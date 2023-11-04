@@ -6,6 +6,7 @@ import PageWithLayoutType from '@/types/layout';
 import Head from 'next/head';
 import { Store } from 'react-notifications-component';
 import NotifContext from '@/stores/notif-provider';
+import Main from '@/components/layout/main';
 
 const Index = () => {
 
@@ -67,6 +68,6 @@ const Index = () => {
   );
 };
 
-// (Index as PageWithLayoutType).layout = Main;
+(Index as PageWithLayoutType).layout = Main;
 
 export default Index;
