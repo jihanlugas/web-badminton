@@ -77,8 +77,7 @@ const Main: React.FC<Props> = ({ children }) => {
         if (res) {
           if (res.status) {
             localStorage.setItem("user", JSON.stringify(res.payload.user))
-            localStorage.setItem("company", JSON.stringify(res.payload.company))
-            localStorage.setItem("companysetting", JSON.stringify(res.payload.companysetting))
+            localStorage.setItem("company", JSON.stringify(res.payload.company || {}))
           }
         }
       },
