@@ -5,8 +5,8 @@ import { Api } from '@/lib/api';
 import PageWithLayoutType from '@/types/layout';
 import Head from 'next/head';
 import { Store } from 'react-notifications-component';
-import NotifContext from '@/stores/notif-provider';
 import Main from '@/components/layout/main';
+import Notif from '@/utils/notif';
 
 const Index = () => {
 
@@ -29,19 +29,17 @@ const Index = () => {
     });
   }
 
-  const { notif } = useContext(NotifContext);
-
   const testSuccess = () => {
-    notif.success('Test success');
+    Notif.success('Test success');
   }
   const testError = () => {
-    notif.error('Test error');
+    Notif.error('Test error');
   }
   const testInfo = () => {
-    notif.info('Test info');
+    Notif.info('Test info');
   }
   const testWarning = () => {
-    notif.warning('Test warning');
+    Notif.warning('Test warning');
   }
 
   return (

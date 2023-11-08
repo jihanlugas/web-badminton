@@ -8,4 +8,6 @@ export type PageInfo = {
 export type PageRequest = {
   page: number
   limit: number
+  sortField?: string
+  sortOrder?: string
 }

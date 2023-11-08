@@ -1,5 +1,4 @@
 import { Api } from '@/lib/api';
-import NotifContext from '@/stores/notif-provider';
 // import UserContext from '@stores/userProvider';
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { BsList } from 'react-icons/bs';
@@ -8,6 +7,7 @@ import { useRouter } from 'next/router';
 import { getInitialWord } from '@/utils/helper';
 import Image from 'next/image';
 import Link from 'next/link';
+import Notif from '@/utils/notif';
 
 interface Props {
   sidebar: boolean,
@@ -21,7 +21,6 @@ const Header: React.FC<Props> = ({ sidebar, setSidebar }) => {
   const [user, setUser] = useState(null);
   const [company, setCompany] = useState(null);
 
-  const { notif } = useContext(NotifContext);
   const router = useRouter();
 
 
@@ -33,10 +32,10 @@ const Header: React.FC<Props> = ({ sidebar, setSidebar }) => {
         // setUser(null);
         localStorage.clear()
         router.push('/sign-in');
-        notif.success('Logout Successfully');
+        Notif.success('Logout Successfully');
       },
       onError: (res) => {
-        notif.error('Please cek you connection');
+        Notif.error('Please cek you connection');
       }
     });
   };

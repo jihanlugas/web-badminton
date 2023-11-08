@@ -6,8 +6,8 @@ import { Api } from '@/lib/api';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { USER_TYPE_ADMIN, USER_TYPE_SAKSI } from '@/utils/constant';
-import NotifContext from '@/stores/notif-provider';
 import { AiOutlineLoading } from 'react-icons/ai'
+import Notif from '@/utils/notif';
 
 
 
@@ -30,8 +30,6 @@ const Main: React.FC<Props> = ({ children }) => {
   const [refreshInterval, setRefreshInteval] = useState(0)
   const [init, setInit] = useState<boolean>(false);
 
-  const { notif } = useContext(NotifContext);
-
   const router = useRouter();
 
   const { data, mutate, isLoading } = useMutation(() => Api.get('/init'));
@@ -47,27 +45,33 @@ const Main: React.FC<Props> = ({ children }) => {
 
 
   useEffect(() => {
-    setTimeout(() => {
-      setRefreshInteval(refreshInterval + 1)
-      mutateRefreshToken(null, {
-        onSuccess: (res) => {
-          if (res) {
-            if (res.status) {
-              localStorage.setItem('token', res.payload.token)
+    if (!localStorage.getItem('token')) {
+      localStorage.clear()
+      router.push('/sign-in');
+    } else {
+      setTimeout(() => {
+        console.log('mutateRefreshToken ', refreshInterval)
+        setRefreshInteval(refreshInterval + 1)
+        mutateRefreshToken(null, {
+          onSuccess: (res) => {
+            if (res) {
+              if (res.status) {
+                localStorage.setItem('token', res.payload.token)
+              } else {
+                Notif.error(res.message)
+              }
             } else {
-              notif.error(res.message)
+              localStorage.clear()
+              router.push('/sign-in');
             }
-          } else {
+          },
+          onError: () => {
             localStorage.clear()
             router.push('/sign-in');
           }
-        },
-        onError: () => {
-          localStorage.clear()
-          router.push('/sign-in');
-        }
-      });
-    }, 1000 * 60 * 10) // 10 menit
+        });
+      }, 1000 * 60 * 60) // 60 menit
+    }
   }, [refreshInterval])
 
   useEffect(() => {
