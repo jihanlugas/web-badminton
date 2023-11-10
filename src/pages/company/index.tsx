@@ -72,15 +72,6 @@ const Index: NextPage<Props> = () => {
         );
       },
       cell: props => props.getValue(),
-      // sortingFn: (rowA, rowB, columnId) => {
-      //   // console.log('rowA ', rowA)
-      //   // console.log('rowB ', rowB)
-      //   // console.log('columnId ', columnId)
-      //   // console.log('rowA.getValue(columnId) ', rowA.getValue(columnId))
-      //   // console.log('rowB.getValue(columnId) ', rowB.getValue(columnId))
-      //   setPageRequest({ ...pageRequest, page: 1, sortBy: columnId });
-      //   return 0;
-      // }
     },
     {
       id: 'description',
@@ -95,13 +86,6 @@ const Index: NextPage<Props> = () => {
         );
       },
       cell: props => props.getValue(),
-      // sortingFn: (rowA, rowB, columnId) => {
-      //   // console.log('rowA ', rowA)
-      //   // console.log('rowB ', rowB)
-      //   // console.log('columnId ', columnId)
-      //   setPageRequest({ ...pageRequest, page: 1, sortBy: columnId });
-      //   return 0;
-      // }
     },
     {
       id: 'balance',
@@ -116,16 +100,37 @@ const Index: NextPage<Props> = () => {
         );
       },
       cell: props => <div className='text-right'>{Number(props.getValue())}</div>,
-      // sortingFn: (rowA, rowB, columnId) => {
-      //   // console.log('rowA ', rowA)
-      //   // console.log('rowB ', rowB)
-      //   // console.log('columnId ', columnId)
-      //   setPageRequest({ ...pageRequest, page: 1, sortBy: columnId });
-      //   return 0;
-      // },
     },
     {
-      id: 'createName',
+      id: 'total_gor',
+      accessorKey: 'totalGor',
+      header: (props) => {
+        return (
+          <>
+            <div className='whitespace-nowrap'>
+              {"Total Gor"}
+            </div>
+          </>
+        );
+      },
+      cell: props => <div className='text-right'>{Number(props.getValue())}</div>,
+    },
+    {
+      id: 'total_player',
+      accessorKey: 'totalPlayer',
+      header: (props) => {
+        return (
+          <>
+            <div className='whitespace-nowrap'>
+              {"Total Player"}
+            </div>
+          </>
+        );
+      },
+      cell: props => <div className='text-right'>{Number(props.getValue())}</div>,
+    },
+    {
+      id: 'create_name',
       accessorKey: 'createName',
       header: (props) => {
         return (
@@ -137,11 +142,13 @@ const Index: NextPage<Props> = () => {
         );
       },
       cell: props => props.getValue(),
-      enableSorting: false,
+      // enableSorting: false,
     },
     {
       id: 'id',
       header: '',
+      // size: 40,
+      // maxSize: 40,
       cell: (props) => {
         return (
           <>
@@ -227,9 +234,9 @@ const Index: NextPage<Props> = () => {
         setPageRequest={setPageRequest}
       />
       <div className='p-4'>
-        <div className='text-xl h-16 flex items-center border-b'>Property</div>
+        <div className='text-xl h-16 flex items-center border-b-2'>Property</div>
         <div className='pt-4'>
-          <div className='bg-white w-full shadow rounded-sm'>
+          <div className='bg-white w-full shadow-lg rounded-sm'>
             <div className='flex justify-between items-center px-2 h-16'>
               <div>
                 <div className='text-xl'>{ }</div>

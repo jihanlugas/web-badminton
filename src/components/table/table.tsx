@@ -65,7 +65,7 @@ const Table: React.FC<Props> = ({ columns, data, setPageRequest, pageRequest, pa
   };
 
   const handleSort = (sortField) => {
-
+    console.log('sortField ', sortField)
     if (pageRequest.sortField !== sortField) {
       setPageRequest({
         ...pageRequest,
@@ -100,10 +100,15 @@ const Table: React.FC<Props> = ({ columns, data, setPageRequest, pageRequest, pa
             <tr key={headerGroup.id} className='border-b border-t text-left'>
               {headerGroup.headers.map((header) => {
                 return (
-                  <th key={header.id} className='py-2 px-2 font-normal text-gray-800 whitespace-nowrap' colSpan={header.colSpan}>
+                  <th
+                    key={header.id} className='py-2 px-2 font-normal text-base whitespace-nowrap'
+                    colSpan={header.colSpan}
+                  // style={{
+                  //   width: header.getSize(),
+                  // }}
+                  >
                     {!header.isPlaceholder && (
                       <>{header.column.getCanSort() ? (
-
                         <div
                           className='cursor-pointer select-none flex justify-between py-2'
                           onClick={() => handleSort(header.id)}
@@ -143,7 +148,7 @@ const Table: React.FC<Props> = ({ columns, data, setPageRequest, pageRequest, pa
               {Array.apply(null, Array(pageRequest.limit)).map((data, key) => (
                 <React.Fragment key={key}>
                   {table.getHeaderGroups().map((headerGroup, key) => (
-                    <tr key={key} className='border-b text-left'>
+                    <tr key={key} className='border-b text-left '>
                       {headerGroup.headers.map((column, key) => (
                         <td key={key} className='py-4 px-2 font-normal whitespace-nowrap animate-pulse'>
                           <div className='h-3 w-full bg-slate-200 rounded-full'></div>

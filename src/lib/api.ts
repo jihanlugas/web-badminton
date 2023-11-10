@@ -22,7 +22,12 @@ const handleError = (error) => {
 		const { data } = error.response;
 		if (data && data.payload && data.payload.forceLogout) {
 			localStorage.clear()
-			Router.push('/sign-in');
+			Router.push({
+				pathname: '/sign-in',
+				query: {
+					redirect: Router.asPath && Router.asPath,
+				}
+			});
 		}
 		return data;
 	}
@@ -111,7 +116,12 @@ class Api {
 					const { payload } = error.response.data;
 					if (payload && payload.forceLogout) {
 						localStorage.clear();
-						Router.push('/sign-in');
+						Router.push({
+							pathname: '/sign-in',
+							query: {
+								redirect: Router.asPath && Router.asPath,
+							}
+						});
 					}
 				}
 

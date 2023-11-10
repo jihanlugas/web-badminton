@@ -44,10 +44,16 @@ const Main: React.FC<Props> = ({ children }) => {
   };
 
 
+
   useEffect(() => {
     if (!localStorage.getItem('token')) {
       localStorage.clear()
-      router.push('/sign-in');
+      router.push({
+        pathname: '/sign-in',
+        query: {
+          redirect: router.asPath && router.asPath,
+        }
+      });
     } else {
       setTimeout(() => {
         console.log('mutateRefreshToken ', refreshInterval)
@@ -62,12 +68,22 @@ const Main: React.FC<Props> = ({ children }) => {
               }
             } else {
               localStorage.clear()
-              router.push('/sign-in');
+              router.push({
+                pathname: '/sign-in',
+                query: {
+                  redirect: router.asPath && router.asPath,
+                }
+              });
             }
           },
           onError: () => {
             localStorage.clear()
-            router.push('/sign-in');
+            router.push({
+              pathname: '/sign-in',
+              query: {
+                redirect: router.asPath && router.asPath,
+              }
+            });
           }
         });
       }, 1000 * 60 * 60) // 60 menit

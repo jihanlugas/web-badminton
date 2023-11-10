@@ -39,7 +39,11 @@ const SingIn: NextPage<Props> = () => {
         if (res) {
           if (res.status) {
             localStorage.setItem('token', res.payload.token)
-            router.push('/');
+            if (router.query.redirect) {
+              router.push(router.query.redirect as string);
+            } else {
+              router.push('/');
+            }
           } else {
             if (res.payload && res.payload.listError) {
               setErrors(res.payload.listError);
