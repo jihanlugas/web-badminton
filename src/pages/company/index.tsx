@@ -19,14 +19,16 @@ import { IoAddOutline } from 'react-icons/io5';
 import Table from '@/components/table/table';
 import notif from '@/utils/notif';
 import { Company } from '@/types/company';
+import ModalFilterCompany from '@/components/modal/modal-filter-company';
 
 type Props = {
 
 }
 
 type FilterProps = {
-  name?: string
-  description?: string
+  name: string
+  description: string
+  createName: string
 }
 
 const Index: NextPage<Props> = () => {
@@ -51,6 +53,7 @@ const Index: NextPage<Props> = () => {
     sortOrder: null,
     name: null,
     description: null,
+    createName: null,
   });
 
   const [count, setCount] = useState(0);
@@ -191,15 +194,6 @@ const Index: NextPage<Props> = () => {
     setShowModalDelete(!showModalDelete);
   };
 
-  const handleOnClickOverlayProperty = (refresh = false) => {
-    setSelectedId('');
-    setShowModalProperty(!showModalProperty);
-    console.log('refresh ', refresh)
-    if (refresh) {
-      refetch();
-    }
-  }
-
   const handleDelete = () => {
     mutateDelete(deleteId, {
       onSuccess: (res) => {
@@ -221,14 +215,17 @@ const Index: NextPage<Props> = () => {
     });
   };
 
-  console.log('pageRequest ', pageRequest)
-  console.log('company ', company)
-
   return (
     <>
       <Head>
         <title>{process.env.APP_NAME + ' - Property'}</title>
       </Head>
+      <ModalFilterCompany
+        onClickOverlay={toogleFilter}
+        show={showModalFilter}
+        pageRequest={pageRequest}
+        setPageRequest={setPageRequest}
+      />
       <div className='p-4'>
         <div className='text-xl h-16 flex items-center border-b'>Property</div>
         <div className='pt-4'>

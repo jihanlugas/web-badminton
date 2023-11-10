@@ -92,8 +92,6 @@ const Table: React.FC<Props> = ({ columns, data, setPageRequest, pageRequest, pa
     }
   }
 
-  console.log('table ', table)
-
   return (
     <>
       <table className='w-full table-auto text-sm'>
