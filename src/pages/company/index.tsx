@@ -20,6 +20,8 @@ import Table from '@/components/table/table';
 import notif from '@/utils/notif';
 import { Company } from '@/types/company';
 import ModalFilterCompany from '@/components/modal/modal-filter-company';
+import { useRouter } from 'next/router';
+import { displayNumber } from '@/utils/formater';
 
 type Props = {
 
@@ -33,10 +35,10 @@ type FilterProps = {
 
 const Index: NextPage<Props> = () => {
 
-  const [showModalProperty, setShowModalProperty] = useState<boolean>(false);
+  const router = useRouter();
+
   const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
   const [showModalFilter, setShowModalFilter] = useState<boolean>(false);
-  const [selectedId, setSelectedId] = useState<string>('');
   const [deleteId, setDeleteId] = useState<string>('');
   const [company, setCompany] = useState<any[]>([]);
   const [pageInfo, setPageInfo] = useState<PageInfo>({
@@ -51,9 +53,9 @@ const Index: NextPage<Props> = () => {
     page: 1,
     sortField: null,
     sortOrder: null,
-    name: null,
-    description: null,
-    createName: null,
+    name: '',
+    description: '',
+    createName: '',
   });
 
   const [count, setCount] = useState(0);
@@ -99,7 +101,7 @@ const Index: NextPage<Props> = () => {
           </>
         );
       },
-      cell: props => <div className='text-right'>{Number(props.getValue())}</div>,
+      cell: props => <div className='text-right'>{displayNumber(Number(props.getValue()))}</div>,
     },
     {
       id: 'total_gor',
@@ -113,7 +115,7 @@ const Index: NextPage<Props> = () => {
           </>
         );
       },
-      cell: props => <div className='text-right'>{Number(props.getValue())}</div>,
+      cell: props => <div className='text-right'>{displayNumber(Number(props.getValue()))}</div>,
     },
     {
       id: 'total_player',
@@ -127,7 +129,7 @@ const Index: NextPage<Props> = () => {
           </>
         );
       },
-      cell: props => <div className='text-right'>{Number(props.getValue())}</div>,
+      cell: props => <div className='text-right'>{displayNumber(Number(props.getValue()))}</div>,
     },
     {
       id: 'create_name',
@@ -154,7 +156,7 @@ const Index: NextPage<Props> = () => {
           <>
             <div className='flex justify-end'>
               <div className=''>
-                <button className='ml-2 px-2 duration-300' title='edit' onClick={() => toogleModalProperty(props.row.original.id)}>
+                <button className='ml-2 px-2 duration-300' title='edit' onClick={() => { router.push({ pathname: '/company/[companyId]/edit', query: { companyId: props.row.original.id } }) }}>
                   <RiPencilLine className='' size={'1.5rem'} />
                 </button>
               </div>
@@ -186,11 +188,6 @@ const Index: NextPage<Props> = () => {
       });
     }
   }, [data]);
-
-  const toogleModalProperty = (id = '') => {
-    setSelectedId(id);
-    setShowModalProperty(!showModalProperty)
-  };
 
   const toogleFilter = () => {
     setShowModalFilter(!showModalFilter)
@@ -225,7 +222,7 @@ const Index: NextPage<Props> = () => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Property'}</title>
+        <title>{process.env.APP_NAME + ' - Company'}</title>
       </Head>
       <ModalFilterCompany
         onClickOverlay={toogleFilter}
@@ -234,10 +231,14 @@ const Index: NextPage<Props> = () => {
         setPageRequest={setPageRequest}
       />
       <div className='p-4'>
-        <div className='text-xl h-16 flex items-center border-b-2'>Property</div>
-        <div className='pt-4'>
-          <div className='bg-white w-full shadow-lg rounded-sm'>
-            <div className='flex justify-between items-center px-2 h-16'>
+        <div className='bg-white mb-4 p-4 rounded shadow'>
+          <div className='text-xl flex items-center'>
+            Company
+          </div>
+        </div>
+        <div className='bg-white mb-4 p-4 rounded shadow'>
+          <div className='w-full rounded-sm'>
+            <div className='flex justify-between items-center px-2'>
               <div>
                 <div className='text-xl'>{ }</div>
               </div>
@@ -248,13 +249,13 @@ const Index: NextPage<Props> = () => {
                   </button>
                 </div>
                 <div>
-                  <button className='h-12 w-12 ease-in-out flex justify-center items-center rounded-full duration-300 hover:bg-gray-100' onClick={() => toogleModalProperty()}>
+                  <button className='h-12 w-12 ease-in-out flex justify-center items-center rounded-full duration-300 hover:bg-gray-100' onClick={() => router.push('/company/new')}>
                     <IoAddOutline className='' size={'1.5em'} />
                   </button>
                 </div>
               </div>
             </div>
-            <div className='mb-16'>
+            <div className=''>
               <Table
                 columns={column}
                 data={company}

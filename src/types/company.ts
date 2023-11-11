@@ -13,3 +13,14 @@ export interface Company {
   updateName: string;
   deleteName: string;
 }
+
+export interface CompanyCreate {
+  fullname: string;
+  email: string;
+  noHp: string;
+  username: string;
+  passwd: string;
+  name: string;
+  description: string;
+  balance: number;
+}

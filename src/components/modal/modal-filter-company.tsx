@@ -38,7 +38,6 @@ const ModalFilterCompany: React.FC<Props> = ({ show, onClickOverlay, pageRequest
       createName: values.createName,
     };
     setPageRequest(newReq);
-    // onClickOverlay(JSON.stringify(pageRequest) !== JSON.stringify(newReq));
     onClickOverlay();
   };
 
@@ -53,7 +52,6 @@ const ModalFilterCompany: React.FC<Props> = ({ show, onClickOverlay, pageRequest
     setPageRequest(newReq);
     setValues(newReq)
     onClickOverlay();
-    // onClickOverlay(JSON.stringify(pageRequest) !== JSON.stringify(newReq));
 
   }
 
