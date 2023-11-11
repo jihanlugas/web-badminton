@@ -101,7 +101,7 @@ const Table: React.FC<Props> = ({ columns, data, setPageRequest, pageRequest, pa
               {headerGroup.headers.map((header) => {
                 return (
                   <th
-                    key={header.id} className='py-2 px-2 font-normal text-base whitespace-nowrap'
+                    key={header.id} className='py-2 font-normal text-base whitespace-nowrap'
                     colSpan={header.colSpan}
                   // style={{
                   //   width: header.getSize(),
@@ -110,24 +110,31 @@ const Table: React.FC<Props> = ({ columns, data, setPageRequest, pageRequest, pa
                     {!header.isPlaceholder && (
                       <>{header.column.getCanSort() ? (
                         <div
-                          className='cursor-pointer select-none flex justify-between py-2'
+                          className='p-2 cursor-pointer select-none flex items-center hover:bg-gray-100 rounded duration-300'
                           onClick={() => handleSort(header.id)}
                         >
                           <div>{flexRender(header.column.columnDef.header, header.getContext())}</div>
                           {header.id === pageRequest.sortField ? (
                             <>
                               {pageRequest.sortOrder === 'asc' ? (
-                                <div><FaSortAmountDownAlt size={'1.0rem'} className={'text-primary-600'} /></div>
+                                <div className='ml-2'>
+                                  <FaSortAmountDownAlt size={'1.0rem'} className={'text-primary-600'} />
+                                </div>
                               ) : (
-                                <div><FaSortAmountDown size={'1.0rem'} className={'text-primary-600'} /></div>
+                                <div className='ml-2'>
+                                  <FaSortAmountDown size={'1.0rem'} className={'text-primary-600'} />
+                                </div>
                               )}
                             </>
                           ) : (
-                            <div><FaSortAmountDownAlt size={'1.0rem'} className={'text-gray-400'} /></div>
+                            <div className='ml-2'>
+                              <FaSortAmountDownAlt size={'1.0rem'} className={'text-gray-400'} />
+                            </div>
                           )}
+
                         </div>
                       ) : (
-                        <div>
+                        <div className='p-2'>
                           {flexRender(
                             header.column.columnDef.header,
                             header.getContext()
@@ -162,9 +169,9 @@ const Table: React.FC<Props> = ({ columns, data, setPageRequest, pageRequest, pa
           ) : (
             <>
               {table.getRowModel().rows.map(row => (
-                <tr key={row.id} className='border-b text-left'>
+                <tr key={row.id} className='border-b text-left align-baseline'>
                   {row.getVisibleCells().map(cell => (
-                    <td key={cell.id} className='py-2 px-2 font-normal whitespace-nowrap'>
+                    <td key={cell.id} className='py-2 px-2 font-normal'>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                   ))}
@@ -247,15 +254,15 @@ const Table: React.FC<Props> = ({ columns, data, setPageRequest, pageRequest, pa
           <div className='relative mx-4' ref={refRows}>
             <div className='flex items-center'>
               <div className='mr-2'>{'Rows per page: '}</div>
-              <button className='w-10 flex justify-center hover:bg-gray-100' onClick={() => setRowsBar(!rowsBar)}>
+              <button className='w-10 h-10 flex justify-center items-center duration-300 hover:bg-gray-100' onClick={() => setRowsBar(!rowsBar)}>
                 {pageRequest.limit}
               </button>
             </div>
-            <div className={`absolute -top-8 right-0 mt-2 w-12 rounded-md overflow-hidden origin-top-right shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none py-2 duration-300 ease-in-out ${!rowsBar && 'scale-0 shadow-none ring-0'}`}>
-              <button className='w-full flex justify-center items-center h-8 hover:bg-gray-100' onClick={() => handleChangeLimit(10)}>{'10'}</button>
-              <button className='w-full flex justify-center items-center h-8 hover:bg-gray-100' onClick={() => handleChangeLimit(25)}>{'25'}</button>
-              <button className='w-full flex justify-center items-center h-8 hover:bg-gray-100' onClick={() => handleChangeLimit(50)}>{'50'}</button>
-              <button className='w-full flex justify-center items-center h-8 hover:bg-gray-100' onClick={() => handleChangeLimit(100)}>{'100'}</button>
+            <div className={`absolute -top-40 -right-2 w-12 rounded-md overflow-hidden origin-bottom-left shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none duration-300 ease-in-out ${!rowsBar && 'scale-0 shadow-none ring-0'}`}>
+              <button className='w-full flex justify-center items-center h-10 hover:bg-gray-100' onClick={() => handleChangeLimit(10)}>{'10'}</button>
+              <button className='w-full flex justify-center items-center h-10 hover:bg-gray-100' onClick={() => handleChangeLimit(25)}>{'25'}</button>
+              <button className='w-full flex justify-center items-center h-10 hover:bg-gray-100' onClick={() => handleChangeLimit(50)}>{'50'}</button>
+              <button className='w-full flex justify-center items-center h-10 hover:bg-gray-100' onClick={() => handleChangeLimit(100)}>{'100'}</button>
             </div>
           </div>
           <div className='w-32 flex justify-center mx-4'>
@@ -267,16 +274,16 @@ const Table: React.FC<Props> = ({ columns, data, setPageRequest, pageRequest, pa
             <span>{pageInfo.totalData}</span>
           </div>
           <div className='flex items-center ml-4'>
-            <button className='h-10 w-10 flex justify-center items-center rounded-full mx-1 duration-300 hover:bg-gray-100 disabled:text-gray-400' disabled={pageRequest.page <= 1} onClick={() => setPageRequest({ ...pageRequest, page: 1 })}>
+            <button className='h-10 w-10 flex justify-center items-center rounded mx-1 duration-300 hover:bg-gray-100 disabled:text-gray-400' disabled={pageRequest.page <= 1} onClick={() => setPageRequest({ ...pageRequest, page: 1 })}>
               <CgPushChevronLeft size={'1.5rem'} className={''} />
             </button>
-            <button className='h-10 w-10 flex justify-center items-center rounded-full mx-1 duration-300 hover:bg-gray-100 disabled:text-gray-400' disabled={pageRequest.page <= 1} onClick={() => setPageRequest({ ...pageRequest, page: pageRequest.page - 1 })}>
+            <button className='h-10 w-10 flex justify-center items-center rounded mx-1 duration-300 hover:bg-gray-100 disabled:text-gray-400' disabled={pageRequest.page <= 1} onClick={() => setPageRequest({ ...pageRequest, page: pageRequest.page - 1 })}>
               <CgChevronLeft size={'1.5rem'} className={''} />
             </button>
-            <button className='h-10 w-10 flex justify-center items-center rounded-full mx-1 duration-300 hover:bg-gray-100 disabled:text-gray-400' disabled={pageRequest.page >= pageInfo.pageCount} onClick={() => setPageRequest({ ...pageRequest, page: pageRequest.page + 1 })}>
+            <button className='h-10 w-10 flex justify-center items-center rounded mx-1 duration-300 hover:bg-gray-100 disabled:text-gray-400' disabled={pageRequest.page >= pageInfo.pageCount} onClick={() => setPageRequest({ ...pageRequest, page: pageRequest.page + 1 })}>
               <CgChevronRight size={'1.5rem'} className={''} />
             </button>
-            <button className='h-10 w-10 flex justify-center items-center rounded-full mx-1 duration-300 hover:bg-gray-100 disabled:text-gray-400' disabled={pageRequest.page >= pageInfo.pageCount} onClick={() => setPageRequest({ ...pageRequest, page: pageInfo.pageCount })}>
+            <button className='h-10 w-10 flex justify-center items-center rounded mx-1 duration-300 hover:bg-gray-100 disabled:text-gray-400' disabled={pageRequest.page >= pageInfo.pageCount} onClick={() => setPageRequest({ ...pageRequest, page: pageInfo.pageCount })}>
               <CgPushChevronRight size={'1.5rem'} className={''} />
             </button>
           </div>

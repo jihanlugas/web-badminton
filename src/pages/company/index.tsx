@@ -101,7 +101,7 @@ const Index: NextPage<Props> = () => {
           </>
         );
       },
-      cell: props => <div className='text-right'>{displayNumber(Number(props.getValue()))}</div>,
+      cell: props => <div className='text-right'>{'Rp ' + displayNumber(Number(props.getValue()))}</div>,
     },
     {
       id: 'total_gor',
@@ -115,7 +115,7 @@ const Index: NextPage<Props> = () => {
           </>
         );
       },
-      cell: props => <div className='text-right'>{displayNumber(Number(props.getValue()))}</div>,
+      cell: props => <div className='text-right'>{'Rp ' + displayNumber(Number(props.getValue()))}</div>,
     },
     {
       id: 'total_player',
@@ -129,7 +129,7 @@ const Index: NextPage<Props> = () => {
           </>
         );
       },
-      cell: props => <div className='text-right'>{displayNumber(Number(props.getValue()))}</div>,
+      cell: props => <div className='text-right'>{'Rp ' + displayNumber(Number(props.getValue()))}</div>,
     },
     {
       id: 'create_name',
@@ -148,23 +148,19 @@ const Index: NextPage<Props> = () => {
     },
     {
       id: 'id',
-      header: '',
+      header: 'Action',
       // size: 40,
       // maxSize: 40,
       cell: (props) => {
         return (
           <>
-            <div className='flex justify-end'>
-              <div className=''>
-                <button className='ml-2 px-2 duration-300' title='edit' onClick={() => { router.push({ pathname: '/company/[companyId]/edit', query: { companyId: props.row.original.id } }) }}>
-                  <RiPencilLine className='' size={'1.5rem'} />
-                </button>
-              </div>
-              <div className=''>
-                <button className='ml-2 px-2 duration-300' title='delete' onClick={() => toogleDelete(props.row.original.id)}>
-                  <VscTrash className='' size={'1.5rem'} />
-                </button>
-              </div>
+            <div className='flex justify-end items-center'>
+              <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit' onClick={() => { router.push({ pathname: '/company/[companyId]/edit', query: { companyId: props.row.original.id } }) }}>
+                <RiPencilLine className='' size={'1.2rem'} />
+              </button>
+              <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='delete' onClick={() => toogleDelete(props.row.original.id)}>
+                <VscTrash className='' size={'1.2rem'} />
+              </button>
             </div>
           </>
         );
@@ -238,19 +234,19 @@ const Index: NextPage<Props> = () => {
         </div>
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='w-full rounded-sm'>
-            <div className='flex justify-between items-center px-2'>
+            <div className='flex justify-between items-center px-2 mb-2'>
               <div>
                 <div className='text-xl'>{ }</div>
               </div>
               <div className='flex'>
-                <div>
-                  <button className='h-12 w-12 ease-in-out flex justify-center items-center rounded-full duration-300 hover:bg-gray-100' onClick={() => toogleFilter()}>
-                    <BiFilterAlt className='' size={'1.5em'} />
+                <div className='ml-2'>
+                  <button className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 hover:bg-gray-100' onClick={() => toogleFilter()}>
+                    <BiFilterAlt className='' size={'1.2em'} />
                   </button>
                 </div>
-                <div>
-                  <button className='h-12 w-12 ease-in-out flex justify-center items-center rounded-full duration-300 hover:bg-gray-100' onClick={() => router.push('/company/new')}>
-                    <IoAddOutline className='' size={'1.5em'} />
+                <div className='ml-2'>
+                  <button className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 hover:bg-gray-100' onClick={() => router.push('/company/new')}>
+                    <IoAddOutline className='' size={'1.2em'} />
                   </button>
                 </div>
               </div>
