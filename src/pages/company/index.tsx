@@ -22,6 +22,8 @@ import { Company } from '@/types/company';
 import ModalFilterCompany from '@/components/modal/modal-filter-company';
 import { useRouter } from 'next/router';
 import { displayNumber } from '@/utils/formater';
+import ModalDelete from '@/components/modal/modal-delete';
+import Notif from '@/utils/notif';
 
 type Props = {
 
@@ -40,7 +42,7 @@ const Index: NextPage<Props> = () => {
   const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
   const [showModalFilter, setShowModalFilter] = useState<boolean>(false);
   const [deleteId, setDeleteId] = useState<string>('');
-  const [company, setCompany] = useState<any[]>([]);
+  const [company, setCompany] = useState<Company[]>([]);
   const [pageInfo, setPageInfo] = useState<PageInfo>({
     pageSize: 0,
     pageCount: 0,
@@ -58,8 +60,6 @@ const Index: NextPage<Props> = () => {
     createName: '',
   });
 
-  const [count, setCount] = useState(0);
-
   const column: ColumnDef<Company>[] = [
     {
       id: 'name',
@@ -73,7 +73,15 @@ const Index: NextPage<Props> = () => {
           </>
         );
       },
-      cell: props => props.getValue(),
+      cell: (props) => {
+        return (
+          <Link href={{ pathname: '/company/[companyId]', query: { companyId: props.row.original.id } }} >
+            <div className='w-full duration-300 hover:text-primary-500'>
+              {props.getValue() as string}
+            </div>
+          </Link>
+        )
+      },
     },
     {
       id: 'description',
@@ -115,7 +123,7 @@ const Index: NextPage<Props> = () => {
           </>
         );
       },
-      cell: props => <div className='text-right'>{'Rp ' + displayNumber(Number(props.getValue()))}</div>,
+      cell: props => <div className='text-right'>{displayNumber(Number(props.getValue()))}</div>,
     },
     {
       id: 'total_player',
@@ -129,7 +137,7 @@ const Index: NextPage<Props> = () => {
           </>
         );
       },
-      cell: props => <div className='text-right'>{'Rp ' + displayNumber(Number(props.getValue()))}</div>,
+      cell: props => <div className='text-right'>{displayNumber(Number(props.getValue()))}</div>,
     },
     {
       id: 'create_name',
@@ -149,8 +157,6 @@ const Index: NextPage<Props> = () => {
     {
       id: 'id',
       header: 'Action',
-      // size: 40,
-      // maxSize: 40,
       cell: (props) => {
         return (
           <>
@@ -199,12 +205,12 @@ const Index: NextPage<Props> = () => {
       onSuccess: (res) => {
         if (res) {
           if (res.status) {
-            notif.success(res.message);
+            Notif.success(res.message);
             setDeleteId('');
             toogleDelete('');
             refetch();
           } else if (!res.status) {
-            notif.error(res.message);
+            Notif.error(res.message);
           }
         }
 
@@ -226,6 +232,17 @@ const Index: NextPage<Props> = () => {
         pageRequest={pageRequest}
         setPageRequest={setPageRequest}
       />
+      <ModalDelete
+        onClickOverlay={toogleDelete}
+        show={showModalDelete}
+        onDelete={handleDelete}
+        isLoading={isLoadingDelete}
+      >
+        <div>
+          <div className='mb-4'>Are you sure ?</div>
+          <div className='text-sm mb-4 text-gray-700'>Data related to this company will also be deleted</div>
+        </div>
+      </ModalDelete>
       <div className='p-4'>
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='text-xl flex items-center'>

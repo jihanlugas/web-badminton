@@ -75,9 +75,12 @@ class Api {
 
 	static _fetch = (method, requestPath, payload = {}, transformHeaders?: {}) => {
 		payload = { ...payload, ...appPayLoad };
+		let token = '';
 		const dataKey = (method === 'get') ? 'params' : 'data';
 		const url = encodeURI(process.env.API_END_POINT + requestPath);
-		const token = localStorage.getItem('token')
+		if (typeof window !== 'undefined') {
+			token = localStorage.getItem('token')
+		}
 		const headers = isEmptyObject(transformHeaders) ? {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json',

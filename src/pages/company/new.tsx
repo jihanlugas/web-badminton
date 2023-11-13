@@ -13,6 +13,8 @@ import Notif from '@/utils/notif';
 import TextField from '@/components/formik/text-field';
 import TextAreaField from '@/components/formik/text-area-field';
 import ButtonSubmit from '@/components/formik/button-submit';
+import { BsChevronRight, BsChevronLeft } from 'react-icons/bs'
+
 
 type Props = {
 }
@@ -75,18 +77,22 @@ const New: NextPage<Props> = () => {
       <div className='p-4'>
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='text-xl flex items-center'>
-            <div className='hidden md:flex'>
+            <div className='hidden md:flex items-center'>
               <Link href={'/company'}>
-                <span className='mr-4 hover:text-primary-500'>{'Company'}</span>
+                <div className='mr-4 hover:text-primary-500'>{'Company'}</div>
               </Link>
-              <span className='mr-4'>{'>'}</span>
-              <span className='mr-4'>{'New'}</span>
+              <div className='mr-4'>
+                <BsChevronRight className={''} size={'1.2rem'} />
+              </div>
+              <div className='mr-4'>{'New'}</div>
             </div>
-            <div className='flex md:hidden'>
+            <div className='flex items-center md:hidden'>
               <Link href={'/company'}>
-                <span className='mr-4'>{'<'}</span>
+                <div className='mr-4 hover:text-primary-500'>
+                  <BsChevronLeft className={''} size={'1.2rem'} />
+                </div>
               </Link>
-              <span className='mr-4'>{'New'}</span>
+              <div className='mr-4'>{'New'}</div>
             </div>
           </div>
         </div>

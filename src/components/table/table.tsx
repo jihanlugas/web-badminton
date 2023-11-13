@@ -110,7 +110,7 @@ const Table: React.FC<Props> = ({ columns, data, setPageRequest, pageRequest, pa
                     {!header.isPlaceholder && (
                       <>{header.column.getCanSort() ? (
                         <div
-                          className='p-2 cursor-pointer select-none flex items-center hover:bg-gray-100 rounded duration-300'
+                          className='p-2 cursor-pointer select-none flex justify-between items-center hover:bg-gray-100 rounded duration-300'
                           onClick={() => handleSort(header.id)}
                         >
                           <div>{flexRender(header.column.columnDef.header, header.getContext())}</div>
@@ -180,72 +180,7 @@ const Table: React.FC<Props> = ({ columns, data, setPageRequest, pageRequest, pa
             </>
           )}
         </tbody>
-        {/* <tfoot>
-          {table.getFooterGroups().map(footerGroup => (
-            <tr key={footerGroup.id}>
-              {footerGroup.headers.map(header => (
-                <th key={header.id} colSpan={header.colSpan}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                      header.column.columnDef.footer,
-                      header.getContext()
-                    )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </tfoot> */}
       </table>
-      {/* <table className='w-full table-auto text-sm' {...getTableProps()}>
-        <thead>
-          {headerGroups.map((headerGroup, key) => (
-            <tr key={key} className='border-b border-t text-left' {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column, key) => (
-                <th key={key} className='py-4 px-2 font-normal text-gray-800 whitespace-nowrap' {...column.getHeaderProps()}>
-                  {column.render('Header')}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {isLoading ? (
-            <>
-              {Array.apply(null, Array(pageRequest.limit)).map((data, key) => (
-                <React.Fragment key={key}>
-                  {headerGroups.map((headerGroup, key) => (
-                    <tr key={key} className='border-b text-left' {...headerGroup.getHeaderGroupProps()}>
-                      {headerGroup.headers.map((column, key) => (
-                        <td key={key} className='py-4 px-2 font-normal whitespace-nowrap animate-pulse' {...column.getHeaderProps()}>
-                          <div className='h-3 w-full bg-slate-200 rounded-full'></div>
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </React.Fragment>
-              ))}
-            </>
-          ) : (
-            <>
-              {rows.map((row, key) => {
-                prepareRow(row);
-                return (
-                  <tr key={key} className='border-b duration-300 align-top hover:bg-gray-100' {...row.getRowProps()}>
-                    {row.cells.map((cell, key) => {
-                      return (
-                        <td className='p-2' key={key} {...cell.getCellProps()} >
-                          {cell.render('Cell')}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                );
-              })}
-            </>
-          )}
-        </tbody>
-      </table> */}
       <div className='flex justify-between items-center'>
         <div className='flex items-center p-2'>
           <div className='mr-2'>{'Page ' + pageInfo.page}</div>

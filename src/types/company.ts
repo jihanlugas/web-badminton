@@ -24,3 +24,9 @@ export interface CompanyCreate {
   description: string;
   balance: number;
 }
+
+export interface CompanyUpdate {
+  name: string;
+  description: string;
+  balance: number;
+}
