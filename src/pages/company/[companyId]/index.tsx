@@ -1,4 +1,5 @@
 import Main from "@/components/layout/main"
+import ModalFilterGor from "@/components/modal/modal-filter-gor"
 import Table from "@/components/table/table"
 import { Api } from "@/lib/api"
 import { Company } from "@/types/company"
@@ -6,7 +7,7 @@ import { Gor } from "@/types/gor"
 import PageWithLayoutType from "@/types/layout"
 import { PageInfo, PageRequest } from "@/types/pagination"
 import { Player } from "@/types/player"
-import { displayNumber, displayPhoneNumber } from "@/utils/formater"
+import { displayActive, displayNumber, displayPhoneNumber } from "@/utils/formater"
 import { useQuery } from "@tanstack/react-query"
 import { ColumnDef } from "@tanstack/react-table"
 import Head from "next/head"
@@ -30,6 +31,7 @@ type FilterPropsGor = {
   name: string
   description: string
   address: string
+  createName: string
 }
 
 type FilterPropsPlayer = {
@@ -79,6 +81,7 @@ const Index: NextPage<Props> = ({ company }) => {
     name: '',
     description: '',
     address: '',
+    createName: '',
   });
 
   const [pageRequestPlayer, setPageRequestPlayer] = useState<PageRequest & FilterPropsPlayer>({
@@ -320,7 +323,7 @@ const Index: NextPage<Props> = ({ company }) => {
           </>
         );
       },
-      cell: props => props.getValue(),
+      cell: props => displayActive(props.getValue() as boolean),
     },
     {
       id: 'create_name',
@@ -382,14 +385,17 @@ const Index: NextPage<Props> = ({ company }) => {
     }
   }, [dataPlayer]);
 
-  console.log('pageInfoGor ', pageInfoGor)
-  console.log('pageInfoPlayer ', pageInfoPlayer)
-
   return (
     <>
       <Head>
         <title>{'Company - ' + company.name}</title>
       </Head>
+      <ModalFilterGor
+        onClickOverlay={toogleFilterGor}
+        show={showModalFilterGor}
+        pageRequest={pageRequestGor}
+        setPageRequest={setPageRequestGor}
+      />
       <div className='p-4'>
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='text-xl flex items-center'>
