@@ -1,5 +1,7 @@
 import Main from "@/components/layout/main"
+import ModalDelete from "@/components/modal/modal-delete"
 import ModalFilterGor from "@/components/modal/modal-filter-gor"
+import ModalFilterPlayer from "@/components/modal/modal-filter-player"
 import Table from "@/components/table/table"
 import { Api } from "@/lib/api"
 import { Company } from "@/types/company"
@@ -8,7 +10,7 @@ import PageWithLayoutType from "@/types/layout"
 import { PageInfo, PageRequest } from "@/types/pagination"
 import { Player } from "@/types/player"
 import { displayActive, displayNumber, displayPhoneNumber } from "@/utils/formater"
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { ColumnDef } from "@tanstack/react-table"
 import Head from "next/head"
 import Link from "next/link"
@@ -20,7 +22,7 @@ import { BsChevronLeft, BsChevronRight } from "react-icons/bs"
 import { IoAddOutline } from "react-icons/io5"
 import { RiPencilLine } from "react-icons/ri"
 import { VscTrash } from "react-icons/vsc"
-
+import notif from '@/utils/notif';
 
 type Props = {
   company: Company
@@ -40,6 +42,7 @@ type FilterPropsPlayer = {
   email: string
   noHp: string
   address: string
+  createName: string
 }
 
 const Index: NextPage<Props> = ({ company }) => {
@@ -94,10 +97,14 @@ const Index: NextPage<Props> = ({ company }) => {
     email: '',
     noHp: '',
     address: '',
+    createName: '',
   });
 
   const { isLoading: isLoadingGor, data: dataGor, refetch: refetchGor } = useQuery(['gor', pageRequestGor], ({ queryKey }) => Api.get('/gor/page', queryKey[1]), {});
   const { isLoading: isLoadingPlayer, data: dataPlayer, refetch: refetchPlayer } = useQuery(['player', pageRequestPlayer], ({ queryKey }) => Api.get('/player/page', queryKey[1]), {});
+
+  const { mutate: mutateDeleteGor, isLoading: isLoadingDeleteGor } = useMutation((id: string) => Api.delete('/gor/' + id));
+  const { mutate: mutateDeletePlayer, isLoading: isLoadingDeletePlayer } = useMutation((id: string) => Api.delete('/player/' + id));
 
   const toogleFilterGor = () => {
     setShowModalFilterGor(!showModalFilterGor)
@@ -107,13 +114,54 @@ const Index: NextPage<Props> = ({ company }) => {
     setShowModalDeleteGor(!showModalDeleteGor);
   };
 
-
   const toogleFilterPlayer = () => {
     setShowModalFilterPlayer(!showModalFilterPlayer)
   };
   const toogleDeletePlayer = (id = '') => {
     setDeletePlayerId(id);
     setShowModalDeletePlayer(!showModalDeletePlayer);
+  };
+
+  const handleDeleteGor = () => {
+    mutateDeleteGor(deleteGorId, {
+      onSuccess: (res) => {
+        if (res) {
+          if (res.status) {
+            notif.success(res.message);
+            setDeleteGorId('');
+            toogleDeleteGor('');
+            refetchGor();
+          } else if (!res.status) {
+            notif.error(res.message);
+          }
+        }
+
+      },
+      onError: (res) => {
+        notif.error('Please cek you connection');
+      },
+    });
+  };
+
+  const handleDeletePlayer = () => {
+    mutateDeletePlayer(deletePlayerId, {
+      onSuccess: (res) => {
+        if (res) {
+          if (res.status) {
+            notif.success(res.message);
+            setDeletePlayerId('');
+            toogleDeletePlayer('');
+            refetchPlayer();
+          } else if (!res.status) {
+            notif.error(res.message);
+          }
+        }
+
+      },
+      onError: (res) => {
+        notif.error('Please cek you connection');
+      },
+    });
   };
 
   const columnGor: ColumnDef<Gor>[] = [
@@ -350,7 +398,7 @@ const Index: NextPage<Props> = ({ company }) => {
               <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit' onClick={() => { router.push({ pathname: '/company/[companyId]/edit', query: { companyId: props.row.original.id } }) }}>
                 <RiPencilLine className='' size={'1.2rem'} />
               </button>
-              <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='delete' onClick={() => toogleDeleteGor(props.row.original.id)}>
+              <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='delete' onClick={() => toogleDeletePlayer(props.row.original.id)}>
                 <VscTrash className='' size={'1.2rem'} />
               </button>
             </div>
@@ -396,6 +444,34 @@ const Index: NextPage<Props> = ({ company }) => {
         pageRequest={pageRequestGor}
         setPageRequest={setPageRequestGor}
       />
+      <ModalFilterPlayer
+        onClickOverlay={toogleFilterPlayer}
+        show={showModalFilterPlayer}
+        pageRequest={pageRequestPlayer}
+        setPageRequest={setPageRequestPlayer}
+      />
+      <ModalDelete
+        onClickOverlay={toogleDeleteGor}
+        show={showModalDeleteGor}
+        onDelete={handleDeleteGor}
+        isLoading={isLoadingDeleteGor}
+      >
+        <div>
+          <div className='mb-4'>Are you sure ?</div>
+          <div className='text-sm mb-4 text-gray-700'>Data related to this gor will also be deleted</div>
+        </div>
+      </ModalDelete>
+      <ModalDelete
+        onClickOverlay={toogleDeletePlayer}
+        show={showModalDeletePlayer}
+        onDelete={handleDeletePlayer}
+        isLoading={isLoadingDeletePlayer}
+      >
+        <div>
+          <div className='mb-4'>Are you sure ?</div>
+          <div className='text-sm mb-4 text-gray-700'>Data related to this player will also be deleted</div>
+        </div>
+      </ModalDelete>
       <div className='p-4'>
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='text-xl flex items-center'>

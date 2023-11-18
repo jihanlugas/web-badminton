@@ -17,13 +17,12 @@ import { BiFilterAlt, BiLayerPlus } from 'react-icons/bi';
 import { RiPencilLine } from 'react-icons/ri';
 import { IoAddOutline } from 'react-icons/io5';
 import Table from '@/components/table/table';
-import notif from '@/utils/notif';
 import { Company } from '@/types/company';
 import ModalFilterCompany from '@/components/modal/modal-filter-company';
 import { useRouter } from 'next/router';
 import { displayNumber } from '@/utils/formater';
 import ModalDelete from '@/components/modal/modal-delete';
-import Notif from '@/utils/notif';
+import notif from '@/utils/notif';
 
 type Props = {
 
@@ -205,12 +204,12 @@ const Index: NextPage<Props> = () => {
       onSuccess: (res) => {
         if (res) {
           if (res.status) {
-            Notif.success(res.message);
+            notif.success(res.message);
             setDeleteId('');
             toogleDelete('');
             refetch();
           } else if (!res.status) {
-            Notif.error(res.message);
+            notif.error(res.message);
           }
         }
 
