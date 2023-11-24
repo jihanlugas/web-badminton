@@ -8,6 +8,7 @@ import { Dispatch, SetStateAction } from 'react';
 import TextAreaField from '@/components/formik/text-area-field';
 import DropdownField from '@/components/formik/dropdown-field';
 import { GrPowerReset } from 'react-icons/gr';
+import { GENDER } from '@/utils/constant';
 
 type FilterProps = {
   companyId: string
@@ -15,6 +16,7 @@ type FilterProps = {
   email: string
   noHp: string
   address: string
+  gender: string
   createName: string
 }
 
@@ -30,6 +32,7 @@ const schema = Yup.object().shape({
   email: Yup.string().nullable().label('Email'),
   noHp: Yup.string().nullable().label('No. Handphone'),
   address: Yup.string().nullable().label('Address'),
+  gender: Yup.string().nullable().label('Gender'),
   createName: Yup.string().nullable().label('Create By'),
 });
 
@@ -42,6 +45,7 @@ const ModalFilterGor: React.FC<Props> = ({ show, onClickOverlay, pageRequest, se
       email: values.email,
       noHp: values.noHp,
       address: values.address,
+      gender: values.gender,
       createName: values.createName,
     };
     setPageRequest(newReq);
@@ -56,6 +60,7 @@ const ModalFilterGor: React.FC<Props> = ({ show, onClickOverlay, pageRequest, se
       email: '',
       noHp: '',
       address: '',
+      gender: '',
       createName: '',
     };
     setPageRequest(newReq);
@@ -116,6 +121,14 @@ const ModalFilterGor: React.FC<Props> = ({ show, onClickOverlay, pageRequest, se
                           type={'text'}
                           placeholder={'Address'}
 
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <DropdownField
+                          label={'Gender'}
+                          name={'gender'}
+                          placeholder={'Select Gender'}
+                          items={Object.values(GENDER)}
                         />
                       </div>
                       <div className="mb-4">

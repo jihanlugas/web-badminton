@@ -15,10 +15,12 @@ interface Props extends React.HTMLProps<HTMLSelectElement> {
 	required?: boolean;
 	placeholder?: string;
 	placeholderValue?: string | number;
+	keyValue?: string;
+	keyLabel?: string;
 }
 
 
-const DropdownField: NextPage<Props> = ({ label, name, items, required, placeholder = '', placeholderValue = '', ...props }) => {
+const DropdownField: NextPage<Props> = ({ label, name, items, required, placeholder = '', placeholderValue = '', keyValue = 'value', keyLabel = 'label', ...props }) => {
 	return (
 		<div className={'flex flex-col w-full'}>
 			{label && (
@@ -28,7 +30,7 @@ const DropdownField: NextPage<Props> = ({ label, name, items, required, placehol
 				</div>
 			)}
 			<Field
-				className={'w-full border-2 rounded h-10 px-2'}
+				className={'w-full border-2 rounded h-10 px-2 bg-white'}
 				name={name}
 				as={'select'}
 				{...props}
@@ -38,7 +40,7 @@ const DropdownField: NextPage<Props> = ({ label, name, items, required, placehol
 				)}
 				{items.map((v, key) => {
 					return (
-						<option key={key} value={v.value}>{v.label}</option>
+						<option key={key} value={v[keyValue]}>{v[keyLabel]}</option>
 					)
 				})}
 			</Field>

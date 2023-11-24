@@ -42,6 +42,7 @@ type FilterPropsPlayer = {
   email: string
   noHp: string
   address: string
+  gender: string
   createName: string
 }
 
@@ -97,6 +98,7 @@ const Index: NextPage<Props> = ({ company }) => {
     email: '',
     noHp: '',
     address: '',
+    gender: '',
     createName: '',
   });
 
@@ -209,20 +211,6 @@ const Index: NextPage<Props> = ({ company }) => {
           <>
             <div className='whitespace-nowrap'>
               {"Address"}
-            </div>
-          </>
-        );
-      },
-      cell: props => props.getValue(),
-    },
-    {
-      id: 'gender',
-      accessorKey: 'gender',
-      header: (props) => {
-        return (
-          <>
-            <div className='whitespace-nowrap'>
-              {"Gender"}
             </div>
           </>
         );
@@ -366,6 +354,20 @@ const Index: NextPage<Props> = ({ company }) => {
           <>
             <div className='whitespace-nowrap'>
               {"Address"}
+            </div>
+          </>
+        );
+      },
+      cell: props => props.getValue(),
+    },
+    {
+      id: 'gender',
+      accessorKey: 'gender',
+      header: (props) => {
+        return (
+          <>
+            <div className='whitespace-nowrap'>
+              {"Gender"}
             </div>
           </>
         );
