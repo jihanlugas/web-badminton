@@ -9,7 +9,7 @@ import { Gor } from "@/types/gor"
 import PageWithLayoutType from "@/types/layout"
 import { PageInfo, PageRequest } from "@/types/pagination"
 import { Player } from "@/types/player"
-import { displayActive, displayNumber, displayPhoneNumber } from "@/utils/formater"
+import { displayActive, displayMoney, displayNumber, displayPhoneNumber } from "@/utils/formater"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { ColumnDef } from "@tanstack/react-table"
 import Head from "next/head"
@@ -495,6 +495,11 @@ const Index: NextPage<Props> = ({ company }) => {
           </div>
         </div>
         <div className='bg-white mb-4 p-4 rounded shadow'>
+          <div className="text-lg">{company.name}</div>
+          <div className="text-sm mb-2 ">{company.description}</div>
+          <div className="text-lg font-bold">{displayMoney(company.balance)}</div>
+        </div>
+        <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='w-full rounded-sm'>
             <div className='flex justify-between items-center px-2 mb-2'>
               <div>
@@ -556,7 +561,10 @@ const Index: NextPage<Props> = ({ company }) => {
             </div>
           </div>
         </div>
-      </div>
+        <div className='bg-white mb-4 p-4 rounded shadow whitespace-pre-wrap'>
+          {JSON.stringify(company, null, 4)}
+        </div>
+      </div >
     </>
   )
 }
