@@ -4,7 +4,7 @@ import DateField from '@/components/formik/date-field';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { Api } from '@/lib/api';
 import PageWithLayoutType from '@/types/layout';
-import Main from '@/components/layout/main';
+import MainAuth from '@/components/layout/main-auth';
 import Head from 'next/head';
 import { NextPage } from 'next/types';
 import { PageInfo, PageRequest } from '@/types/pagination';
@@ -284,6 +284,6 @@ const Index: NextPage<Props> = () => {
   );
 };
 
-(Index as PageWithLayoutType).layout = Main;
+(Index as PageWithLayoutType).layout = MainAuth;
 
 export default Index;

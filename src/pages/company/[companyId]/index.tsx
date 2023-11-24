@@ -1,4 +1,4 @@
-import Main from "@/components/layout/main"
+import MainAuth from '@/components/layout/main-auth'
 import ModalDelete from "@/components/modal/modal-delete"
 import ModalFilterGor from "@/components/modal/modal-filter-gor"
 import ModalFilterPlayer from "@/components/modal/modal-filter-player"
@@ -569,7 +569,7 @@ const Index: NextPage<Props> = ({ company }) => {
   )
 }
 
-(Index as PageWithLayoutType).layout = Main;
+(Index as PageWithLayoutType).layout = MainAuth;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { companyId } = context.query;

@@ -20,10 +20,10 @@ const MyApp: NextPage<AppLayoutProps> = ({ Component, pageProps }) => {
 
   return (
     <>
+      <ReactNotifications />
       <Head>
         <title>{process.env.APP_NAME}</title>
       </Head>
-      <ReactNotifications />
       <QueryClientProvider client={queryClient}>
         <Layout>
           <Component {...pageProps} />

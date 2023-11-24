@@ -1,4 +1,4 @@
-import Main from '@/components/layout/main';
+import MainAuth from '@/components/layout/main-auth';
 import { Api } from '@/lib/api';
 import { CompanyCreate } from '@/types/company';
 import PageWithLayoutType from '@/types/layout';
@@ -204,6 +204,6 @@ const New: NextPage<Props> = () => {
 
 
 
-(New as PageWithLayoutType).layout = Main;
+(New as PageWithLayoutType).layout = MainAuth;
 
 export default New;
