@@ -1,4 +1,4 @@
-import MainAuth from '@/components/layout/main-auth'
+import MainAuth from '@/components/layout/main-auth';
 import ModalDelete from "@/components/modal/modal-delete"
 import ModalFilterGor from "@/components/modal/modal-filter-gor"
 import ModalFilterPlayer from "@/components/modal/modal-filter-player"
@@ -209,6 +209,20 @@ const Index: NextPage<Props> = ({ company }) => {
           <>
             <div className='whitespace-nowrap'>
               {"Address"}
+            </div>
+          </>
+        );
+      },
+      cell: props => props.getValue(),
+    },
+    {
+      id: 'gender',
+      accessorKey: 'gender',
+      header: (props) => {
+        return (
+          <>
+            <div className='whitespace-nowrap'>
+              {"Gender"}
             </div>
           </>
         );
