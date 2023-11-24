@@ -43,3 +43,7 @@ export const displayNumber = (value: number, locales: string = 'in-ID'): string 
 	const numberFormatter = Intl.NumberFormat(locales);
 	return numberFormatter.format(value);
 }
+
+export const displayMoney = (value: number, locales: string = 'in-ID'): string => {
+	return 'Rp ' + displayNumber(value);
+}

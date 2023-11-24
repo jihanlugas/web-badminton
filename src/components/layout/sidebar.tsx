@@ -34,9 +34,9 @@ const defaultMenu = [
     path: '/overview',
   },
   {
-    name: 'Property',
+    name: 'Company',
     icon: 'BiAbacus',
-    path: '/property',
+    path: '/company',
   },
   {
     name: 'Item',

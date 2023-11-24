@@ -20,7 +20,7 @@ import Table from '@/components/table/table';
 import { Company } from '@/types/company';
 import ModalFilterCompany from '@/components/modal/modal-filter-company';
 import { useRouter } from 'next/router';
-import { displayNumber } from '@/utils/formater';
+import { displayMoney, displayNumber } from '@/utils/formater';
 import ModalDelete from '@/components/modal/modal-delete';
 import notif from '@/utils/notif';
 
@@ -108,7 +108,7 @@ const Index: NextPage<Props> = () => {
           </>
         );
       },
-      cell: props => <div className='text-right'>{'Rp ' + displayNumber(Number(props.getValue()))}</div>,
+      cell: props => <div className='text-right'>{displayMoney(Number(props.getValue()))}</div>,
     },
     {
       id: 'total_gor',
