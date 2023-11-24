@@ -10,8 +10,9 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import * as Yup from 'yup';
 import { Api } from '@/lib/api';
-import { env } from 'process';
-import Notification from '@/utils/notif';
+import notif from '@/utils/notif';
+import PageWithLayoutType from '@/types/layout';
+import Main from '@/components/layout/main';
 
 type Props = {
 
@@ -48,13 +49,13 @@ const SingIn: NextPage<Props> = () => {
             if (res.payload && res.payload.listError) {
               setErrors(res.payload.listError);
             } else {
-              Notification.error(res.message);
+              notif.error(res.message);
             }
           }
         }
       },
       onError: (res) => {
-        Notification.error('Please cek you connection');
+        notif.error('Please cek you connection');
       }
     });
   };
@@ -66,7 +67,7 @@ const SingIn: NextPage<Props> = () => {
         <title>{process.env.APP_NAME + ' - Login'}</title>
         <meta name="theme-color" content={'#FAF5FF'} />
       </Head>
-      <div className={'h-screen w-screen flex justify-center items-center -mt-16'}>
+      <div className={'h-screen w-screen flex justify-center items-center'}>
         <div className={'px-4 w-full max-w-md'}>
           <div className={'w-full bg-white rounded-lg shadow p-4 mb-2'}>
             <div className={'flex justify-center mb-4'}>
@@ -88,6 +89,7 @@ const SingIn: NextPage<Props> = () => {
                           name={'username'}
                           type={'text'}
                           placeholder={'Username Atau Email'}
+                          autoFocus
                         />
                       </div>
                       <div className="mb-4">
@@ -126,5 +128,7 @@ const SingIn: NextPage<Props> = () => {
     </>
   );
 };
+
+(SingIn as PageWithLayoutType).layout = Main;
 
 export default SingIn;

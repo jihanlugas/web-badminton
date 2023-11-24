@@ -1,4 +1,4 @@
-import Main from "@/components/layout/main";
+import MainAuth from '@/components/layout/main-auth';
 import { Api } from "@/lib/api";
 import { Company, CompanyUpdate } from "@/types/company";
 import PageWithLayoutType from "@/types/layout";
@@ -160,7 +160,7 @@ const Edit: NextPage<Props> = ({ company }) => {
   )
 }
 
-(Edit as PageWithLayoutType).layout = Main;
+(Edit as PageWithLayoutType).layout = MainAuth;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { companyId } = context.query;
