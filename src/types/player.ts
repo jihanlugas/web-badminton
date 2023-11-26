@@ -5,6 +5,7 @@ export interface Player {
   email: string;
   noHp: string;
   address: string;
+  gender: string;
   isActive: boolean;
   photoId: string;
   createBy: string;
@@ -17,4 +18,24 @@ export interface Player {
   createName: string;
   updateName: string;
   deleteName: string;
+}
+
+export interface PlayerCreate {
+  companyId: string;
+  name: string;
+  email: string;
+  noHp: string;
+  address: string;
+  gender: string;
+  isActive: boolean;
+}
+
+export interface PlayerUpdate {
+  companyId: string;
+  name: string;
+  email: string;
+  noHp: string;
+  address: string;
+  gender: string;
+  isActive: boolean;
 }

@@ -1,42 +1,54 @@
-import MainAuth from '@/components/layout/main-auth';
+import ButtonSubmit from "@/components/formik/button-submit";
+import TextAreaField from "@/components/formik/text-area-field";
+import TextField from "@/components/formik/text-field";
+import MainAuth from "@/components/layout/main-auth";
 import { Api } from "@/lib/api";
-import { Company, CompanyUpdate } from "@/types/company";
+import { Company } from "@/types/company";
+import { Player, PlayerUpdate } from "@/types/player"
 import PageWithLayoutType from "@/types/layout";
+import notif from "@/utils/notif";
+import { useMutation } from "@tanstack/react-query";
+import { Form, Formik, FormikValues } from "formik";
 import Head from "next/head";
 import Link from "next/link";
-import { GetServerSideProps, NextPage } from "next/types";
-import { BsChevronRight, BsChevronLeft } from 'react-icons/bs'
-import notif from '@/utils/notif';
 import { useRouter } from "next/router";
+import { GetServerSideProps, NextPage } from "next/types";
+import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import * as Yup from 'yup';
-import { Form, Formik, FormikValues } from "formik";
-import TextField from "@/components/formik/text-field";
-import TextAreaField from "@/components/formik/text-area-field";
-import ButtonSubmit from "@/components/formik/button-submit";
-import { useMutation } from "@tanstack/react-query";
+import CheckboxField from "@/components/formik/checkbox-field";
+import DropdownField from "@/components/formik/dropdown-field";
+import { GENDER } from "@/utils/constant";
 
 type Props = {
   company: Company
+  player: Player
 }
 
 const schema = Yup.object().shape({
+  companyId: Yup.string().label('name').required(),
   name: Yup.string().label('name').required(),
-  description: Yup.string().label('description'),
-  balance: Yup.number().label('balance').required(),
+  email: Yup.string().email().label('email'),
+  noHp: Yup.string().label('no hp'),
+  address: Yup.string().label('address'),
+  gender: Yup.string().label('gender'),
+  isActive: Yup.boolean().label('active'),
 });
 
-const Edit: NextPage<Props> = ({ company }) => {
 
-
+const Edit: NextPage<Props> = ({ company, player }) => {
   const router = useRouter();
 
-  const initFormikValue: CompanyUpdate = {
-    name: company.name,
-    description: company.description,
-    balance: company.balance,
-  };
+  const { mutate: mutateSubmit, isLoading } = useMutation((val: FormikValues) => Api.put('/player/' + player.id, val));
 
-  const { mutate: mutateSubmit, isLoading } = useMutation((val: FormikValues) => Api.put('/company/' + company.id, val));
+  const initFormikValue: PlayerUpdate = {
+    companyId: player.companyId,
+    name: player.name,
+    email: player.email,
+    noHp: player.noHp,
+    address: player.address,
+    gender: player.gender,
+    isActive: player.isActive,
+  };
 
   const handleSubmit = (values: FormikValues, setErrors) => {
     mutateSubmit(values, {
@@ -44,7 +56,7 @@ const Edit: NextPage<Props> = ({ company }) => {
         if (res) {
           if (res.status) {
             notif.success(res.message);
-            router.push('/company');
+            router.push({ pathname: '/company/[companyId]', query: { companyId: company.id } });
           } else if (!res.success) {
             if (res.payload && res.payload.listError) {
               setErrors(res.payload.listError);
@@ -63,7 +75,7 @@ const Edit: NextPage<Props> = ({ company }) => {
   return (
     <>
       <Head>
-        <title>{'Company - ' + company.name}</title>
+        <title>{'Player - ' + player.name}</title>
       </Head>
       <div className='p-4'>
         <div className='bg-white mb-4 p-4 rounded shadow'>
@@ -76,7 +88,7 @@ const Edit: NextPage<Props> = ({ company }) => {
                 <BsChevronRight className={''} size={'1.2rem'} />
               </div>
               <Link href={{ pathname: '/company/[companyId]', query: { companyId: company.id } }}>
-                <div className='mr-4 hover:text-primary-500'>{company.name}</div>
+                <div className='mr-4 hover:text-primary-500'>{player.name}</div>
               </Link>
               <div className='mr-4'>
                 <BsChevronRight className={''} size={'1.2rem'} />
@@ -84,7 +96,7 @@ const Edit: NextPage<Props> = ({ company }) => {
               <div className='mr-4'>{'Edit'}</div>
             </div>
             <div className='flex items-center md:hidden'>
-              <Link href={{ pathname: '/company/[companyId]', query: { companyId: company.id } }}>
+              <Link href={'/company'}>
                 <div className='mr-4 hover:text-primary-500'>
                   <BsChevronLeft className={''} size={'1.2rem'} />
                 </div>
@@ -95,7 +107,7 @@ const Edit: NextPage<Props> = ({ company }) => {
         </div>
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='mb-4'>
-            <div className='text-xl'>Edit Company</div>
+            <div className='text-xl'>Edit Player</div>
           </div>
           <div className='mb-4'>
             <Formik
@@ -106,49 +118,64 @@ const Edit: NextPage<Props> = ({ company }) => {
             >
               {({ values, errors }) => {
                 return (
-                  <Form encType='multipart/form-data'>
+                  <Form>
                     <div className={'w-full max-w-xl'}>
-
                       <div className="mb-4">
                         <TextField
-                          label={'Company Name'}
+                          label={'Player Name'}
                           name={'name'}
                           type={'text'}
-                          placeholder={'Company Name'}
+                          placeholder={'Player Name'}
                           required
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <TextField
+                          label={'Email'}
+                          name={'email'}
+                          type={'email'}
+                          placeholder={'Email'}
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <TextField
+                          label={'No. Handphone'}
+                          name={'noHp'}
+                          type={'text'}
+                          placeholder={'No. Handphone'}
                         />
                       </div>
                       <div className="mb-4">
                         <TextAreaField
-                          label={'Company Description'}
-                          name={'description'}
+                          label={'Address'}
+                          name={'address'}
                           type={'text'}
-                          placeholder={'Company Description'}
+                          placeholder={'Address'}
                         />
                       </div>
                       <div className="mb-4">
-                        <TextField
-                          label={'Balance'}
-                          name={'balance'}
-                          type={'number'}
-                          placeholder={'Balance'}
-                          required
+                        <DropdownField
+                          label={'Gender'}
+                          name={'gender'}
+                          placeholder={'Select Gender'}
+                          items={Object.values(GENDER)}
                         />
                       </div>
-                      <div className={'mb-4'}>
+                      <div className="mb-4">
+                        <CheckboxField
+                          name={'isActive'}
+                          id={'isActive'}
+                          label={'Active'}
+                        />
+                      </div>
+                      <div className="mb-4">
                         <ButtonSubmit
-                          label={'Simpan'}
+                          label={'Create'}
                           disabled={isLoading}
                           loading={isLoading}
                         />
                       </div>
                     </div>
-                    {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
-                    {JSON.stringify(values, null, 4)}
-                  </div>
-                  <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
-                    {JSON.stringify(errors, null, 4)}
-                  </div> */}
                   </Form>
                 );
               }}
@@ -157,19 +184,24 @@ const Edit: NextPage<Props> = ({ company }) => {
         </div>
       </div>
     </>
-  )
+  );
 }
+
+
+
 
 (Edit as PageWithLayoutType).layout = MainAuth;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { companyId } = context.query;
+  const { companyId, playerId } = context.query;
   const company = await Api.get('/company/' + companyId).then(res => res);
+  const player = await Api.get('/player/' + playerId).then(res => res);
 
-  if (company.status) {
+  if (company.status && player.status) {
     return {
       props: {
         company: company.payload,
+        player: player.payload,
       }
     };
   } else {

@@ -160,9 +160,9 @@ const Index: NextPage<Props> = () => {
         return (
           <>
             <div className='flex justify-end items-center'>
-              <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit' onClick={() => { router.push({ pathname: '/company/[companyId]/edit', query: { companyId: props.row.original.id } }) }}>
+              <Link href={{ pathname: '/company/[companyId]/edit', query: { companyId: props.row.original.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit'>
                 <RiPencilLine className='' size={'1.2rem'} />
-              </button>
+              </Link>
               <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='delete' onClick={() => toogleDelete(props.row.original.id)}>
                 <VscTrash className='' size={'1.2rem'} />
               </button>

@@ -281,9 +281,9 @@ const Index: NextPage<Props> = ({ company }) => {
         return (
           <>
             <div className='flex justify-end items-center'>
-              <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit' onClick={() => { router.push({ pathname: '/company/[companyId]/edit', query: { companyId: props.row.original.id } }) }}>
+              <Link href={{ pathname: '/company/[companyId]/gor/[gorId]/edit', query: { companyId: company.id, gorId: props.row.original.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit' >
                 <RiPencilLine className='' size={'1.2rem'} />
-              </button>
+              </Link>
               <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='delete' onClick={() => toogleDeleteGor(props.row.original.id)}>
                 <VscTrash className='' size={'1.2rem'} />
               </button>
@@ -411,9 +411,9 @@ const Index: NextPage<Props> = ({ company }) => {
         return (
           <>
             <div className='flex justify-end items-center'>
-              <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit' onClick={() => { router.push({ pathname: '/company/[companyId]/edit', query: { companyId: props.row.original.id } }) }}>
+              <Link href={{ pathname: '/company/[companyId]/player/[playerId]/edit', query: { companyId: company.id, playerId: props.row.original.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit' >
                 <RiPencilLine className='' size={'1.2rem'} />
-              </button>
+              </Link>
               <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='delete' onClick={() => toogleDeletePlayer(props.row.original.id)}>
                 <VscTrash className='' size={'1.2rem'} />
               </button>
@@ -528,7 +528,7 @@ const Index: NextPage<Props> = ({ company }) => {
                   </button>
                 </div>
                 <div className='ml-2'>
-                  <button className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 hover:bg-gray-100' onClick={() => router.push('/company/new')}>
+                  <button className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 hover:bg-gray-100' onClick={() => router.push({ pathname: '/company/[companyId]/gor/new', query: { companyId: company.id } })}>
                     <IoAddOutline className='' size={'1.2em'} />
                   </button>
                 </div>
@@ -559,7 +559,7 @@ const Index: NextPage<Props> = ({ company }) => {
                   </button>
                 </div>
                 <div className='ml-2'>
-                  <button className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 hover:bg-gray-100' onClick={() => router.push('/company/new')}>
+                  <button className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 hover:bg-gray-100' onClick={() => router.push({ pathname: '/company/[companyId]/player/new', query: { companyId: company.id } })}>
                     <IoAddOutline className='' size={'1.2em'} />
                   </button>
                 </div>

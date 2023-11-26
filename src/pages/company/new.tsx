@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next/types';
 import * as Yup from 'yup';
-import Notif from '@/utils/notif';
+import notif from '@/utils/notif';
 import TextField from '@/components/formik/text-field';
 import TextAreaField from '@/components/formik/text-area-field';
 import ButtonSubmit from '@/components/formik/button-submit';
@@ -20,19 +20,18 @@ type Props = {
 }
 
 const schema = Yup.object().shape({
-  fullname: Yup.string().label('fullname').required(),
-  email: Yup.string().email().label('email').required(),
-  noHp: Yup.string().label('no hp').required(),
-  username: Yup.string().min(6).label('username').required(),
-  passwd: Yup.string().min(6).label('password').required(),
-  name: Yup.string().label('name').required(),
+  fullname: Yup.string().required("Required field"),
+  email: Yup.string().email().required("Required field"),
+  noHp: Yup.string().required("Required field"),
+  username: Yup.string().min(6).required("Required field"),
+  passwd: Yup.string().min(6).required("Required field"),
+  name: Yup.string().required("Required field"),
   description: Yup.string().label('description'),
-  balance: Yup.number().label('balance').required(),
+  balance: Yup.number().required("Required field"),
 });
 
 const New: NextPage<Props> = () => {
   const router = useRouter();
-
 
   const { mutate: mutateSubmit, isLoading } = useMutation((val: FormikValues) => Api.post('/company', val));
 
@@ -52,19 +51,19 @@ const New: NextPage<Props> = () => {
       onSuccess: (res) => {
         if (res) {
           if (res.status) {
-            Notif.success(res.message);
+            notif.success(res.message);
             router.push('/company');
           } else if (!res.success) {
             if (res.payload && res.payload.listError) {
               setErrors(res.payload.listError);
             } else {
-              Notif.error(res.message);
+              notif.error(res.message);
             }
           }
         }
       },
       onError: (res) => {
-        Notif.error('Please cek you connection');
+        notif.error('Please cek you connection');
       },
     });
   };

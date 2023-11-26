@@ -18,3 +18,23 @@ export interface Gor {
   updateName: string;
   deleteName: string;
 }
+
+export interface GorCreate {
+  companyId: string;
+  name: string;
+  description: string;
+  address: string;
+  normalGamePrice: number;
+  rubberGamePrice: number;
+  ballPrice: number;
+}
+
+export interface GorUpdate {
+  companyId: string;
+  name: string;
+  description: string;
+  address: string;
+  normalGamePrice: number;
+  rubberGamePrice: number;
+  ballPrice: number;
+}
