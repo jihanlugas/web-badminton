@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Head from 'next/head';
 import Header from '@/components/layout/header';
-import Sidebar from '@/components/layout/sidebar';
+import SidebarAdmin from '@/components/layout/sidebar-admin';
 import { Api } from '@/lib/api';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
-import { USER_TYPE_ADMIN, USER_TYPE_SAKSI } from '@/utils/constant';
 import { AiOutlineLoading } from 'react-icons/ai'
 import Notif from '@/utils/notif';
+import { USER_TYPE_ADMIN } from '@/utils/constant';
+import SidebarUser from './sidebar-user';
 
 
 
@@ -25,7 +26,7 @@ const Loading: React.FC = () => {
   )
 }
 
-const MainAuth: React.FC<Props> = ({ children }) => {
+const MainUser: React.FC<Props> = ({ children }) => {
   const [sidebar, setSidebar] = useState<boolean>(false);
   const [refreshInterval, setRefreshInteval] = useState(0)
   const [init, setInit] = useState<boolean>(false);
@@ -111,12 +112,11 @@ const MainAuth: React.FC<Props> = ({ children }) => {
       <Head>
         <meta name="theme-color" content={'currentColor'} />
       </Head>
-
-      {init ? (
-        <>
-          <main className={''}>
+      <main className={''}>
+        {init ? (
+          <>
             <Header sidebar={sidebar} setSidebar={setSidebar} />
-            <Sidebar sidebar={sidebar} onClickOverlay={onClickOverlay} />
+            <SidebarUser sidebar={sidebar} onClickOverlay={onClickOverlay} />
             <div className={`hidden md:block duration-300 ease-in-out pt-16 overflow-y-auto`}>
               <div className="mainContent">
                 {children}
@@ -127,15 +127,15 @@ const MainAuth: React.FC<Props> = ({ children }) => {
                 {children}
               </div>
             </div>
-          </main>
-        </>
-      ) : (
-        <>
-          <Loading />
-        </>
-      )}
+          </>
+        ) : (
+          <>
+            <Loading />
+          </>
+        )}
+      </main>
     </>
   );
 };
 
-export default MainAuth;
+export default MainUser;

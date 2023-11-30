@@ -8,7 +8,6 @@ type Props = {
 }
 
 const Main: React.FC<Props> = ({ children }) => {
-
   return (
     <>
       <Head>

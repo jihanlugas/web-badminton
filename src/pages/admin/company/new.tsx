@@ -1,4 +1,4 @@
-import MainAuth from '@/components/layout/main-auth';
+import MainAdmin from '@/components/layout/main-admin';
 import { Api } from '@/lib/api';
 import { CompanyCreate } from '@/types/company';
 import PageWithLayoutType from '@/types/layout';
@@ -52,7 +52,7 @@ const New: NextPage<Props> = () => {
         if (res) {
           if (res.status) {
             notif.success(res.message);
-            router.push('/company');
+            router.push('/admin/company');
           } else if (!res.success) {
             if (res.payload && res.payload.listError) {
               setErrors(res.payload.listError);
@@ -77,7 +77,7 @@ const New: NextPage<Props> = () => {
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='text-xl flex items-center'>
             <div className='hidden md:flex items-center'>
-              <Link href={'/company'}>
+              <Link href={'/admin/company'}>
                 <div className='mr-4 hover:text-primary-500'>{'Company'}</div>
               </Link>
               <div className='mr-4'>
@@ -86,7 +86,7 @@ const New: NextPage<Props> = () => {
               <div className='mr-4'>{'New'}</div>
             </div>
             <div className='flex items-center md:hidden'>
-              <Link href={'/company'}>
+              <Link href={'/admin/company'}>
                 <div className='mr-4 hover:text-primary-500'>
                   <BsChevronLeft className={''} size={'1.2rem'} />
                 </div>
@@ -203,6 +203,6 @@ const New: NextPage<Props> = () => {
 
 
 
-(New as PageWithLayoutType).layout = MainAuth;
+(New as PageWithLayoutType).layout = MainAdmin;
 
 export default New;

@@ -1,7 +1,10 @@
-import MainAuth from "@/components/layout/main-auth";
+import ButtonSubmit from "@/components/formik/button-submit";
+import TextAreaField from "@/components/formik/text-area-field";
+import TextField from "@/components/formik/text-field";
+import MainAdmin from "@/components/layout/main-admin";
 import { Api } from "@/lib/api";
 import { Company } from "@/types/company";
-import { GorCreate } from "@/types/gor";
+import { Gor, GorUpdate } from "@/types/gor"
 import PageWithLayoutType from "@/types/layout";
 import notif from "@/utils/notif";
 import { useMutation } from "@tanstack/react-query";
@@ -12,12 +15,10 @@ import { useRouter } from "next/router";
 import { GetServerSideProps, NextPage } from "next/types";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import * as Yup from 'yup';
-import TextField from '@/components/formik/text-field';
-import TextAreaField from '@/components/formik/text-area-field';
-import ButtonSubmit from '@/components/formik/button-submit';
 
 type Props = {
   company: Company
+  gor: Gor
 }
 
 const schema = Yup.object().shape({
@@ -30,19 +31,20 @@ const schema = Yup.object().shape({
   ballPrice: Yup.number().label('ball price').required(),
 });
 
-const New: NextPage<Props> = ({ company }) => {
+
+const Edit: NextPage<Props> = ({ company, gor }) => {
   const router = useRouter();
 
-  const { mutate: mutateSubmit, isLoading } = useMutation((val: FormikValues) => Api.post('/gor', val));
+  const { mutate: mutateSubmit, isLoading } = useMutation((val: FormikValues) => Api.put('/gor/' + gor.id, val));
 
-  const initFormikValue: GorCreate = {
-    companyId: company.id,
-    name: '',
-    description: '',
-    address: '',
-    normalGamePrice: 0,
-    rubberGamePrice: 0,
-    ballPrice: 0,
+  const initFormikValue: GorUpdate = {
+    companyId: gor.companyId,
+    name: gor.name,
+    description: gor.description,
+    address: gor.address,
+    normalGamePrice: gor.normalGamePrice,
+    rubberGamePrice: gor.rubberGamePrice,
+    ballPrice: gor.ballPrice,
   };
 
   const handleSubmit = (values: FormikValues, setErrors) => {
@@ -51,7 +53,7 @@ const New: NextPage<Props> = ({ company }) => {
         if (res) {
           if (res.status) {
             notif.success(res.message);
-            router.push({ pathname: '/company/[companyId]', query: { companyId: company.id } });
+            router.push({ pathname: '/admin/company/[companyId]', query: { companyId: company.id } });
           } else if (!res.success) {
             if (res.payload && res.payload.listError) {
               setErrors(res.payload.listError);
@@ -70,39 +72,39 @@ const New: NextPage<Props> = ({ company }) => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Gor New'}</title>
+        <title>{'Gor - ' + gor.name}</title>
       </Head>
       <div className='p-4'>
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='text-xl flex items-center'>
             <div className='hidden md:flex items-center'>
-              <Link href={'/company'}>
+              <Link href={'/admin/company'}>
                 <div className='mr-4 hover:text-primary-500'>{'Company'}</div>
               </Link>
               <div className='mr-4'>
                 <BsChevronRight className={''} size={'1.2rem'} />
               </div>
-              <Link href={{ pathname: '/company/[companyId]', query: { companyId: company.id } }}>
-                <div className='mr-4 hover:text-primary-500'>{company.name}</div>
+              <Link href={{ pathname: '/admin/company/[companyId]', query: { companyId: company.id } }}>
+                <div className='mr-4 hover:text-primary-500'>{gor.name}</div>
               </Link>
               <div className='mr-4'>
                 <BsChevronRight className={''} size={'1.2rem'} />
               </div>
-              <div className='mr-4'>{'New'}</div>
+              <div className='mr-4'>{'Edit'}</div>
             </div>
             <div className='flex items-center md:hidden'>
-              <Link href={{ pathname: '/company/[companyId]', query: { companyId: company.id } }}>
+              <Link href={'/admin/company'}>
                 <div className='mr-4 hover:text-primary-500'>
                   <BsChevronLeft className={''} size={'1.2rem'} />
                 </div>
               </Link>
-              <div className='mr-4'>{'New'}</div>
+              <div className='mr-4'>{'Edit'}</div>
             </div>
           </div>
         </div>
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='mb-4'>
-            <div className='text-xl'>Create Gor</div>
+            <div className='text-xl'>Edit Gor</div>
           </div>
           <div className='mb-4'>
             <Formik
@@ -111,9 +113,9 @@ const New: NextPage<Props> = ({ company }) => {
               enableReinitialize={true}
               onSubmit={(values, { setErrors }) => handleSubmit(values, setErrors)}
             >
-              {({ values, errors, setFieldValue }) => {
+              {({ values, errors }) => {
                 return (
-                  <Form>
+                  <Form encType='multipart/form-data'>
                     <div className={'w-full max-w-xl'}>
                       <div className="mb-4">
                         <TextField
@@ -169,12 +171,18 @@ const New: NextPage<Props> = ({ company }) => {
                       </div>
                       <div className="mb-4">
                         <ButtonSubmit
-                          label={'Create'}
+                          label={'Edit'}
                           disabled={isLoading}
                           loading={isLoading}
                         />
                       </div>
                     </div>
+                    {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                    {JSON.stringify(values, null, 4)}
+                  </div>
+                  <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                    {JSON.stringify(errors, null, 4)}
+                  </div> */}
                   </Form>
                 );
               }}
@@ -183,20 +191,24 @@ const New: NextPage<Props> = ({ company }) => {
         </div>
       </div>
     </>
-  )
+  );
 }
 
 
-(New as PageWithLayoutType).layout = MainAuth;
+
+
+(Edit as PageWithLayoutType).layout = MainAdmin;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { companyId, gorId } = context.query;
   const company = await Api.get('/company/' + companyId).then(res => res);
+  const gor = await Api.get('/gor/' + gorId).then(res => res);
 
-  if (company.status) {
+  if (company.status && gor.status) {
     return {
       props: {
         company: company.payload,
+        gor: gor.payload,
       }
     };
   } else {
@@ -206,4 +218,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 };
 
-export default New;
+export default Edit;

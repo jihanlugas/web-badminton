@@ -1,4 +1,4 @@
-import MainAuth from '@/components/layout/main-auth';
+import MainAdmin from '@/components/layout/main-admin';
 import ModalDelete from "@/components/modal/modal-delete"
 import ModalFilterGor from "@/components/modal/modal-filter-gor"
 import ModalFilterPlayer from "@/components/modal/modal-filter-player"
@@ -108,18 +108,18 @@ const Index: NextPage<Props> = ({ company }) => {
   const { mutate: mutateDeleteGor, isLoading: isLoadingDeleteGor } = useMutation((id: string) => Api.delete('/gor/' + id));
   const { mutate: mutateDeletePlayer, isLoading: isLoadingDeletePlayer } = useMutation((id: string) => Api.delete('/player/' + id));
 
-  const toogleFilterGor = () => {
+  const toggleFilterGor = () => {
     setShowModalFilterGor(!showModalFilterGor)
   };
-  const toogleDeleteGor = (id = '') => {
+  const toggleDeleteGor = (id = '') => {
     setDeleteGorId(id);
     setShowModalDeleteGor(!showModalDeleteGor);
   };
 
-  const toogleFilterPlayer = () => {
+  const toggleFilterPlayer = () => {
     setShowModalFilterPlayer(!showModalFilterPlayer)
   };
-  const toogleDeletePlayer = (id = '') => {
+  const toggleDeletePlayer = (id = '') => {
     setDeletePlayerId(id);
     setShowModalDeletePlayer(!showModalDeletePlayer);
   };
@@ -131,7 +131,7 @@ const Index: NextPage<Props> = ({ company }) => {
           if (res.status) {
             notif.success(res.message);
             setDeleteGorId('');
-            toogleDeleteGor('');
+            toggleDeleteGor('');
             refetchGor();
           } else if (!res.status) {
             notif.error(res.message);
@@ -152,7 +152,7 @@ const Index: NextPage<Props> = ({ company }) => {
           if (res.status) {
             notif.success(res.message);
             setDeletePlayerId('');
-            toogleDeletePlayer('');
+            toggleDeletePlayer('');
             refetchPlayer();
           } else if (!res.status) {
             notif.error(res.message);
@@ -181,7 +181,7 @@ const Index: NextPage<Props> = ({ company }) => {
       },
       cell: (props) => {
         return (
-          <Link href={{ pathname: '/company/[companyId]', query: { companyId: props.row.original.id } }} >
+          <Link href={{ pathname: '/admin/company/[companyId]', query: { companyId: props.row.original.id } }} >
             <div className='w-full duration-300 hover:text-primary-500'>
               {props.getValue() as string}
             </div>
@@ -281,10 +281,10 @@ const Index: NextPage<Props> = ({ company }) => {
         return (
           <>
             <div className='flex justify-end items-center'>
-              <Link href={{ pathname: '/company/[companyId]/gor/[gorId]/edit', query: { companyId: company.id, gorId: props.row.original.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit' >
+              <Link href={{ pathname: '/admin/company/[companyId]/gor/[gorId]/edit', query: { companyId: company.id, gorId: props.row.original.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit' >
                 <RiPencilLine className='' size={'1.2rem'} />
               </Link>
-              <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='delete' onClick={() => toogleDeleteGor(props.row.original.id)}>
+              <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='delete' onClick={() => toggleDeleteGor(props.row.original.id)}>
                 <VscTrash className='' size={'1.2rem'} />
               </button>
             </div>
@@ -310,7 +310,7 @@ const Index: NextPage<Props> = ({ company }) => {
       },
       cell: (props) => {
         return (
-          <Link href={{ pathname: '/company/[companyId]', query: { companyId: props.row.original.id } }} >
+          <Link href={{ pathname: '/admin/company/[companyId]', query: { companyId: props.row.original.id } }} >
             <div className='w-full duration-300 hover:text-primary-500'>
               {props.getValue() as string}
             </div>
@@ -411,10 +411,10 @@ const Index: NextPage<Props> = ({ company }) => {
         return (
           <>
             <div className='flex justify-end items-center'>
-              <Link href={{ pathname: '/company/[companyId]/player/[playerId]/edit', query: { companyId: company.id, playerId: props.row.original.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit' >
+              <Link href={{ pathname: '/admin/company/[companyId]/player/[playerId]/edit', query: { companyId: company.id, playerId: props.row.original.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit' >
                 <RiPencilLine className='' size={'1.2rem'} />
               </Link>
-              <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='delete' onClick={() => toogleDeletePlayer(props.row.original.id)}>
+              <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='delete' onClick={() => toggleDeletePlayer(props.row.original.id)}>
                 <VscTrash className='' size={'1.2rem'} />
               </button>
             </div>
@@ -455,19 +455,19 @@ const Index: NextPage<Props> = ({ company }) => {
         <title>{'Company - ' + company.name}</title>
       </Head>
       <ModalFilterGor
-        onClickOverlay={toogleFilterGor}
+        onClickOverlay={toggleFilterGor}
         show={showModalFilterGor}
         pageRequest={pageRequestGor}
         setPageRequest={setPageRequestGor}
       />
       <ModalFilterPlayer
-        onClickOverlay={toogleFilterPlayer}
+        onClickOverlay={toggleFilterPlayer}
         show={showModalFilterPlayer}
         pageRequest={pageRequestPlayer}
         setPageRequest={setPageRequestPlayer}
       />
       <ModalDelete
-        onClickOverlay={toogleDeleteGor}
+        onClickOverlay={toggleDeleteGor}
         show={showModalDeleteGor}
         onDelete={handleDeleteGor}
         isLoading={isLoadingDeleteGor}
@@ -478,7 +478,7 @@ const Index: NextPage<Props> = ({ company }) => {
         </div>
       </ModalDelete>
       <ModalDelete
-        onClickOverlay={toogleDeletePlayer}
+        onClickOverlay={toggleDeletePlayer}
         show={showModalDeletePlayer}
         onDelete={handleDeletePlayer}
         isLoading={isLoadingDeletePlayer}
@@ -492,7 +492,7 @@ const Index: NextPage<Props> = ({ company }) => {
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='text-xl flex items-center'>
             <div className='hidden md:flex items-center'>
-              <Link href={'/company'}>
+              <Link href={'/admin/company'}>
                 <div className='mr-4 hover:text-primary-500'>{'Company'}</div>
               </Link>
               <div className='mr-4'>
@@ -501,7 +501,7 @@ const Index: NextPage<Props> = ({ company }) => {
               <div className='mr-4 hover:text-primary-500'>{company.name}</div>
             </div>
             <div className='flex items-center md:hidden'>
-              <Link href={'/company'}>
+              <Link href={'/admin/company'}>
                 <div className='mr-4 hover:text-primary-500'>
                   <BsChevronLeft className={''} size={'1.2rem'} />
                 </div>
@@ -523,12 +523,12 @@ const Index: NextPage<Props> = ({ company }) => {
               </div>
               <div className='flex'>
                 <div className='ml-2'>
-                  <button className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 hover:bg-gray-100' onClick={() => toogleFilterGor()}>
+                  <button className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 hover:bg-gray-100' onClick={() => toggleFilterGor()}>
                     <BiFilterAlt className='' size={'1.2em'} />
                   </button>
                 </div>
                 <div className='ml-2'>
-                  <button className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 hover:bg-gray-100' onClick={() => router.push({ pathname: '/company/[companyId]/gor/new', query: { companyId: company.id } })}>
+                  <button className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 hover:bg-gray-100' onClick={() => router.push({ pathname: '/admin/company/[companyId]/gor/new', query: { companyId: company.id } })}>
                     <IoAddOutline className='' size={'1.2em'} />
                   </button>
                 </div>
@@ -554,12 +554,12 @@ const Index: NextPage<Props> = ({ company }) => {
               </div>
               <div className='flex'>
                 <div className='ml-2'>
-                  <button className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 hover:bg-gray-100' onClick={() => toogleFilterPlayer()}>
+                  <button className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 hover:bg-gray-100' onClick={() => toggleFilterPlayer()}>
                     <BiFilterAlt className='' size={'1.2em'} />
                   </button>
                 </div>
                 <div className='ml-2'>
-                  <button className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 hover:bg-gray-100' onClick={() => router.push({ pathname: '/company/[companyId]/player/new', query: { companyId: company.id } })}>
+                  <button className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 hover:bg-gray-100' onClick={() => router.push({ pathname: '/admin/company/[companyId]/player/new', query: { companyId: company.id } })}>
                     <IoAddOutline className='' size={'1.2em'} />
                   </button>
                 </div>
@@ -585,7 +585,7 @@ const Index: NextPage<Props> = ({ company }) => {
   )
 }
 
-(Index as PageWithLayoutType).layout = MainAuth;
+(Index as PageWithLayoutType).layout = MainAdmin;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { companyId } = context.query;

@@ -121,9 +121,9 @@ class Api {
 						localStorage.clear();
 						Router.push({
 							pathname: '/sign-in',
-							query: {
-								redirect: Router.asPath && Router.asPath,
-							}
+							// query: {
+							// 	redirect: Router.asPath && Router.asPath,
+							// }
 						});
 					}
 				}

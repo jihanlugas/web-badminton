@@ -1,4 +1,4 @@
-import MainAuth from "@/components/layout/main-auth";
+import MainAdmin from "@/components/layout/main-admin";
 import { Api } from "@/lib/api";
 import { Company } from "@/types/company";
 import { Gor } from "@/types/gor"
@@ -26,7 +26,7 @@ const Index: NextPage<Props> = ({ company, gor }) => {
 
 
 
-(Index as PageWithLayoutType).layout = MainAuth;
+(Index as PageWithLayoutType).layout = MainAdmin;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { companyId, gorId } = context.query;

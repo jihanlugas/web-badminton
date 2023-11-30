@@ -1,10 +1,10 @@
 import { NextPage } from 'next';
 import Main from '@/components/layout/main';
-import MainAuth from "@/components/layout/main-auth";
+import MainAdmin from "@/components/layout/main-admin";
 // import MainAdmin from '@com/Layout/MainAdmin';
 // import MainUser from '@com/Layout/MainSaksi';
 
-type PageWithMainLayoutType = NextPage & { layout: typeof Main | typeof MainAuth, title?: string }
+type PageWithMainLayoutType = NextPage & { layout: typeof Main | typeof MainAdmin, title?: string }
 
 // type PageWithPostLayoutType = NextPage & { layout: typeof SecondaryLayout }
 

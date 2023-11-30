@@ -1,7 +1,7 @@
 import ButtonSubmit from "@/components/formik/button-submit";
 import TextAreaField from "@/components/formik/text-area-field";
 import TextField from "@/components/formik/text-field";
-import MainAuth from "@/components/layout/main-auth";
+import MainAdmin from "@/components/layout/main-admin";
 import { Api } from "@/lib/api";
 import { Company } from "@/types/company";
 import { Player, PlayerUpdate } from "@/types/player"
@@ -56,7 +56,7 @@ const Edit: NextPage<Props> = ({ company, player }) => {
         if (res) {
           if (res.status) {
             notif.success(res.message);
-            router.push({ pathname: '/company/[companyId]', query: { companyId: company.id } });
+            router.push({ pathname: '/admin/company/[companyId]', query: { companyId: company.id } });
           } else if (!res.success) {
             if (res.payload && res.payload.listError) {
               setErrors(res.payload.listError);
@@ -81,13 +81,13 @@ const Edit: NextPage<Props> = ({ company, player }) => {
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='text-xl flex items-center'>
             <div className='hidden md:flex items-center'>
-              <Link href={'/company'}>
+              <Link href={'/admin/company'}>
                 <div className='mr-4 hover:text-primary-500'>{'Company'}</div>
               </Link>
               <div className='mr-4'>
                 <BsChevronRight className={''} size={'1.2rem'} />
               </div>
-              <Link href={{ pathname: '/company/[companyId]', query: { companyId: company.id } }}>
+              <Link href={{ pathname: '/admin/company/[companyId]', query: { companyId: company.id } }}>
                 <div className='mr-4 hover:text-primary-500'>{player.name}</div>
               </Link>
               <div className='mr-4'>
@@ -96,7 +96,7 @@ const Edit: NextPage<Props> = ({ company, player }) => {
               <div className='mr-4'>{'Edit'}</div>
             </div>
             <div className='flex items-center md:hidden'>
-              <Link href={'/company'}>
+              <Link href={'/admin/company'}>
                 <div className='mr-4 hover:text-primary-500'>
                   <BsChevronLeft className={''} size={'1.2rem'} />
                 </div>
@@ -190,7 +190,7 @@ const Edit: NextPage<Props> = ({ company, player }) => {
 
 
 
-(Edit as PageWithLayoutType).layout = MainAuth;
+(Edit as PageWithLayoutType).layout = MainAdmin;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { companyId, playerId } = context.query;

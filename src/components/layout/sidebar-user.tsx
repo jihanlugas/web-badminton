@@ -7,8 +7,6 @@ import { FiEdit, FiUsers } from 'react-icons/fi';
 import { MdHowToVote } from 'react-icons/md';
 import { IoFileTrayStackedOutline } from 'react-icons/io5';
 import { VscOpenPreview } from 'react-icons/vsc';
-// import UserContext from '@stores/userProvider';
-import { USER_TYPE_ADMIN, USER_TYPE_KOORDINATOR, USER_TYPE_SAKSI } from '@/utils/constant';
 
 interface Props {
   sidebar: boolean,
@@ -34,18 +32,28 @@ const defaultMenu = [
     path: '/overview',
   },
   {
-    name: 'Company',
+    name: 'Gor',
     icon: 'BiAbacus',
-    path: '/company',
+    path: '/gor',
   },
   {
-    name: 'Item',
+    name: 'Player',
     icon: 'BiAbacus',
-    path: '/item',
+    path: '/player',
+  },
+  {
+    name: 'Game',
+    icon: 'BiAbacus',
+    path: '/game',
+  },
+  {
+    name: 'Transaction',
+    icon: 'BiAbacus',
+    path: '/transaction',
   },
 ];
 
-const Sidebar: React.FC<Props> = ({ sidebar, onClickOverlay }) => {
+const SidebarUser: React.FC<Props> = ({ sidebar, onClickOverlay }) => {
 
   const router = useRouter();
 
@@ -106,4 +114,4 @@ const Sidebar: React.FC<Props> = ({ sidebar, onClickOverlay }) => {
   );
 };
 
-export default Sidebar;
+export default SidebarUser;

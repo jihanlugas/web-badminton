@@ -4,7 +4,7 @@ import DateField from '@/components/formik/date-field';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { Api } from '@/lib/api';
 import PageWithLayoutType from '@/types/layout';
-import MainAuth from '@/components/layout/main-auth';
+import MainAdmin from '@/components/layout/main-admin';
 import Head from 'next/head';
 import { NextPage } from 'next/types';
 import { PageInfo, PageRequest } from '@/types/pagination';
@@ -74,7 +74,7 @@ const Index: NextPage<Props> = () => {
       },
       cell: (props) => {
         return (
-          <Link href={{ pathname: '/company/[companyId]', query: { companyId: props.row.original.id } }} >
+          <Link href={{ pathname: '/admin/company/[companyId]', query: { companyId: props.row.original.id } }} >
             <div className='w-full duration-300 hover:text-primary-500'>
               {props.getValue() as string}
             </div>
@@ -160,10 +160,10 @@ const Index: NextPage<Props> = () => {
         return (
           <>
             <div className='flex justify-end items-center'>
-              <Link href={{ pathname: '/company/[companyId]/edit', query: { companyId: props.row.original.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit'>
+              <Link href={{ pathname: '/admin/company/[companyId]/edit', query: { companyId: props.row.original.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit'>
                 <RiPencilLine className='' size={'1.2rem'} />
               </Link>
-              <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='delete' onClick={() => toogleDelete(props.row.original.id)}>
+              <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='delete' onClick={() => toggleDelete(props.row.original.id)}>
                 <VscTrash className='' size={'1.2rem'} />
               </button>
             </div>
@@ -190,11 +190,11 @@ const Index: NextPage<Props> = () => {
     }
   }, [data]);
 
-  const toogleFilter = () => {
+  const toggleFilter = () => {
     setShowModalFilter(!showModalFilter)
   };
 
-  const toogleDelete = (id = '') => {
+  const toggleDelete = (id = '') => {
     setDeleteId(id);
     setShowModalDelete(!showModalDelete);
   };
@@ -206,7 +206,7 @@ const Index: NextPage<Props> = () => {
           if (res.status) {
             notif.success(res.message);
             setDeleteId('');
-            toogleDelete('');
+            toggleDelete('');
             refetch();
           } else if (!res.status) {
             notif.error(res.message);
@@ -226,13 +226,13 @@ const Index: NextPage<Props> = () => {
         <title>{process.env.APP_NAME + ' - Company'}</title>
       </Head>
       <ModalFilterCompany
-        onClickOverlay={toogleFilter}
+        onClickOverlay={toggleFilter}
         show={showModalFilter}
         pageRequest={pageRequest}
         setPageRequest={setPageRequest}
       />
       <ModalDelete
-        onClickOverlay={toogleDelete}
+        onClickOverlay={toggleDelete}
         show={showModalDelete}
         onDelete={handleDelete}
         isLoading={isLoadingDelete}
@@ -256,12 +256,12 @@ const Index: NextPage<Props> = () => {
               </div>
               <div className='flex'>
                 <div className='ml-2'>
-                  <button className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 hover:bg-gray-100' onClick={() => toogleFilter()}>
+                  <button className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 hover:bg-gray-100' onClick={() => toggleFilter()}>
                     <BiFilterAlt className='' size={'1.2em'} />
                   </button>
                 </div>
                 <div className='ml-2'>
-                  <button className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 hover:bg-gray-100' onClick={() => router.push('/company/new')}>
+                  <button className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 hover:bg-gray-100' onClick={() => router.push('/admin/company/new')}>
                     <IoAddOutline className='' size={'1.2em'} />
                   </button>
                 </div>
@@ -284,6 +284,6 @@ const Index: NextPage<Props> = () => {
   );
 };
 
-(Index as PageWithLayoutType).layout = MainAuth;
+(Index as PageWithLayoutType).layout = MainAdmin;
 
 export default Index;
