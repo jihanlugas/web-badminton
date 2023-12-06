@@ -7,7 +7,7 @@ import { Company } from "@/types/company"
 import { Game } from "@/types/game"
 import PageWithLayoutType from "@/types/layout"
 import { PageInfo, PageRequest } from "@/types/pagination"
-import { displayActive, displayMoney, displayNumber, displayPhoneNumber } from "@/utils/formater"
+import { displayActive, displayDateTime, displayMoney, displayNumber, displayPhoneNumber } from "@/utils/formater"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { ColumnDef } from "@tanstack/react-table"
 import Head from "next/head"
@@ -26,6 +26,7 @@ import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import { FaRegMap } from 'react-icons/fa6';
 import { IoBaseballSharp } from 'react-icons/io5';
 import Image from 'next/image'
+import { GrSchedule } from 'react-icons/gr';
 
 type Props = {
 }
@@ -180,6 +181,10 @@ const Index: NextPage<Props> = () => {
                   <div className={`duration-300 overflow-hidden ${accordion.includes(key) ? 'max-h-60 ' : 'max-h-0 '}`}>
                     <div className='px-4 pb-4'>
                       <div className='flex'>
+                        <div className='h-6 w-6 flex-none flex justify-center items-center mr-2'><GrSchedule className='' size={'1.2rem'} /></div>
+                        <div className='flex-grow '>{displayDateTime(data.gameDt, 'dddd DD MMM YYYY HH:mm')}</div>
+                      </div>
+                      <div className='flex'>
                         <div className='h-6 w-6 flex-none flex justify-center items-center mr-2'>2</div>
                         <div className='flex-grow '>{displayMoney(data.normalGamePrice)}</div>
                       </div>
@@ -220,6 +225,10 @@ const Index: NextPage<Props> = () => {
                   </div>
                   <div className={'duration-300 overflow-hidden'}>
                     <div className='px-4 pb-4'>
+                      <div className='flex'>
+                        <div className='h-6 w-6 flex-none flex justify-center items-center mr-2'><GrSchedule className='' size={'1.2rem'} /></div>
+                        <div className='flex-grow '>{displayDateTime(data.gameDt, 'dddd DD MMM YYYY HH:mm')}</div>
+                      </div>
                       <div className='flex'>
                         <div className='h-6 w-6 flex-none flex justify-center items-center mr-2'>2</div>
                         <div className='flex-grow '>{displayMoney(data.normalGamePrice)}</div>

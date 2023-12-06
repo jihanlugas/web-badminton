@@ -55,7 +55,7 @@ const New: NextPage<Props> = () => {
 
   const [searchGor, setSearchGor] = useState<string>('');
   const debounceSearchGor = useDebounce(searchGor, 300)
-  const [listDateGor, setListDataGor] = useState<ListData[]>([]);
+  const [listDataGor, setListDataGor] = useState<ListData[]>([]);
 
   const [pageRequestGor, setPageRequestGor] = useState<PageRequest & FilterPropsGor>({
     limit: 1000,
@@ -71,7 +71,7 @@ const New: NextPage<Props> = () => {
   const { isLoading: isLoadingGor, data: dataGor, refetch: refetchGor } = useQuery(['gor', pageRequestGor], ({ queryKey }) => Api.get('/gor/page', queryKey[1]), {});
 
   const initFormikValue: GameCreate = {
-    companyId: '',
+    companyId: company.id,
     gorId: '',
     name: '',
     description: '',
@@ -87,10 +87,18 @@ const New: NextPage<Props> = () => {
   }, [debounceSearchGor])
 
   const handleChangeGor = (e, setFieldValue) => {
-    setFieldValue('gorId', e ? e.value : "")
-
-    // todo:  set price
-
+    if (e) {
+      const selected = dataGor.payload.list.find((data) => data.id === e.value)
+      setFieldValue('gorId', selected ? selected.id : '')
+      setFieldValue('normalGamePrice', selected ? selected.normalGamePrice : 0)
+      setFieldValue('rubberGamePrice', selected ? selected.rubberGamePrice : 0)
+      setFieldValue('ballPrice', selected ? selected.ballPrice : 0)
+    } else {
+      setFieldValue('gorId', '')
+      setFieldValue('normalGamePrice', 0)
+      setFieldValue('rubberGamePrice', 0)
+      setFieldValue('ballPrice', 0)
+    }
   }
 
   const handleSubmit = (values: FormikValues, setErrors) => {
@@ -126,8 +134,6 @@ const New: NextPage<Props> = () => {
       setListDataGor(newArrayOfObj)
     }
   }, [dataGor])
-
-  console.log('listDateGor ', listDateGor)
 
   return (
     <>
@@ -192,6 +198,8 @@ const New: NextPage<Props> = () => {
                         <DateField
                           label={'Game Date'}
                           name={'gameDt'}
+                          dateFormat={'dddd DD MMM YYYY'}
+                          timeFormat={'HH:mm'}
                           required
                         />
                       </div>
@@ -199,7 +207,7 @@ const New: NextPage<Props> = () => {
                         <SearchDropdownField
                           label={'Gor'}
                           name={'gorId'}
-                          options={listDateGor}
+                          options={listDataGor}
                           onInputChange={search => { setSearchGor(search) }}
                           onChange={e => handleChangeGor(e, setFieldValue)}
                           required
@@ -243,8 +251,10 @@ const New: NextPage<Props> = () => {
                         <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
                           {JSON.stringify(values, null, 4)}
                         </div>
+                        <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                          {JSON.stringify(errors, null, 4)}
+                        </div>
                       </div>
-
                     </div>
                   </Form>
                 );
