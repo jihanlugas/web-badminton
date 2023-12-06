@@ -3,7 +3,6 @@ import { Field, ErrorMessage } from 'formik';
 import { NextPage } from 'next';
 import React from 'react';
 import Select from 'react-select';
-import SelectType from 'react-select/dist/declarations/src/Select'
 
 // declare module 'react-select/dist/declarations/src/Select' {
 // 	export interface Props<
@@ -19,19 +18,6 @@ import SelectType from 'react-select/dist/declarations/src/Select'
 // 	label: string;
 // 	value: string | number;
 // }
-
-interface Props {
-	label?: string;
-	name: string;
-	options: ListData[];
-	required?: boolean;
-	disable?: boolean;
-	isLoading?: boolean;
-	placeholder?: string;
-	placeholderValue?: string | number;
-	onChange?: (any) => void;
-	onInputChange?: (any) => void;
-}
 
 const DropDown = ({ field, form, options, required, disable, isLoading, placeholder, onChange, onInputChange, ...props }) => {
 
@@ -104,14 +90,26 @@ const DropDown = ({ field, form, options, required, disable, isLoading, placehol
 	)
 }
 
-const SearchDropdownField: NextPage<Props> = ({ label, name, options, required = false, disable = false, isLoading = false, placeholder = 'Select ...', placeholderValue = '', onChange, onInputChange, ...props }) => {
+
+interface Props {
+	label?: string;
+	name: string;
+	options: ListData[];
+	isLoading?: boolean;
+	placeholder?: string;
+	placeholderValue?: string | number;
+	onChange?: (any) => void;
+	onInputChange?: (any) => void;
+}
+
+const SearchDropdownField: NextPage<Props & React.HTMLProps<HTMLSelectElement>> = ({ label, name, options, isLoading = false, placeholder = 'Select ...', placeholderValue = '', onChange, onInputChange, ...props }) => {
 
 	return (
 		<div className={'flex flex-col w-full'}>
 			{label && (
 				<div className={'mb-1'}>
 					<span>{label}</span>
-					{required && <span className={'text-red-600'}>{'*'}</span>}
+					{props.required && <span className={'text-red-600'}>{'*'}</span>}
 				</div>
 			)}
 			<Field
@@ -121,8 +119,7 @@ const SearchDropdownField: NextPage<Props> = ({ label, name, options, required =
 				onChange={onChange}
 				onInputChange={onInputChange}
 				component={DropDown}
-				required={required}
-				disable={disable}
+				isLoading={isLoading}
 				{...props}
 			/>
 			<ErrorMessage name={name}>

@@ -17,7 +17,7 @@ const TextField: NextPage<Props> = ({ name, type, ...props }) => {
 				</div>
 			)}
 			<FastField
-				className={'w-full border-2 rounded h-10 px-2 select-all focus:border-primary-500'}
+				className={'w-full h-10 px-2 select-all'}
 				type={type}
 				name={name}
 				onWheel={event => event.currentTarget.blur()}

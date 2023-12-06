@@ -8,6 +8,8 @@ import { MdHowToVote } from 'react-icons/md';
 import { IoFileTrayStackedOutline } from 'react-icons/io5';
 import { VscOpenPreview } from 'react-icons/vsc';
 
+
+
 interface Props {
   sidebar: boolean,
   onClickOverlay: (boolean?) => void,

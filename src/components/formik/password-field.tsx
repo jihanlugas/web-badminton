@@ -28,7 +28,7 @@ const PasswordField: NextPage<Props> = ({ label, name, required, ...props }) => 
 			)}
 			<div className='relative w-full'>
 				<Field
-					className={'h-10 w-full px-2 border-2 rounded bg-gray-50 focus:border-primary-500'}
+					className={'h-10 w-full px-2 '}
 					type={show ? 'text' : 'password'}
 					name={name}
 					{...props}

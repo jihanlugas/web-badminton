@@ -1,10 +1,7 @@
-import ButtonSubmit from "@/components/formik/button-submit";
-import TextAreaField from "@/components/formik/text-area-field";
-import TextField from "@/components/formik/text-field";
-import MainAdmin from "@/components/layout/main-admin";
+import MainUser from "@/components/layout/main-user";
 import { Api } from "@/lib/api";
 import { Company } from "@/types/company";
-import { Player, PlayerUpdate } from "@/types/player"
+import { GorCreate } from "@/types/gor";
 import PageWithLayoutType from "@/types/layout";
 import notif from "@/utils/notif";
 import { useMutation } from "@tanstack/react-query";
@@ -15,39 +12,38 @@ import { useRouter } from "next/router";
 import { GetServerSideProps, NextPage } from "next/types";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import * as Yup from 'yup';
-import CheckboxField from "@/components/formik/checkbox-field";
-import DropdownField from "@/components/formik/dropdown-field";
-import { GENDER } from "@/utils/constant";
+import TextField from '@/components/formik/text-field';
+import TextAreaField from '@/components/formik/text-area-field';
+import ButtonSubmit from '@/components/formik/button-submit';
 
 type Props = {
-  company: Company
-  player: Player
 }
 
 const schema = Yup.object().shape({
-  companyId: Yup.string().label('company').required(),
+  companyId: Yup.string().label('name').required(),
   name: Yup.string().label('name').required(),
-  email: Yup.string().email().label('email'),
-  noHp: Yup.string().label('no hp'),
+  description: Yup.string().label('description'),
   address: Yup.string().label('address'),
-  gender: Yup.string().label('gender'),
-  isActive: Yup.boolean().label('active'),
+  normalGamePrice: Yup.number().label('normal game price').required(),
+  rubberGamePrice: Yup.number().label('rubber game price').required(),
+  ballPrice: Yup.number().label('ball price').required(),
 });
 
-
-const Edit: NextPage<Props> = ({ company, player }) => {
+const New: NextPage<Props> = () => {
   const router = useRouter();
 
-  const { mutate: mutateSubmit, isLoading } = useMutation((val: FormikValues) => Api.put('/player/' + player.id, val));
+  const company: Company = JSON.parse(localStorage.getItem('company'));
 
-  const initFormikValue: PlayerUpdate = {
-    companyId: player.companyId,
-    name: player.name,
-    email: player.email,
-    noHp: player.noHp,
-    address: player.address,
-    gender: player.gender,
-    isActive: player.isActive,
+  const { mutate: mutateSubmit, isLoading } = useMutation((val: FormikValues) => Api.post('/gor', val));
+
+  const initFormikValue: GorCreate = {
+    companyId: company.id,
+    name: '',
+    description: '',
+    address: '',
+    normalGamePrice: 0,
+    rubberGamePrice: 0,
+    ballPrice: 0,
   };
 
   const handleSubmit = (values: FormikValues, setErrors) => {
@@ -56,7 +52,7 @@ const Edit: NextPage<Props> = ({ company, player }) => {
         if (res) {
           if (res.status) {
             notif.success(res.message);
-            router.push({ pathname: '/admin/company/[companyId]', query: { companyId: company.id } });
+            router.push({ pathname: '/gor' });
           } else if (!res.success) {
             if (res.payload && res.payload.listError) {
               setErrors(res.payload.listError);
@@ -75,39 +71,33 @@ const Edit: NextPage<Props> = ({ company, player }) => {
   return (
     <>
       <Head>
-        <title>{'Player - ' + player.name}</title>
+        <title>{process.env.APP_NAME + ' - Gor New'}</title>
       </Head>
       <div className='p-4'>
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='text-xl flex items-center'>
             <div className='hidden md:flex items-center'>
-              <Link href={'/admin/company'}>
-                <div className='mr-4 hover:text-primary-500'>{'Company'}</div>
+              <Link href={'/gor'}>
+                <div className='mr-4 hover:text-primary-500'>{'Gor'}</div>
               </Link>
               <div className='mr-4'>
                 <BsChevronRight className={''} size={'1.2rem'} />
               </div>
-              <Link href={{ pathname: '/admin/company/[companyId]', query: { companyId: company.id } }}>
-                <div className='mr-4 hover:text-primary-500'>{player.name}</div>
-              </Link>
-              <div className='mr-4'>
-                <BsChevronRight className={''} size={'1.2rem'} />
-              </div>
-              <div className='mr-4'>{'Edit'}</div>
+              <div className='mr-4'>{'New'}</div>
             </div>
             <div className='flex items-center md:hidden'>
-              <Link href={'/admin/company'}>
+              <Link href={'/gor'}>
                 <div className='mr-4 hover:text-primary-500'>
                   <BsChevronLeft className={''} size={'1.2rem'} />
                 </div>
               </Link>
-              <div className='mr-4'>{'Edit'}</div>
+              <div className='mr-4'>{'New'}</div>
             </div>
           </div>
         </div>
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='mb-4'>
-            <div className='text-xl'>Edit Player</div>
+            <div className='text-xl'>Create Gor</div>
           </div>
           <div className='mb-4'>
             <Formik
@@ -116,33 +106,25 @@ const Edit: NextPage<Props> = ({ company, player }) => {
               enableReinitialize={true}
               onSubmit={(values, { setErrors }) => handleSubmit(values, setErrors)}
             >
-              {({ values, errors }) => {
+              {({ values, errors, setFieldValue }) => {
                 return (
                   <Form>
                     <div className={'w-full max-w-xl'}>
                       <div className="mb-4">
                         <TextField
-                          label={'Player Name'}
+                          label={'Gor Name'}
                           name={'name'}
                           type={'text'}
-                          placeholder={'Player Name'}
+                          placeholder={'Gor Name'}
                           required
                         />
                       </div>
                       <div className="mb-4">
-                        <TextField
-                          label={'Email'}
-                          name={'email'}
-                          type={'email'}
-                          placeholder={'Email'}
-                        />
-                      </div>
-                      <div className="mb-4">
-                        <TextField
-                          label={'No. Handphone'}
-                          name={'noHp'}
+                        <TextAreaField
+                          label={'Gor Description'}
+                          name={'description'}
                           type={'text'}
-                          placeholder={'No. Handphone'}
+                          placeholder={'Gor Description'}
                         />
                       </div>
                       <div className="mb-4">
@@ -154,18 +136,30 @@ const Edit: NextPage<Props> = ({ company, player }) => {
                         />
                       </div>
                       <div className="mb-4">
-                        <DropdownField
-                          label={'Gender'}
-                          name={'gender'}
-                          placeholder={'Select Gender'}
-                          items={Object.values(GENDER)}
+                        <TextField
+                          label={'Normal Game Price'}
+                          name={'normalGamePrice'}
+                          type={'number'}
+                          placeholder={'Normal Game Price'}
+                          required
                         />
                       </div>
                       <div className="mb-4">
-                        <CheckboxField
-                          name={'isActive'}
-                          id={'isActive'}
-                          label={'Active'}
+                        <TextField
+                          label={'Rubber Game Price'}
+                          name={'rubberGamePrice'}
+                          type={'number'}
+                          placeholder={'Rubber Game Price'}
+                          required
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <TextField
+                          label={'Ball Price'}
+                          name={'ballPrice'}
+                          type={'number'}
+                          placeholder={'Ball Price'}
+                          required
                         />
                       </div>
                       <div className="mb-4">
@@ -184,31 +178,10 @@ const Edit: NextPage<Props> = ({ company, player }) => {
         </div>
       </div>
     </>
-  );
+  )
 }
 
 
+(New as PageWithLayoutType).layout = MainUser;
 
-
-(Edit as PageWithLayoutType).layout = MainAdmin;
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { companyId, playerId } = context.query;
-  const company = await Api.get('/company/' + companyId).then(res => res);
-  const player = await Api.get('/player/' + playerId).then(res => res);
-
-  if (company.status && player.status) {
-    return {
-      props: {
-        company: company.payload,
-        player: player.payload,
-      }
-    };
-  } else {
-    return {
-      notFound: true
-    };
-  }
-};
-
-export default Edit;
+export default New;

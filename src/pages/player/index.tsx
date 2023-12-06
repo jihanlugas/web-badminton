@@ -22,6 +22,9 @@ import { RiPencilLine } from "react-icons/ri"
 import { VscTrash } from "react-icons/vsc"
 import notif from '@/utils/notif';
 import MainUser from '@/components/layout/main-user';
+import { MdOutlineEmail, MdOutlineKeyboardArrowRight, MdPhone } from 'react-icons/md';
+import { FaRegMap } from 'react-icons/fa6';
+import { getInitialWord } from '@/utils/helper';
 
 type Props = {
   company: Company
@@ -45,7 +48,15 @@ const Index: NextPage<Props> = () => {
   const [player, setPlayer] = useState<Player[]>([]);
   const [showModalFilterPlayer, setShowModalFilterPlayer] = useState<boolean>(false);
   const [showModalDeletePlayer, setShowModalDeletePlayer] = useState<boolean>(false);
-  const [deletePlayerId, setDeletePlayerId] = useState<string>('');
+  const [deletePlayerId, setDeletePlayerId] = useState<string>(''); const [accordion, setAccordion] = useState<number[]>([]);
+
+  const toggleAccordion = (key) => {
+    if (accordion.includes(key)) {
+      setAccordion(accordion.filter((item) => item !== key));
+    } else {
+      setAccordion([...accordion, key]);
+    }
+  }
 
 
   const [pageInfoPlayer, setPageInfoPlayer] = useState<PageInfo>({
@@ -55,7 +66,7 @@ const Index: NextPage<Props> = () => {
     page: 0,
   });
   const [pageRequestPlayer, setPageRequestPlayer] = useState<PageRequest & FilterPropsPlayer>({
-    limit: 10,
+    limit: 1000,
     page: 1,
     sortField: null,
     sortOrder: null,
@@ -101,136 +112,6 @@ const Index: NextPage<Props> = () => {
     });
   };
 
-  const columnPlayer: ColumnDef<Player>[] = [
-    {
-      id: 'name',
-      accessorKey: 'name',
-      header: (props) => {
-        return (
-          <>
-            <div className='whitespace-nowrap'>
-              {"Name"}
-            </div>
-          </>
-        );
-      },
-      cell: (props) => {
-        return (
-          <Link href={{ pathname: '/admin/company/[companyId]', query: { companyId: props.row.original.id } }} >
-            <div className='w-full duration-300 hover:text-primary-500'>
-              {props.getValue() as string}
-            </div>
-          </Link>
-        )
-      },
-    },
-    {
-      id: 'email',
-      accessorKey: 'email',
-      header: (props) => {
-        return (
-          <>
-            <div className='whitespace-nowrap'>
-              {"Email"}
-            </div>
-          </>
-        );
-      },
-      cell: props => props.getValue(),
-    },
-    {
-      id: 'no_hp',
-      accessorKey: 'noHp',
-      header: (props) => {
-        return (
-          <>
-            <div className='whitespace-nowrap'>
-              {"No. Handphone"}
-            </div>
-          </>
-        );
-      },
-      cell: props => displayPhoneNumber(props.getValue() as string),
-    },
-    {
-      id: 'address',
-      accessorKey: 'address',
-      header: (props) => {
-        return (
-          <>
-            <div className='whitespace-nowrap'>
-              {"Address"}
-            </div>
-          </>
-        );
-      },
-      cell: props => props.getValue(),
-    },
-    {
-      id: 'gender',
-      accessorKey: 'gender',
-      header: (props) => {
-        return (
-          <>
-            <div className='whitespace-nowrap'>
-              {"Gender"}
-            </div>
-          </>
-        );
-      },
-      cell: props => props.getValue(),
-    },
-    {
-      id: 'isActive',
-      accessorKey: 'isActive',
-      enableSorting: false,
-      header: (props) => {
-        return (
-          <>
-            <div className='whitespace-nowrap'>
-              {"Active"}
-            </div>
-          </>
-        );
-      },
-      cell: props => displayActive(props.getValue() as boolean),
-    },
-    {
-      id: 'create_name',
-      accessorKey: 'createName',
-      header: (props) => {
-        return (
-          <>
-            <div className='whitespace-nowrap'>
-              {"Created By"}
-            </div>
-          </>
-        );
-      },
-      cell: props => props.getValue(),
-      // enableSorting: false,
-    },
-    {
-      id: 'id',
-      header: 'Action',
-      cell: (props) => {
-        return (
-          <>
-            <div className='flex justify-end items-center'>
-              <Link href={{ pathname: '/player/[playerId]/edit', query: { playerId: props.row.original.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit' >
-                <RiPencilLine className='' size={'1.2rem'} />
-              </Link>
-              <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='delete' onClick={() => toggleDeletePlayer(props.row.original.id)}>
-                <VscTrash className='' size={'1.2rem'} />
-              </button>
-            </div>
-          </>
-        );
-      },
-
-    }
-  ];
-
   useEffect(() => {
     if (dataPlayer && dataPlayer.status) {
       setPlayer(dataPlayer.payload.list);
@@ -266,49 +147,102 @@ const Index: NextPage<Props> = () => {
         </div>
       </ModalDelete>
       <div className='p-4'>
-        <div className='bg-white mb-4 p-4 rounded shadow'>
-          <div className='text-xl flex items-center'>
+      <div className='bg-white mb-4 p-4 rounded shadow'>
+          <div className='text-xl flex items-center justify-between'>
             <div className='hidden md:flex items-center'>
               <div className='mr-4'>{'Player'}</div>
             </div>
             <div className='flex items-center md:hidden'>
               <div className='mr-4'>{'Player'}</div>
             </div>
-          </div>
-        </div>
-        <div className='bg-white mb-4 p-4 rounded shadow'>
-          <div className='w-full rounded-sm'>
-            <div className='flex justify-between items-center px-2 mb-2'>
-              <div>
-                <div className='text-xl'>{'Player'}</div>
-              </div>
-              <div className='flex'>
-                <div className='ml-2'>
-                  <button className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 hover:bg-gray-100' onClick={() => toggleFilterPlayer()}>
-                    <BiFilterAlt className='' size={'1.2em'} />
-                  </button>
+            <div className='flex items-center'>
+              <Link href={{ pathname: '/player/new' }} className='flex items-center hover:bg-gray-100 rounded -m-2 p-2'>
+                <div className='flex justify-center items-center rounded h-8 w-8'>
+                  <IoAddOutline size={'1.2em'} />
                 </div>
-                <div className='ml-2'>
-                  <button className='h-10 w-10 ease-in-out flex justify-center items-center rounded duration-300 hover:bg-gray-100' onClick={() => router.push({ pathname: '/player/new'})}>
-                    <IoAddOutline className='' size={'1.2em'} />
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div className=''>
-              <Table
-                columns={columnPlayer}
-                data={player}
-                setPageRequest={setPageRequestPlayer}
-                pageRequest={pageRequestPlayer}
-                pageInfo={pageInfoPlayer}
-                isLoading={isLoadingPlayer}
-              />
+                <div className='ml-2 hidden md:block'>Add Player</div>
+              </Link>
             </div>
           </div>
         </div>
-        <div className='bg-white mb-4 p-4 rounded shadow whitespace-pre-wrap'>
-          {JSON.stringify(company, null, 4)}
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-4'>
+          {player.map((data, key) => {
+            return (
+              <div key={key} className='bg-white rounded shadow'>
+                <div className='block md:hidden'>
+                  <button className='w-full flex justify-between rounded items-center p-4' onClick={() => toggleAccordion(key)}>
+                    <div className='text-left flex items-center'>
+                      <div className='h-10 w-10 mr-2 bg-gray-700 rounded-full text-gray-100 flex justify-center items-center text-lg'>
+                        {getInitialWord(data.name)}
+                      </div>
+                      <div className='text-lg'>{data.name}</div>
+                    </div>
+                    <div className='flex justify-center items-center h-8 w-8'>
+                      <MdOutlineKeyboardArrowRight className={`rotate-0 duration-300 ${accordion.includes(key) && 'rotate-90'}`} size={'1.5em'} />
+                    </div>
+                  </button>
+                  <div className={`duration-300 overflow-hidden ${accordion.includes(key) ? 'max-h-60 ' : 'max-h-0 '}`}>
+                    <div className='px-4 pb-4'>
+                      <div className='flex'>
+                        <div className='h-6 w-6 flex-none flex justify-center items-center mr-2'><FaRegMap className='' size={'1.1rem'} /></div>
+                        <div className='flex-grow '>{data.address ? data.address : '-'}</div>
+                      </div>
+                      <div className='flex'>
+                        <div className='h-6 w-6 flex-none flex justify-center items-center mr-2'><MdOutlineEmail className='' size={'1.1rem'} /></div>
+                        <div className='flex-grow '>{data.email ? data.email : '-'}</div>
+                      </div>
+                      <div className='flex'>
+                        <div className='h-6 w-6 flex-none flex justify-center items-center mr-2'><MdPhone className='' size={'1.1rem'} /></div>
+                        <div className='flex-grow '>{data.noHp ? displayPhoneNumber(data.noHp) : '-'}</div>
+                      </div>
+                      <div className='flex justify-end items-center'>
+                        <Link href={{ pathname: '/player/[playerId]/edit', query: { playerId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit'>
+                          <RiPencilLine className='' size={'1.2rem'} />
+                        </Link>
+                        <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='delete' onClick={() => toggleDeletePlayer(data.id)}>
+                          <VscTrash className='' size={'1.2rem'} />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className='hidden md:block'>
+                  <div className='w-full flex justify-between rounded items-center p-4'>
+                    <div className='text-left flex items-center'>
+                      <div className='h-10 w-10 mr-2 bg-gray-700 rounded-full text-gray-100 flex justify-center items-center text-lg'>
+                        {getInitialWord(data.name)}
+                      </div>
+                      <div className='text-lg'>{data.name}</div>
+                    </div>
+                  </div>
+                  <div className={'duration-300 overflow-hidden'}>
+                    <div className='px-4 pb-4'>
+                      <div className='flex'>
+                        <div className='h-6 w-6 flex-none flex justify-center items-center mr-2'><FaRegMap className='' size={'1.1rem'} /></div>
+                        <div className='flex-grow '>{data.address ? data.address : '-'}</div>
+                      </div>
+                      <div className='flex'>
+                        <div className='h-6 w-6 flex-none flex justify-center items-center mr-2'><MdOutlineEmail className='' size={'1.1rem'} /></div>
+                        <div className='flex-grow '>{data.email ? data.email : '-'}</div>
+                      </div>
+                      <div className='flex'>
+                        <div className='h-6 w-6 flex-none flex justify-center items-center mr-2'><MdPhone className='' size={'1.1rem'} /></div>
+                        <div className='flex-grow '>{data.noHp ? displayPhoneNumber(data.noHp) : '-'}</div>
+                      </div>                      
+                      <div className='flex justify-end items-center'>
+                        <Link href={{ pathname: '/player/[playerId]/edit', query: { playerId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit'>
+                          <RiPencilLine className='' size={'1.2rem'} />
+                        </Link>
+                        <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='delete' onClick={() => toggleDeletePlayer(data.id)}>
+                          <VscTrash className='' size={'1.2rem'} />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
         </div>
       </div >
     </>
