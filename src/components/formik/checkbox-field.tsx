@@ -3,30 +3,34 @@ import { NextPage } from 'next';
 
 interface Props extends React.HTMLProps<HTMLInputElement> {
 	name: string;
+	showError?: boolean;
 }
 
-const CheckboxField: NextPage<Props> = ({ name, ...props }) => {
+const CheckboxField: NextPage<Props> = ({ name, showError = true, ...props }) => {
 	return (
 		<div className={'flex flex-col w-full'}>
 			<div className='flex items-center'>
-				<FastField
-					className={'mr-2 accent-primary-500 py-2 h-5 w-5'}
-					type={'checkbox'}
-					name={name}
-					id={props.id}
-					{...props}
-				/>
 				{props.label && (
-					<label htmlFor={props.id} className={'select-none w-full py-2'} >{props.label}</label>
+					<label className={'select-none w-full py-2 flex items-center'} >
+						<FastField
+							className={'mr-2 accent-primary-500 py-2 h-5 w-5'}
+							type={'checkbox'}
+							name={name}
+							{...props}
+						/>
+						<span className='truncate'>{props.label}</span>
+					</label>
 				)}
 			</div>
-			<ErrorMessage name={name}>
-				{(msg) => {
-					return (
-						<div className={'text-red-600 text-sm normal-case'}>{msg}</div>
-					);
-				}}
-			</ErrorMessage>
+			{showError && (
+				<ErrorMessage name={name}>
+					{(msg) => {
+						return (
+							<div className={'text-red-600 text-sm normal-case'}>{msg}</div>
+						);
+					}}
+				</ErrorMessage>
+			)}
 		</div>
 	);
 };

@@ -1,4 +1,6 @@
-export interface Player {
+import { Paging } from "@/types/pagination";
+
+export declare interface PlayerView {
   id: string;
   companyId: string;
   name: string;
@@ -20,7 +22,7 @@ export interface Player {
   deleteName: string;
 }
 
-export interface PlayerCreate {
+export declare interface CreatePlayer {
   companyId: string;
   name: string;
   email: string;
@@ -30,7 +32,7 @@ export interface PlayerCreate {
   isActive: boolean;
 }
 
-export interface PlayerUpdate {
+export declare interface UpdatePlayer {
   companyId: string;
   name: string;
   email: string;
@@ -38,4 +40,15 @@ export interface PlayerUpdate {
   address: string;
   gender: string;
   isActive: boolean;
+}
+
+export declare interface PagePlayer extends Paging{
+  companyId: string;
+  name: string;
+  email: string;
+  noHp: string;
+  address: string;
+  gender: string;
+  createName: string;
+  gameId?: string;
 }

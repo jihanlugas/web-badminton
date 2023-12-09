@@ -1,4 +1,5 @@
 import Modal from '@/components/modal/modal';
+import { NextPage } from 'next';
 
 type Props = {
   show: boolean;
@@ -8,7 +9,7 @@ type Props = {
   children: React.ReactNode;
 }
 
-const ModalDelete: React.FC<Props> = ({ show, onClickOverlay, onDelete, isLoading = false, children }) => {
+const ModalDelete: NextPage<Props> = ({ show, onClickOverlay, onDelete, isLoading = false, children }) => {
 
   return (
     <>

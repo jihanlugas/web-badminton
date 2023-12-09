@@ -32,14 +32,14 @@ type FilterPropsGor = {
 }
 
 const schema = Yup.object().shape({
-  companyId: Yup.string().required(),
-  gorId: Yup.string().required(),
-  name: Yup.string().required(),
+  companyId: Yup.string().required("Required field"),
+  gorId: Yup.string().required("Required field"),
+  name: Yup.string().required("Required field"),
   description: Yup.string(),
   normalGamePrice: Yup.number(),
   rubberGamePrice: Yup.number(),
   ballPrice: Yup.number(),
-  gameDt: Yup.date().required(),
+  gameDt: Yup.date().required("Required field"),
   isFinish: Yup.boolean(),
 });
 

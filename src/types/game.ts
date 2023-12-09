@@ -1,4 +1,6 @@
-export interface Game {
+import { Paging } from "@/types/pagination";
+
+export declare interface GameView {
   id: string;
   companyId: string;
   gorId: string;
@@ -9,6 +11,8 @@ export interface Game {
   ballPrice: number;
   gameDt: string;
   isFinish: boolean;
+  expectedDebit: number;
+  debit: number;
   createBy: string;
   createDt: string;
   updateBy: string;
@@ -22,7 +26,7 @@ export interface Game {
   deleteName: string;
 }
 
-export interface GameCreate {
+export declare interface CreateGame {
   companyId: string;
   gorId: string;
   name: string;
@@ -31,10 +35,9 @@ export interface GameCreate {
   rubberGamePrice: number;
   ballPrice: number;
   gameDt: Date | string;
-  isFinish: boolean;
 }
 
-export interface GameUpdate {
+export declare interface UpdateGame {
   companyId: string;
   gorId: string;
   name: string;
@@ -44,4 +47,13 @@ export interface GameUpdate {
   ballPrice: number;
   gameDt: Date | string;
   isFinish: boolean;
+  expectedDebit: number;
+  debit: number;
+}
+
+export declare interface PageGame extends Paging {
+  companyId: string;
+  gorId: string;
+  name: string;
+  description: string;
 }

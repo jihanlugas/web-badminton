@@ -20,13 +20,13 @@ type Props = {
 }
 
 const schema = Yup.object().shape({
-  companyId: Yup.string().label('name').required(),
-  name: Yup.string().label('name').required(),
+  companyId: Yup.string().label('name').required("Required field"),
+  name: Yup.string().label('name').required("Required field"),
   description: Yup.string().label('description'),
   address: Yup.string().label('address'),
-  normalGamePrice: Yup.number().label('normal game price').required(),
-  rubberGamePrice: Yup.number().label('rubber game price').required(),
-  ballPrice: Yup.number().label('ball price').required(),
+  normalGamePrice: Yup.number().label('normal game price').required("Required field"),
+  rubberGamePrice: Yup.number().label('rubber game price').required("Required field"),
+  ballPrice: Yup.number().label('ball price').required("Required field"),
 });
 
 const New: NextPage<Props> = () => {

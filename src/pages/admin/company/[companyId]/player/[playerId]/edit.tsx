@@ -3,8 +3,8 @@ import TextAreaField from "@/components/formik/text-area-field";
 import TextField from "@/components/formik/text-field";
 import MainAdmin from "@/components/layout/main-admin";
 import { Api } from "@/lib/api";
-import { Company } from "@/types/company";
-import { Player, PlayerUpdate } from "@/types/player"
+import { CompanyView } from "@/types/company";
+import { PlayerView, UpdatePlayer } from "@/types/player"
 import PageWithLayoutType from "@/types/layout";
 import notif from "@/utils/notif";
 import { useMutation } from "@tanstack/react-query";
@@ -20,13 +20,13 @@ import DropdownField from "@/components/formik/dropdown-field";
 import { GENDER } from "@/utils/constant";
 
 type Props = {
-  company: Company
-  player: Player
+  company: CompanyView
+  player: PlayerView
 }
 
 const schema = Yup.object().shape({
-  companyId: Yup.string().label('company').required(),
-  name: Yup.string().label('name').required(),
+  companyId: Yup.string().label('company').required("Required field"),
+  name: Yup.string().label('name').required("Required field"),
   email: Yup.string().email().label('email'),
   noHp: Yup.string().label('no hp'),
   address: Yup.string().label('address'),
@@ -40,7 +40,7 @@ const Edit: NextPage<Props> = ({ company, player }) => {
 
   const { mutate: mutateSubmit, isLoading } = useMutation((val: FormikValues) => Api.put('/player/' + player.id, val));
 
-  const initFormikValue: PlayerUpdate = {
+  const initFormikValue: UpdatePlayer = {
     companyId: player.companyId,
     name: player.name,
     email: player.email,

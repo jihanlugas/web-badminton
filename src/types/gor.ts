@@ -1,4 +1,6 @@
-export interface Gor {
+import { Paging } from "@/types/pagination";
+
+export declare interface GorView {
   id: string;
   companyId: string;
   name: string;
@@ -19,7 +21,7 @@ export interface Gor {
   deleteName: string;
 }
 
-export interface GorCreate {
+export declare interface CreateGor {
   companyId: string;
   name: string;
   description: string;
@@ -29,7 +31,7 @@ export interface GorCreate {
   ballPrice: number;
 }
 
-export interface GorUpdate {
+export declare interface UpdateGor {
   companyId: string;
   name: string;
   description: string;
@@ -37,4 +39,12 @@ export interface GorUpdate {
   normalGamePrice: number;
   rubberGamePrice: number;
   ballPrice: number;
+}
+
+export declare interface PageGor extends Paging{
+  companyId: string;
+  name: string;
+  description: string;
+  address: string;
+  createName: string;
 }

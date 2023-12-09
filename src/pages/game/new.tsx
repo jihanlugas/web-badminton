@@ -1,7 +1,5 @@
 import MainUser from "@/components/layout/main-user";
 import { Api } from "@/lib/api";
-import { Company } from "@/types/company";
-import { GameCreate } from "@/types/game";
 import PageWithLayoutType from "@/types/layout";
 import notif from "@/utils/notif";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -21,10 +19,12 @@ import DropdownField from "@/components/formik/dropdown-field";
 import { GENDER } from "@/utils/constant";
 import CheckboxField from "@/components/formik/checkbox-field";
 import SearchDropdownField from "@/components/formik/search-dropdown-field";
-import { PageRequest } from "@/types/pagination";
 import { useEffect, useState } from "react";
 import { ListData } from "@/types/data";
 import { useDebounce } from "@/utils/hook";
+import { CompanyView } from "@/types/company";
+import { PageGor } from "@/types/gor";
+import { CreateGame } from "@/types/game";
 
 type Props = {
 }
@@ -37,40 +37,43 @@ type FilterPropsGor = {
 }
 
 const schema = Yup.object().shape({
-  companyId: Yup.string().required(),
-  gorId: Yup.string().required(),
-  name: Yup.string().required(),
+  companyId: Yup.string().required("Required field"),
+  gorId: Yup.string().required("Required field"),
+  name: Yup.string().required("Required field"),
   description: Yup.string(),
   normalGamePrice: Yup.number(),
   rubberGamePrice: Yup.number(),
   ballPrice: Yup.number(),
-  gameDt: Yup.date().required(),
+  gameDt: Yup.date().required("Required field"),
   isFinish: Yup.boolean(),
 });
 
 const New: NextPage<Props> = () => {
   const router = useRouter();
 
-  const company: Company = JSON.parse(localStorage.getItem('company'));
+  const company: CompanyView = JSON.parse(localStorage.getItem('company'));
 
   const [searchGor, setSearchGor] = useState<string>('');
   const debounceSearchGor = useDebounce(searchGor, 300)
   const [listDataGor, setListDataGor] = useState<ListData[]>([]);
 
-  const [pageRequestGor, setPageRequestGor] = useState<PageRequest & FilterPropsGor>({
+  const [pageRequestGor, setPageRequestGor] = useState<PageGor>({
     limit: 1000,
     page: 1,
     sortField: null,
     sortOrder: null,
     companyId: company.id,
     name: '',
+    createName: '',
+    description: '',
+    address: '',
   });
 
   const { mutate: mutateSubmit, isLoading } = useMutation((val: FormikValues) => Api.post('/game', val));
 
   const { isLoading: isLoadingGor, data: dataGor, refetch: refetchGor } = useQuery(['gor', pageRequestGor], ({ queryKey }) => Api.get('/gor/page', queryKey[1]), {});
 
-  const initFormikValue: GameCreate = {
+  const initFormikValue: CreateGame = {
     companyId: company.id,
     gorId: '',
     name: '',
@@ -79,7 +82,6 @@ const New: NextPage<Props> = () => {
     rubberGamePrice: 0,
     ballPrice: 0,
     gameDt: new Date(new Date().setHours(7, 0, 0, 0)),
-    isFinish: false,
   };
 
   useEffect(() => {

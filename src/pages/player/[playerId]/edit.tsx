@@ -24,8 +24,8 @@ type Props = {
 }
 
 const schema = Yup.object().shape({
-  companyId: Yup.string().required(),
-  name: Yup.string().required(),
+  companyId: Yup.string().required("Required field"),
+  name: Yup.string().required("Required field"),
   email: Yup.string().email(),
   noHp: Yup.string(),
   address: Yup.string(),

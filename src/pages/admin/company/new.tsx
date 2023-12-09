@@ -1,6 +1,6 @@
 import MainAdmin from '@/components/layout/main-admin';
 import { Api } from '@/lib/api';
-import { CompanyCreate } from '@/types/company';
+import { CreateCompany } from '@/types/company';
 import PageWithLayoutType from '@/types/layout';
 import { useMutation } from '@tanstack/react-query';
 import { Form, Formik, FormikValues } from 'formik';
@@ -35,7 +35,7 @@ const New: NextPage<Props> = () => {
 
   const { mutate: mutateSubmit, isLoading } = useMutation((val: FormikValues) => Api.post('/company', val));
 
-  const initFormikValue: CompanyCreate = {
+  const initFormikValue: CreateCompany = {
     fullname: '',
     email: '',
     noHp: '',

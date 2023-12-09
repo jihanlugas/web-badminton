@@ -4,11 +4,7 @@ import ModalFilterGor from "@/components/modal/modal-filter-gor"
 import ModalFilterPlayer from "@/components/modal/modal-filter-player"
 import Table from "@/components/table/table"
 import { Api } from "@/lib/api"
-import { Company } from "@/types/company"
-import { Gor } from "@/types/gor"
 import PageWithLayoutType from "@/types/layout"
-import { PageInfo, PageRequest } from "@/types/pagination"
-import { Player } from "@/types/player"
 import { displayActive, displayMoney, displayNumber, displayPhoneNumber } from "@/utils/formater"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { ColumnDef } from "@tanstack/react-table"
@@ -23,39 +19,25 @@ import { IoAddOutline } from "react-icons/io5"
 import { RiPencilLine } from "react-icons/ri"
 import { VscTrash } from "react-icons/vsc"
 import notif from '@/utils/notif';
+import { CompanyView } from '@/types/company';
+import { GorView, PageGor } from '@/types/gor';
+import { PagePlayer, PlayerView } from '@/types/player';
+import { PageInfo } from '@/types/pagination';
 
 type Props = {
-  company: Company
-}
-
-type FilterPropsGor = {
-  companyId: string
-  name: string
-  description: string
-  address: string
-  createName: string
-}
-
-type FilterPropsPlayer = {
-  companyId: string
-  name: string
-  email: string
-  noHp: string
-  address: string
-  gender: string
-  createName: string
+  company: CompanyView
 }
 
 const Index: NextPage<Props> = ({ company }) => {
 
   const router = useRouter();
 
-  const [gor, setGor] = useState<Gor[]>([]);
+  const [gor, setGor] = useState<GorView[]>([]);
   const [showModalFilterGor, setShowModalFilterGor] = useState<boolean>(false);
   const [showModalDeleteGor, setShowModalDeleteGor] = useState<boolean>(false);
   const [deleteGorId, setDeleteGorId] = useState<string>('');
 
-  const [player, setPlayer] = useState<Player[]>([]);
+  const [player, setPlayer] = useState<PlayerView[]>([]);
   const [showModalFilterPlayer, setShowModalFilterPlayer] = useState<boolean>(false);
   const [showModalDeletePlayer, setShowModalDeletePlayer] = useState<boolean>(false);
   const [deletePlayerId, setDeletePlayerId] = useState<string>('');
@@ -76,7 +58,7 @@ const Index: NextPage<Props> = ({ company }) => {
     page: 0,
   });
 
-  const [pageRequestGor, setPageRequestGor] = useState<PageRequest & FilterPropsGor>({
+  const [pageRequestGor, setPageRequestGor] = useState<PageGor>({
     limit: 10,
     page: 1,
     sortField: null,
@@ -88,7 +70,7 @@ const Index: NextPage<Props> = ({ company }) => {
     createName: '',
   });
 
-  const [pageRequestPlayer, setPageRequestPlayer] = useState<PageRequest & FilterPropsPlayer>({
+  const [pageRequestPlayer, setPageRequestPlayer] = useState<PagePlayer>({
     limit: 10,
     page: 1,
     sortField: null,
@@ -166,7 +148,7 @@ const Index: NextPage<Props> = ({ company }) => {
     });
   };
 
-  const columnGor: ColumnDef<Gor>[] = [
+  const columnGor: ColumnDef<GorView>[] = [
     {
       id: 'name',
       accessorKey: 'name',
@@ -295,7 +277,7 @@ const Index: NextPage<Props> = ({ company }) => {
     }
   ];
 
-  const columnPlayer: ColumnDef<Player>[] = [
+  const columnPlayer: ColumnDef<PlayerView>[] = [
     {
       id: 'name',
       accessorKey: 'name',

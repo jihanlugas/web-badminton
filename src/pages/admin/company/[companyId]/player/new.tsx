@@ -1,7 +1,5 @@
 import MainAdmin from "@/components/layout/main-admin";
 import { Api } from "@/lib/api";
-import { Company } from "@/types/company";
-import { PlayerCreate } from "@/types/player";
 import PageWithLayoutType from "@/types/layout";
 import notif from "@/utils/notif";
 import { useMutation } from "@tanstack/react-query";
@@ -18,14 +16,16 @@ import ButtonSubmit from '@/components/formik/button-submit';
 import DropdownField from "@/components/formik/dropdown-field";
 import { GENDER } from "@/utils/constant";
 import CheckboxField from "@/components/formik/checkbox-field";
+import { CreatePlayer } from "@/types/player";
+import { CompanyView } from "@/types/company";
 
 type Props = {
-  company: Company
+  company: CompanyView
 }
 
 const schema = Yup.object().shape({
-  companyId: Yup.string().label('name').required(),
-  name: Yup.string().label('name').required(),
+  companyId: Yup.string().label('name').required("Required field"),
+  name: Yup.string().label('name').required("Required field"),
   email: Yup.string().email().label('email'),
   noHp: Yup.string().label('no hp'),
   address: Yup.string().label('address'),
@@ -38,7 +38,7 @@ const New: NextPage<Props> = ({ company }) => {
 
   const { mutate: mutateSubmit, isLoading } = useMutation((val: FormikValues) => Api.post('/player', val));
 
-  const initFormikValue: PlayerCreate = {
+  const initFormikValue: CreatePlayer = {
     companyId: company.id,
     name: '',
     email: '',

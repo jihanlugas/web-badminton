@@ -1,6 +1,5 @@
 import MainAdmin from '@/components/layout/main-admin';
 import { Api } from "@/lib/api";
-import { Company, CompanyUpdate } from "@/types/company";
 import PageWithLayoutType from "@/types/layout";
 import Head from "next/head";
 import Link from "next/link";
@@ -14,15 +13,16 @@ import TextField from "@/components/formik/text-field";
 import TextAreaField from "@/components/formik/text-area-field";
 import ButtonSubmit from "@/components/formik/button-submit";
 import { useMutation } from "@tanstack/react-query";
+import { CompanyView, UpdateCompany } from '@/types/company';
 
 type Props = {
-  company: Company
+  company: CompanyView
 }
 
 const schema = Yup.object().shape({
-  name: Yup.string().label('name').required(),
+  name: Yup.string().label('name').required("Required field"),
   description: Yup.string().label('description'),
-  balance: Yup.number().label('balance').required(),
+  balance: Yup.number().label('balance').required("Required field"),
 });
 
 const Edit: NextPage<Props> = ({ company }) => {
@@ -30,7 +30,7 @@ const Edit: NextPage<Props> = ({ company }) => {
 
   const router = useRouter();
 
-  const initFormikValue: CompanyUpdate = {
+  const initFormikValue: UpdateCompany = {
     name: company.name,
     description: company.description,
     balance: company.balance,

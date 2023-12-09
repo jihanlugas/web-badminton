@@ -3,8 +3,8 @@ import TextAreaField from "@/components/formik/text-area-field";
 import TextField from "@/components/formik/text-field";
 import MainAdmin from "@/components/layout/main-admin";
 import { Api } from "@/lib/api";
-import { Company } from "@/types/company";
-import { Gor, GorUpdate } from "@/types/gor"
+import { CompanyView } from "@/types/company";
+import { GorView, UpdateGor } from "@/types/gor";
 import PageWithLayoutType from "@/types/layout";
 import notif from "@/utils/notif";
 import { useMutation } from "@tanstack/react-query";
@@ -17,18 +17,18 @@ import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import * as Yup from 'yup';
 
 type Props = {
-  company: Company
-  gor: Gor
+  company: CompanyView
+  gor: GorView
 }
 
 const schema = Yup.object().shape({
-  companyId: Yup.string().label('name').required(),
-  name: Yup.string().label('name').required(),
+  companyId: Yup.string().label('name').required("Required field"),
+  name: Yup.string().label('name').required("Required field"),
   description: Yup.string().label('description'),
   address: Yup.string().label('address'),
-  normalGamePrice: Yup.number().label('normal game price').required(),
-  rubberGamePrice: Yup.number().label('rubber game price').required(),
-  ballPrice: Yup.number().label('ball price').required(),
+  normalGamePrice: Yup.number().label('normal game price').required("Required field"),
+  rubberGamePrice: Yup.number().label('rubber game price').required("Required field"),
+  ballPrice: Yup.number().label('ball price').required("Required field"),
 });
 
 
@@ -37,7 +37,7 @@ const Edit: NextPage<Props> = ({ company, gor }) => {
 
   const { mutate: mutateSubmit, isLoading } = useMutation((val: FormikValues) => Api.put('/gor/' + gor.id, val));
 
-  const initFormikValue: GorUpdate = {
+  const initFormikValue: UpdateGor = {
     companyId: gor.companyId,
     name: gor.name,
     description: gor.description,

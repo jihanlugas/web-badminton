@@ -7,7 +7,6 @@ import PageWithLayoutType from '@/types/layout';
 import MainAdmin from '@/components/layout/main-admin';
 import Head from 'next/head';
 import { NextPage } from 'next/types';
-import { PageInfo, PageRequest } from '@/types/pagination';
 import Link from 'next/link';
 import { MdOutlineFilterList } from 'react-icons/md';
 import { VscTrash } from 'react-icons/vsc';
@@ -17,21 +16,16 @@ import { BiFilterAlt, BiLayerPlus } from 'react-icons/bi';
 import { RiPencilLine } from 'react-icons/ri';
 import { IoAddOutline } from 'react-icons/io5';
 import Table from '@/components/table/table';
-import { Company } from '@/types/company';
 import ModalFilterCompany from '@/components/modal/modal-filter-company';
 import { useRouter } from 'next/router';
 import { displayMoney, displayNumber } from '@/utils/formater';
 import ModalDelete from '@/components/modal/modal-delete';
 import notif from '@/utils/notif';
+import { CompanyView, PageCompany } from '@/types/company';
+import { PageInfo } from '@/types/pagination';
 
 type Props = {
 
-}
-
-type FilterProps = {
-  name: string
-  description: string
-  createName: string
 }
 
 const Index: NextPage<Props> = () => {
@@ -41,7 +35,7 @@ const Index: NextPage<Props> = () => {
   const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
   const [showModalFilter, setShowModalFilter] = useState<boolean>(false);
   const [deleteId, setDeleteId] = useState<string>('');
-  const [company, setCompany] = useState<Company[]>([]);
+  const [company, setCompany] = useState<CompanyView[]>([]);
   const [pageInfo, setPageInfo] = useState<PageInfo>({
     pageSize: 0,
     pageCount: 0,
@@ -49,7 +43,7 @@ const Index: NextPage<Props> = () => {
     page: 0,
   });
 
-  const [pageRequest, setPageRequest] = useState<PageRequest & FilterProps>({
+  const [pageRequest, setPageRequest] = useState<PageCompany>({
     limit: 10,
     page: 1,
     sortField: null,
@@ -59,7 +53,7 @@ const Index: NextPage<Props> = () => {
     createName: '',
   });
 
-  const column: ColumnDef<Company>[] = [
+  const column: ColumnDef<CompanyView>[] = [
     {
       id: 'name',
       accessorKey: 'name',

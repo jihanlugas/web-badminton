@@ -3,11 +3,12 @@ import Modal from '@/components/modal/modal';
 import { Formik, Form, FormikValues } from 'formik';
 import * as Yup from 'yup';
 import ButtonSubmit from '@/components/formik/button-submit';
-import { PageRequest } from '@/types/pagination';
 import { Dispatch, SetStateAction } from 'react';
 import TextAreaField from '@/components/formik/text-area-field';
 import DropdownField from '@/components/formik/dropdown-field';
 import { GrPowerReset } from 'react-icons/gr';
+import { PageCompany } from '@/types/company';
+import { NextPage } from 'next';
 
 type FilterProps = {
   name: string
@@ -18,8 +19,8 @@ type FilterProps = {
 type Props = {
   show: boolean;
   onClickOverlay: Function;
-  pageRequest: PageRequest & FilterProps
-  setPageRequest: Dispatch<SetStateAction<PageRequest & FilterProps>>
+  pageRequest: PageCompany
+  setPageRequest: Dispatch<SetStateAction<PageCompany>>
 }
 
 const schema = Yup.object().shape({
@@ -28,7 +29,7 @@ const schema = Yup.object().shape({
   createName: Yup.string().nullable().label('Create By'),
 });
 
-const ModalFilterCompany: React.FC<Props> = ({ show, onClickOverlay, pageRequest, setPageRequest }) => {
+const ModalFilterCompany: NextPage<Props> = ({ show, onClickOverlay, pageRequest, setPageRequest }) => {
   const handleSubmit = (values: FormikValues) => {
     const newReq = {
       ...pageRequest,

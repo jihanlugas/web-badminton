@@ -1,4 +1,6 @@
-export interface Company {
+import { Paging } from "@/types/pagination";
+
+export declare interface CompanyView {
   id: string;
   name: string;
   description: string;
@@ -12,9 +14,12 @@ export interface Company {
   createName: string;
   updateName: string;
   deleteName: string;
+  totalGor: number;
+  totalPlayer: number;
 }
 
-export interface CompanyCreate {
+
+export declare interface CreateCompany {
   fullname: string;
   email: string;
   noHp: string;
@@ -25,8 +30,14 @@ export interface CompanyCreate {
   balance: number;
 }
 
-export interface CompanyUpdate {
+export declare interface UpdateCompany {
   name: string;
   description: string;
   balance: number;
+}
+
+export declare interface PageCompany extends Paging{
+  name: string;
+  description: string;
+  createName: string;
 }

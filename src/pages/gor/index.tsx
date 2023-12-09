@@ -3,10 +3,7 @@ import ModalDelete from "@/components/modal/modal-delete"
 import ModalFilterGor from "@/components/modal/modal-filter-gor"
 import Table from "@/components/table/table"
 import { Api } from "@/lib/api"
-import { Company } from "@/types/company"
-import { Gor } from "@/types/gor"
 import PageWithLayoutType from "@/types/layout"
-import { PageInfo, PageRequest } from "@/types/pagination"
 import { displayActive, displayMoney, displayNumber, displayPhoneNumber } from "@/utils/formater"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { ColumnDef } from "@tanstack/react-table"
@@ -26,6 +23,9 @@ import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import { FaRegMap } from 'react-icons/fa6';
 import { IoBaseballSharp } from 'react-icons/io5';
 import Image from 'next/image'
+import { CompanyView } from '@/types/company';
+import { GorView, PageGor } from '@/types/gor';
+import { PageInfo } from '@/types/pagination';
 
 type Props = {
   company: Company
@@ -41,10 +41,10 @@ type FilterPropsGor = {
 
 const Index: NextPage<Props> = () => {
 
-  const company: Company = JSON.parse(localStorage.getItem('company'));
+  const company: CompanyView = JSON.parse(localStorage.getItem('company'));
   const router = useRouter();
 
-  const [gor, setGor] = useState<Gor[]>([]);
+  const [gor, setGor] = useState<GorView[]>([]);
   const [showModalFilterGor, setShowModalFilterGor] = useState<boolean>(false);
   const [showModalDeleteGor, setShowModalDeleteGor] = useState<boolean>(false);
   const [deleteGorId, setDeleteGorId] = useState<string>('');
@@ -66,7 +66,7 @@ const Index: NextPage<Props> = () => {
     page: 0,
   });
 
-  const [pageRequestGor, setPageRequestGor] = useState<PageRequest & FilterPropsGor>({
+  const [pageRequestGor, setPageRequestGor] = useState<PageGor>({
     limit: 1000,
     page: 1,
     sortField: null,
@@ -154,7 +154,7 @@ const Index: NextPage<Props> = () => {
             <div className='flex items-center md:hidden'>
               <div className='mr-4'>{'Gor'}</div>
             </div>
-            <div className='flex items-center'>
+            <div className='flex items-center text-base'>
               <Link href={{ pathname: '/gor/new' }} className='flex items-center hover:bg-gray-100 rounded -m-2 p-2'>
                 <div className='flex justify-center items-center rounded h-8 w-8'>
                   <IoAddOutline size={'1.2em'} />

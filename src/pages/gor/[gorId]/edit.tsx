@@ -21,13 +21,13 @@ type Props = {
 }
 
 const schema = Yup.object().shape({
-  companyId: Yup.string().required(),
-  name: Yup.string().required(),
+  companyId: Yup.string().required("Required field"),
+  name: Yup.string().required("Required field"),
   description: Yup.string(),
   address: Yup.string(),
-  normalGamePrice: Yup.number().required(),
-  rubberGamePrice: Yup.number().required(),
-  ballPrice: Yup.number().required(),
+  normalGamePrice: Yup.number().required("Required field"),
+  rubberGamePrice: Yup.number().required("Required field"),
+  ballPrice: Yup.number().required("Required field"),
 });
 
 

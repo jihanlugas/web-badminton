@@ -3,10 +3,7 @@ import ModalDelete from "@/components/modal/modal-delete"
 // import ModalFilterGame from "@/components/modal/modal-filter-game"
 import Table from "@/components/table/table"
 import { Api } from "@/lib/api"
-import { Company } from "@/types/company"
-import { Game } from "@/types/game"
 import PageWithLayoutType from "@/types/layout"
-import { PageInfo, PageRequest } from "@/types/pagination"
 import { displayActive, displayDateTime, displayMoney, displayNumber, displayPhoneNumber } from "@/utils/formater"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { ColumnDef } from "@tanstack/react-table"
@@ -22,11 +19,14 @@ import { RiPencilLine } from "react-icons/ri"
 import { VscTrash } from "react-icons/vsc"
 import notif from '@/utils/notif';
 import MainUser from '@/components/layout/main-user';
-import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
+import { MdOutlineDashboard, MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import { FaRegMap } from 'react-icons/fa6';
 import { IoBaseballSharp } from 'react-icons/io5';
 import Image from 'next/image'
 import { GrSchedule } from 'react-icons/gr';
+import { CompanyView } from '@/types/company';
+import { GameView, PageGame } from '@/types/game';
+import { PageInfo, Paging } from '@/types/pagination';
 
 type Props = {
 }
@@ -41,10 +41,10 @@ type FilterPropsGame = {
 
 const Index: NextPage<Props> = () => {
 
-  const company: Company = JSON.parse(localStorage.getItem('company'));
+  const company: CompanyView = JSON.parse(localStorage.getItem('company'));
   const router = useRouter();
 
-  const [game, setGame] = useState<Game[]>([]);
+  const [game, setGame] = useState<GameView[]>([]);
   const [showModalFilterGame, setShowModalFilterGame] = useState<boolean>(false);
   const [showModalDeleteGame, setShowModalDeleteGame] = useState<boolean>(false);
   const [deleteGameId, setDeleteGameId] = useState<string>('');
@@ -66,7 +66,7 @@ const Index: NextPage<Props> = () => {
     page: 0,
   });
 
-  const [pageRequestGame, setPageRequestGame] = useState<PageRequest & FilterPropsGame>({
+  const [pageRequestGame, setPageRequestGame] = useState<PageGame>({
     limit: 1000,
     page: 1,
     sortField: null,
@@ -75,7 +75,6 @@ const Index: NextPage<Props> = () => {
     gorId: '',
     name: '',
     description: '',
-    createName: '',
   });
 
   const { isLoading: isLoadingGame, data: dataGame, refetch: refetchGame } = useQuery(['game', pageRequestGame], ({ queryKey }) => Api.get('/game/page', queryKey[1]), {});
@@ -126,7 +125,7 @@ const Index: NextPage<Props> = () => {
   return (
     <>
       <Head>
-        <title>{'Company - ' + company.name}</title>
+        <title>{'Game'}</title>
       </Head>
       {/* <ModalFilterGame
         onClickOverlay={toggleFilterGame}
@@ -154,7 +153,7 @@ const Index: NextPage<Props> = () => {
             <div className='flex items-center md:hidden'>
               <div className='mr-4'>{'Game'}</div>
             </div>
-            <div className='flex items-center'>
+            <div className='flex items-center text-base'>
               <Link href={{ pathname: '/game/new' }} className='flex items-center hover:bg-gray-100 rounded -m-2 p-2'>
                 <div className='flex justify-center items-center rounded h-8 w-8'>
                   <IoAddOutline size={'1.2em'} />
@@ -172,7 +171,7 @@ const Index: NextPage<Props> = () => {
                   <button className='w-full flex justify-between rounded items-center p-4' onClick={() => toggleAccordion(key)}>
                     <div className='text-left'>
                       <div className='text-lg'>{data.name}</div>
-                      <div className={`text-sm ${!accordion.includes(key) && 'w-64 truncate '}`}>{data.description}</div>
+                      <div className={`text-sm ${!accordion.includes(key) && 'w-64 truncate '}`}>{displayDateTime(data.gameDt, 'dddd, DD MMM YYYY HH:mm')}</div>
                     </div>
                     <div className='flex justify-center items-center h-8 w-8'>
                       <MdOutlineKeyboardArrowRight className={`rotate-0 duration-300 ${accordion.includes(key) && 'rotate-90'}`} size={'1.5em'} />
@@ -180,10 +179,11 @@ const Index: NextPage<Props> = () => {
                   </button>
                   <div className={`duration-300 overflow-hidden ${accordion.includes(key) ? 'max-h-60 ' : 'max-h-0 '}`}>
                     <div className='px-4 pb-4'>
-                      <div className='flex'>
-                        <div className='h-6 w-6 flex-none flex justify-center items-center mr-2'><GrSchedule className='' size={'1.2rem'} /></div>
-                        <div className='flex-grow '>{displayDateTime(data.gameDt, 'dddd DD MMM YYYY HH:mm')}</div>
-                      </div>
+                      {data.description && (
+                        <div className='flex mb-2'>
+                          <div className='flex-grow '>{data.description}</div>
+                        </div>
+                      )}
                       <div className='flex'>
                         <div className='h-6 w-6 flex-none flex justify-center items-center mr-2'>2</div>
                         <div className='flex-grow '>{displayMoney(data.normalGamePrice)}</div>
@@ -206,6 +206,9 @@ const Index: NextPage<Props> = () => {
                         <div className='flex-grow '>{displayMoney(data.ballPrice)}</div>
                       </div>
                       <div className='flex justify-end items-center'>
+                        <Link href={{ pathname: '/game/[gameId]', query: { gameId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='Game Details'>
+                          <MdOutlineDashboard className='' size={'1.2rem'} />
+                        </Link>
                         <Link href={{ pathname: '/game/[gameId]/edit', query: { gameId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit'>
                           <RiPencilLine className='' size={'1.2rem'} />
                         </Link>
@@ -220,15 +223,16 @@ const Index: NextPage<Props> = () => {
                   <div className='w-full flex justify-between rounded items-center p-4'>
                     <div className='text-left'>
                       <div className='text-lg'>{data.name}</div>
-                      <div className={'text-sm'}>{data.description}</div>
+                      <div className={'text-sm'}>{displayDateTime(data.gameDt, 'dddd DD MMM YYYY HH:mm')}</div>
                     </div>
                   </div>
                   <div className={'duration-300 overflow-hidden'}>
                     <div className='px-4 pb-4'>
-                      <div className='flex'>
-                        <div className='h-6 w-6 flex-none flex justify-center items-center mr-2'><GrSchedule className='' size={'1.2rem'} /></div>
-                        <div className='flex-grow '>{displayDateTime(data.gameDt, 'dddd DD MMM YYYY HH:mm')}</div>
-                      </div>
+                      {data.description && (
+                        <div className='flex mb-2'>
+                          <div className='flex-grow '>{data.description}</div>
+                        </div>
+                      )}
                       <div className='flex'>
                         <div className='h-6 w-6 flex-none flex justify-center items-center mr-2'>2</div>
                         <div className='flex-grow '>{displayMoney(data.normalGamePrice)}</div>
@@ -251,6 +255,9 @@ const Index: NextPage<Props> = () => {
                         <div className='flex-grow '>{displayMoney(data.ballPrice)}</div>
                       </div>
                       <div className='flex justify-end items-center'>
+                        <Link href={{ pathname: '/game/[gameId]', query: { gameId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='Game Details'>
+                          <MdOutlineDashboard className='' size={'1.2rem'} />
+                        </Link>
                         <Link href={{ pathname: '/game/[gameId]/edit', query: { gameId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit'>
                           <RiPencilLine className='' size={'1.2rem'} />
                         </Link>

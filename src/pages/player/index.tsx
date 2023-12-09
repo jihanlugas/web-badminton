@@ -3,10 +3,7 @@ import ModalDelete from "@/components/modal/modal-delete"
 import ModalFilterPlayer from "@/components/modal/modal-filter-player"
 import Table from "@/components/table/table"
 import { Api } from "@/lib/api"
-import { Company } from "@/types/company"
-import { Player } from "@/types/player"
 import PageWithLayoutType from "@/types/layout"
-import { PageInfo, PageRequest } from "@/types/pagination"
 import { displayActive, displayMoney, displayNumber, displayPhoneNumber } from "@/utils/formater"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { ColumnDef } from "@tanstack/react-table"
@@ -25,9 +22,12 @@ import MainUser from '@/components/layout/main-user';
 import { MdOutlineEmail, MdOutlineKeyboardArrowRight, MdPhone } from 'react-icons/md';
 import { FaRegMap } from 'react-icons/fa6';
 import { getInitialWord } from '@/utils/helper';
+import { CompanyView } from '@/types/company';
+import { PagePlayer, PlayerView } from '@/types/player';
+import { PageInfo } from '@/types/pagination';
 
 type Props = {
-  company: Company
+  company: CompanyView
 }
 
 type FilterPropsPlayer = {
@@ -42,10 +42,10 @@ type FilterPropsPlayer = {
 
 const Index: NextPage<Props> = () => {
 
-  const company: Company = JSON.parse(localStorage.getItem('company'));
+  const company: CompanyView = JSON.parse(localStorage.getItem('company'));
   const router = useRouter();
 
-  const [player, setPlayer] = useState<Player[]>([]);
+  const [player, setPlayer] = useState<PlayerView[]>([]);
   const [showModalFilterPlayer, setShowModalFilterPlayer] = useState<boolean>(false);
   const [showModalDeletePlayer, setShowModalDeletePlayer] = useState<boolean>(false);
   const [deletePlayerId, setDeletePlayerId] = useState<string>(''); const [accordion, setAccordion] = useState<number[]>([]);
@@ -65,7 +65,7 @@ const Index: NextPage<Props> = () => {
     totalData: 0,
     page: 0,
   });
-  const [pageRequestPlayer, setPageRequestPlayer] = useState<PageRequest & FilterPropsPlayer>({
+  const [pageRequestPlayer, setPageRequestPlayer] = useState<PagePlayer>({
     limit: 1000,
     page: 1,
     sortField: null,
@@ -155,7 +155,7 @@ const Index: NextPage<Props> = () => {
             <div className='flex items-center md:hidden'>
               <div className='mr-4'>{'Player'}</div>
             </div>
-            <div className='flex items-center'>
+            <div className='flex items-center text-base'>
               <Link href={{ pathname: '/player/new' }} className='flex items-center hover:bg-gray-100 rounded -m-2 p-2'>
                 <div className='flex justify-center items-center rounded h-8 w-8'>
                   <IoAddOutline size={'1.2em'} />
