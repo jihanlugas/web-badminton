@@ -3,8 +3,8 @@ import TextAreaField from "@/components/formik/text-area-field";
 import TextField from "@/components/formik/text-field";
 import MainUser from "@/components/layout/main-user";
 import { Api } from "@/lib/api";
-import { Company } from "@/types/company";
-import { Player, PlayerUpdate } from "@/types/player"
+import { CompanyView } from "@/types/company";
+import { PlayerView, UpdatePlayer } from "@/types/player"
 import PageWithLayoutType from "@/types/layout";
 import notif from "@/utils/notif";
 import { useMutation } from "@tanstack/react-query";
@@ -20,7 +20,7 @@ import { GENDER } from "@/utils/constant";
 import CheckboxField from "@/components/formik/checkbox-field";
 
 type Props = {
-  player: Player
+  player: PlayerView
 }
 
 const schema = Yup.object().shape({
@@ -39,7 +39,7 @@ const Edit: NextPage<Props> = ({ player }) => {
 
   const { mutate: mutateSubmit, isLoading } = useMutation((val: FormikValues) => Api.put('/player/' + player.id, val));
 
-  const initFormikValue: PlayerUpdate = {
+  const initFormikValue: UpdatePlayer = {
     companyId: player.companyId,
     name: player.name,
     email: player.email,

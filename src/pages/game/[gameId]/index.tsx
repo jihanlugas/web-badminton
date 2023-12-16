@@ -217,10 +217,15 @@ const Index: NextPage<Props> = ({ game }) => {
                   <button onClick={() => toggleAddGamematch(false)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
                     {'Add match'}
                   </button>
-                  <hr />
                   <button onClick={() => toggleAddGameplayer(false)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
                     {'Add game player'}
                   </button>
+                  <hr />
+                  <Link href={{ pathname: "/game/[gameId]/finish", query: { gameId: game.id } }}>
+                    <div className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
+                      {'Finish Game'}
+                    </div>
+                  </Link>
                 </div>
               </div>
             </div>

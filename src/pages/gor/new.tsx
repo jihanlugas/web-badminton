@@ -1,7 +1,7 @@
 import MainUser from "@/components/layout/main-user";
 import { Api } from "@/lib/api";
-import { Company } from "@/types/company";
-import { GorCreate } from "@/types/gor";
+import { CompanyView } from "@/types/company";
+import { CreateGor } from "@/types/gor";
 import PageWithLayoutType from "@/types/layout";
 import notif from "@/utils/notif";
 import { useMutation } from "@tanstack/react-query";
@@ -32,11 +32,11 @@ const schema = Yup.object().shape({
 const New: NextPage<Props> = () => {
   const router = useRouter();
 
-  const company: Company = JSON.parse(localStorage.getItem('company'));
+  const company: CompanyView = JSON.parse(localStorage.getItem('company'));
 
   const { mutate: mutateSubmit, isLoading } = useMutation((val: FormikValues) => Api.post('/gor', val));
 
-  const initFormikValue: GorCreate = {
+  const initFormikValue: CreateGor = {
     companyId: company.id,
     name: '',
     description: '',
