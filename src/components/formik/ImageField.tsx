@@ -34,7 +34,7 @@ const ImageField: NextPage<Props & React.HTMLProps<HTMLInputElement>> = ({ label
       {label && (
         <div className={''}>
           <span>{label}</span>
-          {required && <span className={'text-red-600'}>{'*'}</span>}
+          {required && <span className={'text-rose-600'}>{'*'}</span>}
         </div>
       )}
       <input
@@ -63,7 +63,7 @@ const ImageField: NextPage<Props & React.HTMLProps<HTMLInputElement>> = ({ label
       <ErrorMessage name={name}>
         {(msg) => {
           return (
-            <div className={'text-red-600 text-sm normal-case'}>{msg}</div>
+            <div className={'text-rose-600 text-sm normal-case'}>{msg}</div>
           );
         }}
       </ErrorMessage>

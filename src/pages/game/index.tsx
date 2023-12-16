@@ -155,7 +155,7 @@ const Index: NextPage<Props> = () => {
             </div>
             <div className='flex items-center text-base'>
               <Link href={{ pathname: '/game/new' }} className='flex items-center hover:bg-gray-100 rounded -m-2 p-2'>
-                <div className='flex justify-center items-center rounded h-8 w-8'>
+                <div className='flex justify-center items-center rounded h-6 w-6'>
                   <IoAddOutline size={'1.2em'} />
                 </div>
                 <div className='ml-2 hidden md:block'>Add Game</div>
@@ -206,15 +206,15 @@ const Index: NextPage<Props> = () => {
                         <div className='flex-grow '>{displayMoney(data.ballPrice)}</div>
                       </div>
                       <div className='flex justify-end items-center'>
-                        <Link href={{ pathname: '/game/[gameId]', query: { gameId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='Game Details'>
-                          <MdOutlineDashboard className='' size={'1.2rem'} />
-                        </Link>
-                        <Link href={{ pathname: '/game/[gameId]/edit', query: { gameId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit'>
-                          <RiPencilLine className='' size={'1.2rem'} />
-                        </Link>
-                        <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='delete' onClick={() => toggleDeleteGame(data.id)}>
+                        <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow text-rose-500' title='delete' onClick={() => toggleDeleteGame(data.id)}>
                           <VscTrash className='' size={'1.2rem'} />
                         </button>
+                        <Link href={{ pathname: '/game/[gameId]/edit', query: { gameId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow text-amber-500' title='edit'>
+                          <RiPencilLine className='' size={'1.2rem'} />
+                        </Link>
+                        <Link href={{ pathname: '/game/[gameId]', query: { gameId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow text-primary-500' title='Game Details'>
+                          <MdOutlineDashboard className='' size={'1.2rem'} />
+                        </Link>
                       </div>
                     </div>
                   </div>
@@ -255,15 +255,15 @@ const Index: NextPage<Props> = () => {
                         <div className='flex-grow '>{displayMoney(data.ballPrice)}</div>
                       </div>
                       <div className='flex justify-end items-center'>
-                        <Link href={{ pathname: '/game/[gameId]', query: { gameId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='Game Details'>
-                          <MdOutlineDashboard className='' size={'1.2rem'} />
-                        </Link>
-                        <Link href={{ pathname: '/game/[gameId]/edit', query: { gameId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit'>
-                          <RiPencilLine className='' size={'1.2rem'} />
-                        </Link>
-                        <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='delete' onClick={() => toggleDeleteGame(data.id)}>
+                        <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow text-rose-500' title='delete' onClick={() => toggleDeleteGame(data.id)}>
                           <VscTrash className='' size={'1.2rem'} />
                         </button>
+                        <Link href={{ pathname: '/game/[gameId]/edit', query: { gameId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow text-amber-500' title='edit'>
+                          <RiPencilLine className='' size={'1.2rem'} />
+                        </Link>
+                        <Link href={{ pathname: '/game/[gameId]', query: { gameId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow text-primary-500' title='Game Details'>
+                          <MdOutlineDashboard className='' size={'1.2rem'} />
+                        </Link>
                       </div>
                     </div>
                   </div>

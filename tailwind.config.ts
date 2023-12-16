@@ -9,6 +9,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      height: {
+        '128': '32rem',
+      },
       zIndex: {
         '100': '100',
       },

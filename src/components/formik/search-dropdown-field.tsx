@@ -57,18 +57,18 @@ const DropDown = ({ field, form, options, required, disable, isLoading, placehol
 			{...props}
 			classNames={{
 				// valueContainer: (state) =>
-				// 	state.isFocused ? 'border-red-400' : 'border-green-400',
+				// 	state.isFocused ? 'border-rose-400' : 'border-green-400',
 				// menu: (state) =>
-				// 	state.isFocused ? 'border-red-400' : 'border-green-400',
+				// 	state.isFocused ? 'border-rose-400' : 'border-green-400',
 
 				container: (state) =>
 					state.isFocused ? 'border-2 border-primary-400 rounded' : 'border-2 border-gray-400 rounded',
 				// menuList: (state) =>
 				// 	'bg-blue-500',
 				// menu: (state) =>
-				// 	'bg-red-500',
+				// 	'bg-rose-500',
 				option: (state) =>
-					'bg-red-500',
+					'bg-rose-500',
 
 			}}
 			styles={{
@@ -109,7 +109,7 @@ const SearchDropdownField: NextPage<Props & React.HTMLProps<HTMLSelectElement>> 
 			{label && (
 				<div className={'mb-1'}>
 					<span>{label}</span>
-					{props.required && <span className={'text-red-600'}>{'*'}</span>}
+					{props.required && <span className={'text-rose-600'}>{'*'}</span>}
 				</div>
 			)}
 			<Field
@@ -125,7 +125,7 @@ const SearchDropdownField: NextPage<Props & React.HTMLProps<HTMLSelectElement>> 
 			<ErrorMessage name={name}>
 				{(msg) => {
 					return (
-						<div className={'text-red-600 text-sm normal-case'}>{msg}</div>
+						<div className={'text-rose-600 text-sm normal-case'}>{msg}</div>
 					);
 				}}
 			</ErrorMessage>

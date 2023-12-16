@@ -23,7 +23,7 @@ const PasswordField: NextPage<Props> = ({ label, name, required, ...props }) => 
 			{label && (
 				<div className={'mb-1'}>
 					<span>{label}</span>
-					{required && <span className={'text-red-600'}>{'*'}</span>}
+					{required && <span className={'text-rose-600'}>{'*'}</span>}
 				</div>
 			)}
 			<div className='relative w-full'>
@@ -40,7 +40,7 @@ const PasswordField: NextPage<Props> = ({ label, name, required, ...props }) => 
 			<ErrorMessage name={name}>
 				{(msg) => {
 					return (
-						<div className={'text-red-600 text-sm normal-case'}>{msg}</div>
+						<div className={'text-rose-600 text-sm normal-case'}>{msg}</div>
 					);
 				}}
 			</ErrorMessage>

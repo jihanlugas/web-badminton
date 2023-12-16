@@ -16,7 +16,7 @@ const DateField: NextPage<Props> = ({ label, name, required, ...props }) => {
         {label && (
           <div className={'mb-1'}>
             <span>{label}</span>
-            {required && <span className={'text-red-600'}>{'*'}</span>}
+            {required && <span className={'text-rose-600'}>{'*'}</span>}
           </div>
         )}
         {/* <Datetime

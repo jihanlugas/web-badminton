@@ -38,18 +38,18 @@ const SearchDropdown = ({ field, form, options, required, disable, isLoading, pl
 			{...props}
 			classNames={{
 				// valueContainer: (state) =>
-				// 	state.isFocused ? 'border-red-400' : 'border-green-400',
+				// 	state.isFocused ? 'border-rose-400' : 'border-green-400',
 				// menu: (state) =>
-				// 	state.isFocused ? 'border-red-400' : 'border-green-400',
+				// 	state.isFocused ? 'border-rose-400' : 'border-green-400',
 
 				container: (state) =>
 					state.isFocused ? 'border-2 border-primary-400 rounded' : 'border-2 border-gray-400 rounded',
 				// menuList: (state) =>
 				// 	'bg-blue-500',
 				// menu: (state) =>
-				// 	'bg-red-500',
+				// 	'bg-rose-500',
 				option: (state) =>
-					'bg-red-500',
+					'bg-rose-500',
 
 			}}
 			styles={{

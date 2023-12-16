@@ -36,11 +36,13 @@ export declare interface UpdateGameplayer {
   playerId: string;
   normalGame: number;
   rubberGame: number;
-  ballPrice: number;
+  ball: number;
   isPay: boolean;
 }
 
 export declare interface PageGameplayer extends Paging {
   gameId: string;
   playerId: string;
+  gameName: string;
+  playerName: string;
 }

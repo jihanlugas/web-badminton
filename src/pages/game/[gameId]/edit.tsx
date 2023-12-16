@@ -5,11 +5,11 @@ import TextAreaField from "@/components/formik/text-area-field";
 import TextField from "@/components/formik/text-field";
 import MainUser from "@/components/layout/main-user";
 import { Api } from "@/lib/api";
-import { Company } from "@/types/company";
+import { CompanyView } from "@/types/company";
 import { ListData } from "@/types/data";
-import { Game, GameUpdate } from "@/types/game"
+import { GameView, PageGame, UpdateGame } from "@/types/game";
+import { PageGor } from "@/types/gor";
 import PageWithLayoutType from "@/types/layout";
-import { PageRequest } from "@/types/pagination";
 import { useDebounce } from "@/utils/hook";
 import notif from "@/utils/notif";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -23,7 +23,7 @@ import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import * as Yup from 'yup';
 
 type Props = {
-  game: Game
+  game: GameView
 }
 
 type FilterPropsGor = {
@@ -47,9 +47,9 @@ const schema = Yup.object().shape({
 const Edit: NextPage<Props> = ({ game }) => {
   const router = useRouter();
 
-  const company: Company = JSON.parse(localStorage.getItem('company'));
+  const company: CompanyView = JSON.parse(localStorage.getItem('company'));
 
-  const initFormikValue: GameUpdate = {
+  const initFormikValue: UpdateGame = {
     companyId:game.companyId,
     gorId:game.gorId,
     name:game.name,
@@ -59,19 +59,24 @@ const Edit: NextPage<Props> = ({ game }) => {
     ballPrice:game.ballPrice,
     gameDt:game.gameDt,
     isFinish:game.isFinish,
+    debit: game.debit,
+    expectedDebit: game.expectedDebit,
   };
 
   const [searchGor, setSearchGor] = useState<string>('');
   const debounceSearchGor = useDebounce(searchGor, 300)
   const [listDataGor, setListDataGor] = useState<ListData[]>([]);
 
-  const [pageRequestGor, setPageRequestGor] = useState<PageRequest & FilterPropsGor>({
+  const [pageRequestGor, setPageRequestGor] = useState<PageGor>({
     limit: 1000,
     page: 1,
     sortField: null,
     sortOrder: null,
     companyId: company.id,
     name: '',
+    address: '',
+    createName: '',
+    description: '',
   });
 
   const { mutate: mutateSubmit, isLoading } = useMutation((val: FormikValues) => Api.put('/game/' + game.id, val));

@@ -157,7 +157,7 @@ const Index: NextPage<Props> = () => {
             </div>
             <div className='flex items-center text-base'>
               <Link href={{ pathname: '/player/new' }} className='flex items-center hover:bg-gray-100 rounded -m-2 p-2'>
-                <div className='flex justify-center items-center rounded h-8 w-8'>
+                <div className='flex justify-center items-center rounded h-6 w-6'>
                   <IoAddOutline size={'1.2em'} />
                 </div>
                 <div className='ml-2 hidden md:block'>Add Player</div>

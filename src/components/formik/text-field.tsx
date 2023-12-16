@@ -13,7 +13,7 @@ const TextField: NextPage<Props> = ({ name, type, ...props }) => {
 			{props.label && (
 				<div className={'mb-1'}>
 					<span>{props.label}</span>
-					{props.required && <span className={'text-red-600'}>{'*'}</span>}
+					{props.required && <span className={'text-rose-600'}>{'*'}</span>}
 				</div>
 			)}
 			<FastField
@@ -26,7 +26,7 @@ const TextField: NextPage<Props> = ({ name, type, ...props }) => {
 			<ErrorMessage name={name}>
 				{(msg) => {
 					return (
-						<div className={'text-red-600 text-sm normal-case'}>{msg}</div>
+						<div className={'text-rose-600 text-sm normal-case'}>{msg}</div>
 					);
 				}}
 			</ErrorMessage>

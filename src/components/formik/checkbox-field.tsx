@@ -26,7 +26,7 @@ const CheckboxField: NextPage<Props> = ({ name, showError = true, ...props }) =>
 				<ErrorMessage name={name}>
 					{(msg) => {
 						return (
-							<div className={'text-red-600 text-sm normal-case'}>{msg}</div>
+							<div className={'text-rose-600 text-sm normal-case'}>{msg}</div>
 						);
 					}}
 				</ErrorMessage>

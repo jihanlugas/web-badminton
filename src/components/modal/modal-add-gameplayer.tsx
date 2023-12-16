@@ -148,7 +148,7 @@ const ModalAddGameplayer: NextPage<Props> = ({ show, onClickOverlay, game }) => 
                                   </>
                                 )}
                                 {touched.listPlayerId && errors.listPlayerId && (
-                                  <div className='text-red-500'>{errors.listPlayerId}</div>
+                                  <div className='text-rose-500'>{errors.listPlayerId}</div>
                                 )}
                               </div>
                             </>
@@ -159,7 +159,7 @@ const ModalAddGameplayer: NextPage<Props> = ({ show, onClickOverlay, game }) => 
                     <div className='flex'>
                       <div className={'w-full'}>
                         <ButtonSubmit
-                          label={'Filter'}
+                          label={'Add'}
                           disabled={isLoadingPlayer || isLoading}
                           loading={isLoadingPlayer || isLoading}
                         />
