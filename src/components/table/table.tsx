@@ -9,13 +9,13 @@ import {
 import React, { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 import { CgPushChevronRight, CgPushChevronLeft, CgChevronRight, CgChevronLeft } from 'react-icons/cg';
 import { FaSortAmountDownAlt, FaSortAmountDown } from 'react-icons/fa';
-import { PageInfo, PageRequest } from '@/types/pagination';
+import { PageInfo, Paging } from '@/types/pagination';
 
 type Props = {
   columns: any[],
   data: any[],
-  pageRequest: PageRequest & any,
-  setPageRequest: Dispatch<SetStateAction<PageRequest & any>>,
+  pageRequest: Paging & any,
+  setPageRequest: Dispatch<SetStateAction<Paging & any>>,
   pageInfo: PageInfo,
   isLoading: boolean,
 }

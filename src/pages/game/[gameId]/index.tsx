@@ -97,6 +97,8 @@ const Index: NextPage<Props> = ({ game }) => {
     sortOrder: 'asc',
     gameId: game.id,
     playerId: '',
+    gameName: '',
+    playerName: '',
   });
 
   const { mutate: mutateDeleteGameplayer, isLoading: isLoadingDeleteGameplayer } = useMutation((id: string) => Api.delete('/gameplayer/' + id));

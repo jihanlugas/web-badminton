@@ -29,8 +29,8 @@ const schema = Yup.object().shape({
   companyId: Yup.string().required('Required field'),
   gameId: Yup.string().required('Required field'),
   matchName: Yup.string().required('Required field'),
-  leftPoint: Yup.number().min(0).required('Required field'),
-  rightPoint: Yup.number().min(0).required('Required field'),
+  leftPoint: Yup.number().required('Required field'),
+  rightPoint: Yup.number().required('Required field'),
   gameMatchTeams: Yup.array().of(
     Yup.object().shape({
       name: Yup.string().required('Required field'),
@@ -99,7 +99,7 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
         rightScore: 0,
       },
     ],
-    ball: 0,
+    ball: 1,
   }
 
   const [pageRequestGameplayer, setPageRequestGameplayer] = useState<PageGameplayer>({
@@ -113,32 +113,33 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
     playerName: '',
   });
 
-  const { mutate: mutateSubmit, isLoading } = useMutation((val: FormikValues) => Api.post('/gameplayermatch', val));
+  const { mutate: mutateSubmit, isLoading } = useMutation((val: FormikValues) => Api.post('/gamematch', val));
 
   const { isLoading: isLoadingGameplayer, data: dataGameplayer, refetch: refetchGameplayer } = useQuery(['gameplayer', pageRequestGameplayer], ({ queryKey }) => Api.get('/gameplayer/page', queryKey[1]), {});
 
   const handleSubmit = (values: FormikValues, formikHelpers: FormikHelpers<CreateGamematch>) => {
     console.log('values ', values)
-    // mutateSubmit(values, {
-    //   onSuccess: (res) => {
-    //     if (res) {
-    //       if (res.status) {
-    //         notif.success(res.message);
-    //         formikHelpers.resetForm()
-    //         onClickOverlay(true)
-    //       } else if (!res.success) {
-    //         if (res.payload && res.payload.listError) {
-    //           notif.error(res.message);
-    //         } else {
-    //           notif.error(res.message);
-    //         }
-    //       }
-    //     }
-    //   },
-    //   onError: (res) => {
-    //     notif.error('Please cek you connection');
-    //   },
-    // });
+
+    mutateSubmit(values, {
+      onSuccess: (res) => {
+        if (res) {
+          if (res.status) {
+            notif.success(res.message);
+            formikHelpers.resetForm()
+            onClickOverlay(true)
+          } else if (!res.success) {
+            if (res.payload && res.payload.listError) {
+              notif.error(res.message);
+            } else {
+              notif.error(res.message);
+            }
+          }
+        }
+      },
+      onError: (res) => {
+        notif.error('Please cek you connection');
+      },
+    });
   }
 
   useEffect(() => {
@@ -146,7 +147,7 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
       const newArrayOfObj = dataGameplayer.payload.list.map(data => {
         return {
           label: data.playerName,
-          value: data.id
+          value: data.playerId
         }
       })
       setListDataPlayer(newArrayOfObj)
@@ -159,7 +160,8 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
     }
   }, [show]);
 
-  const handleChangePlayer = (e, fieldName, setFieldValue) => {
+  const handleChangePlayer = (e: HTMLSelectElement, fieldName, setFieldValue) => {
+    console.log(e)
     setFieldValue(fieldName, e ? e.value : '')
   }
 
@@ -186,182 +188,187 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
           <div className={'text-xl mb-4'}>
             Add Game Match
           </div>
-          <div className=''>
-            <Formik
-              initialValues={initFormikValue}
-              validationSchema={schema}
-              enableReinitialize={true}
-              onSubmit={(values, formikHelpers) => handleSubmit(values, formikHelpers)}
-            >
-              {({ values, errors, touched, setValues, setFieldValue }) => {
-                return (
-                  <Form encType='multipart/form-data'>
-                    <div className='max-h-[44rem] overflow-y-scroll mb-4'>
-                      <div className="mb-4">
-                        <TextField
-                          label={'Match Name'}
-                          name={'matchName'}
-                          type={'text'}
-                          placeholder={'Match Name'}
-                          required
-                        />
-                      </div>
-                      <div className='mb-4 '>
-                        <div className='w-full grid grid-cols-2 gap-2'>
-                          <button className='w-full h-8 rounded-lg bg-primary-200 hover:bg-primary-300 disabled:bg-primary-400' disabled={!selected} type='button' onClick={() => setSelected(!selected)}>
-                            <div>{values.gameMatchTeams[0].name}</div>
-                          </button>
-                          <button className='w-full h-8 rounded-lg bg-primary-200 hover:bg-primary-300 disabled:bg-primary-400' disabled={selected} type='button' onClick={() => setSelected(!selected)}>
-                            <div>{values.gameMatchTeams[1].name}</div>
-                          </button>
+          {show && (
+            <div className=''>
+              <Formik
+                initialValues={initFormikValue}
+                validationSchema={schema}
+                enableReinitialize={true}
+                onSubmit={(values, formikHelpers) => handleSubmit(values, formikHelpers)}
+              >
+                {({ values, errors, touched, setValues, setFieldValue }) => {
+                  return (
+                    <Form encType='multipart/form-data'>
+                      <div className='max-h-[44rem] overflow-y-scroll mb-4'>
+                        <div className="mb-4">
+                          <TextField
+                            label={'Match Name'}
+                            name={'matchName'}
+                            type={'text'}
+                            placeholder={'Match Name'}
+                            required
+                          />
                         </div>
-                      </div>
-                      <div className='mb-4'>
-                        <div className={`${selected ? 'hidden' : 'block'}`}>
-                          <div className='mb-4'>
-                            <TextField
-                              label={'Team Name'}
-                              name={'gameMatchTeams[0].name'}
-                              type={'text'}
-                              placeholder={'Team Name'}
-                              required
-                            />
-                          </div>
-                          <div className="mb-4">
-                            <SearchDropdownField
-                              label={'Player 1'}
-                              name={'gameMatchTeams[0].gameMatchTeamPlayers[0].playerId'}
-                              options={listDataPlayer}
-                              onInputChange={search => { setSearchPlayer(search) }}
-                              onChange={e => handleChangePlayer(e, 'gameMatchTeams[0].gameMatchTeamPlayers[0].playerId', setFieldValue)}
-                              required
-                            />
-                          </div>
-                          <div className="mb-4">
-                            <SearchDropdownField
-                              label={'Player 2'}
-                              name={'gameMatchTeams[0].gameMatchTeamPlayers[1].playerId'}
-                              options={listDataPlayer}
-                              onInputChange={search => { setSearchPlayer(search) }}
-                              onChange={e => handleChangePlayer(e, 'gameMatchTeams[0].gameMatchTeamPlayers[1].playerId', setFieldValue)}
-                              required
-                            />
+                        <div className='mb-4 '>
+                          <div className='w-full grid grid-cols-2 gap-2'>
+                            <button className='w-full h-8 rounded-lg bg-primary-200 hover:bg-primary-300 disabled:bg-primary-400' disabled={!selected} type='button' onClick={() => setSelected(!selected)}>
+                              <div>{values.gameMatchTeams[0].name}</div>
+                            </button>
+                            <button className='w-full h-8 rounded-lg bg-primary-200 hover:bg-primary-300 disabled:bg-primary-400' disabled={selected} type='button' onClick={() => setSelected(!selected)}>
+                              <div>{values.gameMatchTeams[1].name}</div>
+                            </button>
                           </div>
                         </div>
-                        <div className={`${selected ? 'block' : 'hidden'}`}>
-                          <div className='mb-4'>
-                            <TextField
-                              label={'Team Name'}
-                              name={'gameMatchTeams[1].name'}
-                              type={'text'}
-                              placeholder={'Team Name'}
-                              required
-                            />
+                        <div className='mb-4'>
+                          <div className={`${selected ? 'hidden' : 'block'}`}>
+                            <div className='mb-4'>
+                              <TextField
+                                label={'Team Name'}
+                                name={'gameMatchTeams[0].name'}
+                                type={'text'}
+                                placeholder={'Team Name'}
+                                required
+                              />
+                            </div>
+                            <div className="mb-4">
+                              <SearchDropdownField
+                                label={'Player 1'}
+                                name={'gameMatchTeams[0].gameMatchTeamPlayers[0].playerId'}
+                                options={listDataPlayer}
+                                onInputChange={search => { setSearchPlayer(search) }}
+                                onChange={e => handleChangePlayer(e, 'gameMatchTeams[0].gameMatchTeamPlayers[0].playerId', setFieldValue)}
+                                required
+                              />
+                            </div>
+                            <div className="mb-4">
+                              <SearchDropdownField
+                                label={'Player 2'}
+                                name={'gameMatchTeams[0].gameMatchTeamPlayers[1].playerId'}
+                                options={listDataPlayer}
+                                onInputChange={search => { setSearchPlayer(search) }}
+                                onChange={e => handleChangePlayer(e, 'gameMatchTeams[0].gameMatchTeamPlayers[1].playerId', setFieldValue)}
+                                required
+                              />
+                            </div>
                           </div>
-                          <div className="mb-4">
-                            <SearchDropdownField
-                              label={'Player 1'}
-                              name={'gameMatchTeams[1].gameMatchTeamPlayers[0].playerId'}
-                              options={listDataPlayer}
-                              onInputChange={search => { setSearchPlayer(search) }}
-                              onChange={e => handleChangePlayer(e, 'gameMatchTeams[1].gameMatchTeamPlayers[0].playerId', setFieldValue)}
-                              required
-                            />
-                          </div>
-                          <div className="mb-4">
-                            <SearchDropdownField
-                              label={'Player 2'}
-                              name={'gameMatchTeams[1].gameMatchTeamPlayers[1].playerId'}
-                              options={listDataPlayer}
-                              onInputChange={search => { setSearchPlayer(search) }}
-                              onChange={e => handleChangePlayer(e, 'gameMatchTeams[1].gameMatchTeamPlayers[1].playerId', setFieldValue)}
-                              required
-                            />
+                          <div className={`${selected ? 'block' : 'hidden'}`}>
+                            <div className='mb-4'>
+                              <TextField
+                                label={'Team Name'}
+                                name={'gameMatchTeams[1].name'}
+                                type={'text'}
+                                placeholder={'Team Name'}
+                                required
+                              />
+                            </div>
+                            <div className="mb-4">
+                              <SearchDropdownField
+                                label={'Player 1'}
+                                name={'gameMatchTeams[1].gameMatchTeamPlayers[0].playerId'}
+                                options={listDataPlayer}
+                                onInputChange={search => { setSearchPlayer(search) }}
+                                onChange={e => handleChangePlayer(e, 'gameMatchTeams[1].gameMatchTeamPlayers[0].playerId', setFieldValue)}
+                                required
+                              />
+                            </div>
+                            <div className="mb-4">
+                              <SearchDropdownField
+                                label={'Player 2'}
+                                name={'gameMatchTeams[1].gameMatchTeamPlayers[1].playerId'}
+                                options={listDataPlayer}
+                                onInputChange={search => { setSearchPlayer(search) }}
+                                onChange={e => handleChangePlayer(e, 'gameMatchTeams[1].gameMatchTeamPlayers[1].playerId', setFieldValue)}
+                                required
+                              />
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div className='mb-4'>
-                        <div className='text-lg'>Score</div>
-                        <FieldArray
-                          name={'gameMatchScores'}
-                          render={arrayHelpers => (
-                            <>
-                              <div className='mb-4'>
-                                <div className=''>
-                                  <CheckboxField
-                                    name={`isRubber`}
-                                    label={"Rubber"}
-                                    onChange={(e) => handleCheckRubber(e, setFieldValue, arrayHelpers)}
-                                  />
-                                </div>
-                                {values.gameMatchScores.map((item, key) => {
-                                  return (
-                                    <div key={key} className='mb-4'>
-                                      <div>{'Set ' + (key + 1)}</div>
-                                      <div className='grid grid-cols-2 gap-2'>
-                                        <TextField
-                                          label={values.gameMatchTeams[0].name}
-                                          name={`gameMatchScores[${key}].leftScore`}
-                                          type={'number'}
-                                          placeholder={'Score'}
-                                          required
-                                        />
-                                        <TextField
-                                          label={values.gameMatchTeams[1].name}
-                                          name={`gameMatchScores[${key}].rightScore`}
-                                          type={'number'}
-                                          placeholder={'Score'}
-                                          required
-                                        />
+                        <div className='mb-4'>
+                          <div className='text-lg'>Score</div>
+                          <FieldArray
+                            name={'gameMatchScores'}
+                            render={arrayHelpers => (
+                              <>
+                                <div className='mb-4'>
+                                  <div className=''>
+                                    <CheckboxField
+                                      name={`isRubber`}
+                                      label={"Rubber Game"} 
+                                      onChange={(e) => handleCheckRubber(e, setFieldValue, arrayHelpers)}
+                                    />
+                                  </div>
+                                  {values.gameMatchScores.map((item, key) => {
+                                    return (
+                                      <div key={key} className='mb-4'>
+                                        <div>{'Set ' + (key + 1)}</div>
+                                        <div className='grid grid-cols-2 gap-2'>
+                                          <TextField
+                                            label={values.gameMatchTeams[0].name}
+                                            name={`gameMatchScores[${key}].leftScore`}
+                                            type={'number'}
+                                            placeholder={'Score'}
+                                            required
+                                          />
+                                          <TextField
+                                            label={values.gameMatchTeams[1].name}
+                                            name={`gameMatchScores[${key}].rightScore`}
+                                            type={'number'}
+                                            placeholder={'Score'}
+                                            required
+                                          />
+                                        </div>
                                       </div>
-                                    </div>
-                                  )
-                                })}
-                              </div>
-                            </>
-                          )}
-                        />
-                      </div>
-                      <div className='mb-4'>
-                        <div className='grid grid-cols-2 gap-2'>
-                          <TextField
-                            label={'Point ' + values.gameMatchTeams[0].name}
-                            name={'leftPoint'}
-                            type={'number'}
-                            placeholder={'Point'}
-                            required
+                                    )
+                                  })}
+                                </div>
+                              </>
+                            )}
                           />
+                        </div>
+                        <div className=''>
+                          <div className='text-lg'>Point</div>
+                        </div>
+                        <div className='mb-4'>
+                          <div className='grid grid-cols-2 gap-2'>
+                            <TextField
+                              label={'Point ' + values.gameMatchTeams[0].name}
+                              name={'leftPoint'}
+                              type={'number'}
+                              placeholder={'Point'}
+                              required
+                            />
+                            <TextField
+                              label={'Point ' + values.gameMatchTeams[1].name}
+                              name={'rightPoint'}
+                              type={'number'}
+                              placeholder={'Point'}
+                              required
+                            />
+                          </div>
+                        </div>
+                        <div className='mb-4'>
                           <TextField
-                            label={'Point ' + values.gameMatchTeams[1].name}
-                            name={'rightPoint'}
+                            label={'Total Ball'}
+                            name={'ball'}
                             type={'number'}
-                            placeholder={'Point'}
+                            placeholder={'Ball'}
                             required
                           />
                         </div>
                       </div>
-                      <div className='mb-4'>
-                        <TextField
-                          label={'Total Ball'}
-                          name={'ball'}
-                          type={'number'}
-                          placeholder={'Ball'}
-                          required
+                      <div className=''>
+                        <ButtonSubmit
+                          label={'Create'}
+                          disabled={isLoading}
+                          loading={isLoading}
                         />
                       </div>
-                    </div>
-                    <div className=''>
-                      <ButtonSubmit
-                        label={'Create'}
-                        disabled={isLoading}
-                        loading={isLoading}
-                      />
-                    </div>
-                  </Form>
-                );
-              }}
-            </Formik>
-          </div>
+                    </Form>
+                  );
+                }}
+              </Formik>
+            </div>
+          )}
         </div>
       </Modal>
     </>

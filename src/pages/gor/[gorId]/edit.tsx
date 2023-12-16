@@ -3,8 +3,8 @@ import TextAreaField from "@/components/formik/text-area-field";
 import TextField from "@/components/formik/text-field";
 import MainUser from "@/components/layout/main-user";
 import { Api } from "@/lib/api";
-import { Company } from "@/types/company";
-import { Gor, GorUpdate } from "@/types/gor"
+import { CompanyView } from "@/types/company";
+import { GorView, UpdateGor } from "@/types/gor"
 import PageWithLayoutType from "@/types/layout";
 import notif from "@/utils/notif";
 import { useMutation } from "@tanstack/react-query";
@@ -17,7 +17,7 @@ import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import * as Yup from 'yup';
 
 type Props = {
-  gor: Gor
+  gor: GorView
 }
 
 const schema = Yup.object().shape({
@@ -36,7 +36,7 @@ const Edit: NextPage<Props> = ({ gor }) => {
 
   const { mutate: mutateSubmit, isLoading } = useMutation((val: FormikValues) => Api.put('/gor/' + gor.id, val));
 
-  const initFormikValue: GorUpdate = {
+  const initFormikValue: UpdateGor = {
     companyId: gor.companyId,
     name: gor.name,
     description: gor.description,

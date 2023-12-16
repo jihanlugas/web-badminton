@@ -1,15 +1,15 @@
 import MainAdmin from "@/components/layout/main-admin";
 import { Api } from "@/lib/api";
-import { Company } from "@/types/company";
-import { Gor } from "@/types/gor"
+import { CompanyView } from "@/types/company";
+import { GorView } from "@/types/gor";
 import PageWithLayoutType from "@/types/layout";
 import Head from "next/head";
 import { GetServerSideProps, NextPage } from "next/types";
 
 
 type Props = {
-  company: Company
-  gor: Gor
+  company: CompanyView
+  gor: GorView
 }
 
 
