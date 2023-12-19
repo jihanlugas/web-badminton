@@ -4,7 +4,7 @@ import MainUser from "@/components/layout/main-user";
 import { Api } from "@/lib/api";
 import { CompanyView } from "@/types/company";
 import { ListData } from "@/types/data";
-import { GameView } from "@/types/game";
+import { GameDetail, GameView } from "@/types/game";
 import PageWithLayoutType from "@/types/layout";
 import { PageInfo, Paging } from "@/types/pagination";
 import { PagePlayer } from "@/types/player";
@@ -33,7 +33,7 @@ import CheckboxField from "@/components/formik/checkbox-field";
 import ModalAddGamematch from "@/components/modal/modal-add-gamematch";
 
 type Props = {
-  game: GameView
+  gamedetail: GameDetail
 }
 type GamePlayerSectionProps = {
   game: GameView
@@ -53,7 +53,9 @@ const schemaAddPlayer = Yup.object().shape({
   playerId: Yup.string(),
 });
 
-const Finish: NextPage<Props> = ({ game }) => {
+const Finish: NextPage<Props> = ({ gamedetail }) => {
+
+  const { game, gamematches, gamematchteams, gamematchteamplayers, gamematchscores } = gamedetail;
 
   const company: CompanyView = JSON.parse(localStorage.getItem('company'));
   const router = useRouter();
@@ -214,7 +216,7 @@ const Finish: NextPage<Props> = ({ game }) => {
           </div>
         </div>
 
-        <div className='bg-white rounded shadow'>
+        <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className={'w-full max-w-xl'}>
             <div className='p-4'>
               <div className='text-lg'>Game</div>
@@ -243,11 +245,69 @@ const Finish: NextPage<Props> = ({ game }) => {
                 <div>{displayDateTime(game.gameDt)}</div>
               </div>
             </div>
-            <div>
-              <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
-                {JSON.stringify(game, null, 4)}
-              </div>
+          </div>
+        </div>
+
+        <div className='bg-white mb-4 p-4 rounded shadow'>
+          <div className={'w-full max-w-xl'}>
+            <div className='p-4'>
+              <div className='text-lg'>Game Match</div>
+              {gamematches.map((data, key) => {
+                return (
+                  <div key={key} className="mb-4">
+                    <div>{data.name}</div>
+                    <div className="flex justify-between">
+                      <div>{data.leftTeamName}</div>
+                      {gamematchteamplayers.filter((player) => player.gamematchteamId === data.leftTeamId).map((player, key) => {
+                        return (
+                          <div key={key}>{player.playerName}</div>
+                        )
+                      })}
+                      {gamematchscores.filter((gms) => gms.gamematchId === data.id).map((gms, key) => {
+                        return (
+                          <div key={key}>{gms.leftTeamScore}</div>
+                        )
+                      })}
+                    </div>
+                    <div className="flex justify-between">
+                      <div>{data.rightTeamName}</div>
+                      {gamematchteamplayers.filter((player) => player.gamematchteamId === data.rightTeamId).map((player, key) => {
+                        return (
+                          <div key={key}>{player.playerName}</div>
+                        )
+                      })}
+                      {gamematchscores.filter((gms) => gms.gamematchId === data.id).map((gms, key) => {
+                        return (
+                          <div key={key}>{gms.rightTeamScore}</div>
+                        )
+                      })}
+                    </div>
+                    {/* <div className="grid grid-cols-2 gap-4">
+                      <div>{data.leftTeamName}</div>
+                      <div>{data.rightTeamName}</div>
+                    </div>
+                    {gamematchscores.filter((gms) => gms.gamematchId === data.id).map((gms, key) => {
+                      return (
+                        <div key={key} className="grid grid-cols-2 gap-4">
+                          <div>{gms.leftTeamScore}</div>
+                          <div>{gms.rightTeamScore}</div>
+                        </div>
+                      )
+                    })}
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>{data.leftTeamPoint}</div>
+                      <div>{data.rightTeamPoint}</div>
+                    </div> */}
+                  </div>
+                )
+              })}
             </div>
+          </div>
+        </div>
+
+        <div className='bg-white mb-4 p-4 rounded shadow'>
+          <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+            {JSON.stringify(gamedetail, null, 4)}
           </div>
         </div>
 
@@ -260,12 +320,12 @@ const Finish: NextPage<Props> = ({ game }) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { gameId } = context.query;
-  const game = await Api.get('/game/' + gameId).then(res => res);
+  const gamedetail = await Api.get('/game/' + gameId + '/detail').then(res => res);
 
-  if (game.status) {
+  if (gamedetail.status) {
     return {
       props: {
-        game: game.payload,
+        gamedetail: gamedetail.payload,
       }
     };
   } else {

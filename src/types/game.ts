@@ -1,4 +1,9 @@
 import { Paging } from "@/types/pagination";
+import { GameplayerView } from "@/types/gameplayer";
+import { GamematchView } from "@/types/gamematch";
+import { GamematchscoreView } from "@/types/gamematchscore";
+import { GamematchteamView } from "@/types/gamematchteam";
+import { GamematchteamplayerView } from "@/types/gamematchteamplayer";
 
 export declare interface GameView {
   id: string;
@@ -24,6 +29,14 @@ export declare interface GameView {
   createName: string;
   updateName: string;
   deleteName: string;
+}
+export declare interface GameDetail {
+  game: GameView;
+  gameplayers: GameplayerView[];
+  gamematches: GamematchView[];
+  gamematchscores: GamematchscoreView[];
+  gamematchteams: GamematchteamView[];
+  gamematchteamplayers: GamematchteamplayerView[];
 }
 
 export declare interface CreateGame {
