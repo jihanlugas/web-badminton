@@ -4,7 +4,7 @@ import MainUser from "@/components/layout/main-user";
 import { Api } from "@/lib/api";
 import { CompanyView } from "@/types/company";
 import { ListData } from "@/types/data";
-import { GameDetail, GameView } from "@/types/game";
+import { FinishGame, GameDetail, GameView } from "@/types/game";
 import PageWithLayoutType from "@/types/layout";
 import { PageInfo, Paging } from "@/types/pagination";
 import { PagePlayer } from "@/types/player";
@@ -53,140 +53,91 @@ const schemaAddPlayer = Yup.object().shape({
   playerId: Yup.string(),
 });
 
+const schema = Yup.object().shape({
+  gameId: Yup.string().required("Required field"),
+  transactions: Yup.array().of(
+    Yup.object().shape({
+      companyId: Yup.string().required("Required field"),
+      name: Yup.string().required("Required field"),
+      isDebit: Yup.boolean(),
+      price: Yup.number().required("Required field"),
+    })
+  )
+});
+
 const Finish: NextPage<Props> = ({ gamedetail }) => {
 
-  const { game, gamematches, gamematchteams, gamematchteamplayers, gamematchscores } = gamedetail;
+  const { game, gamematches, gamematchteams, gamematchteamplayers, gamematchscores, gameplayers } = gamedetail;
 
   const company: CompanyView = JSON.parse(localStorage.getItem('company'));
   const router = useRouter();
 
-  const [gameplayer, setGameplayer] = useState<GameplayerView[]>([]);
-  const [showModalAddGameplayer, setShowModalAddGameplayer] = useState<boolean>(false);
-  const [showModalAddGamematch, setShowModalAddGamematch] = useState<boolean>(false);
-  const [showModalDeleteGameplayer, setShowModalDeleteGameplayer] = useState<boolean>(false);
-  const refAdd = useRef<HTMLDivElement>();
-  const [addBar, setAddBar] = useState(false);
-  const [deleteGameplayerId, setDeleteGameplayerId] = useState<string>('');
+  const [accordionPlayer, setAccordionPlayer] = useState<string[]>([]);
+  const [accordionGamematch, setAccordionGamematch] = useState<string[]>([]);
 
-  useEffect(() => {
-    const checkIfClickedOutside = e => {
-      // If the menu is open and the clicked target is not within the menu,
-      // then close the menu
-      if (addBar && refAdd.current && !refAdd.current.contains(e.target)) {
-        setAddBar(false);
-      }
-    };
-
-    document.addEventListener('mousedown', checkIfClickedOutside);
-
-    return () => {
-      // Cleanup the event listener
-      document.removeEventListener('mousedown', checkIfClickedOutside);
-    };
-  }, [addBar]);
-
-  const [pageInfoGameplayer, setPageInfoGameplayer] = useState<PageInfo>({
-    pageSize: 0,
-    pageCount: 0,
-    totalData: 0,
-    page: 0,
-  });
-
-  const [pageRequestGameplayer, setPageRequestGameplayer] = useState<PageGameplayer>({
-    limit: 1000,
-    page: 1,
-    sortField: 'create_dt',
-    sortOrder: 'asc',
+  const initFormikValue: FinishGame = {
     gameId: game.id,
-    playerId: '',
-    gameName: '',
-    playerName: '',
-  });
-
-  const { mutate: mutateDeleteGameplayer, isLoading: isLoadingDeleteGameplayer } = useMutation((id: string) => Api.delete('/gameplayer/' + id));
-
-  const { isLoading: isLoadingGameplayer, data: dataGameplayer, refetch: refetchGameplayer } = useQuery(['gameplayer', pageRequestGameplayer], ({ queryKey }) => Api.get('/gameplayer/page', queryKey[1]), {});
-
-  useEffect(() => {
-    if (dataGameplayer && dataGameplayer.status) {
-      setGameplayer(dataGameplayer.payload.list);
-      setPageInfoGameplayer({
-        pageCount: dataGameplayer.payload.totalPage,
-        pageSize: dataGameplayer.payload.dataPerPage,
-        totalData: dataGameplayer.payload.totalData,
-        page: dataGameplayer.payload.page,
-      });
-    }
-  }, [dataGameplayer]);
-
-  const toggleDeleteGameplayer = (id = '') => {
-    setDeleteGameplayerId(id);
-    setShowModalDeleteGameplayer(!showModalDeleteGameplayer);
-  };
-
-  const handleDeleteGameplayer = () => {
-    mutateDeleteGameplayer(deleteGameplayerId, {
-      onSuccess: (res) => {
-        if (res) {
-          if (res.status) {
-            notif.success(res.message);
-            setDeleteGameplayerId('');
-            toggleDeleteGameplayer('');
-            refetchGameplayer();
-          } else if (!res.status) {
-            notif.error(res.message);
-          }
-        }
-
+    transactions: [
+      {
+        companyId: company.id,
+        name: 'Iuran Game',
+        isDebit: true,
+        price: 0,
       },
-      onError: (res) => {
-        notif.error('Please cek you connection');
+      {
+        companyId: company.id,
+        name: 'Bola',
+        isDebit: false,
+        price: 0,
       },
-    });
+
+    ]
+  }
+
+  const toggleAccordionPlayer = (key) => {
+    if (accordionPlayer.includes(key)) {
+      setAccordionPlayer(accordionPlayer.filter((item) => item !== key));
+    } else {
+      setAccordionPlayer([...accordionPlayer, key]);
+    }
+  }
+
+  const toggleAccordionGamematch = (key) => {
+    if (accordionGamematch.includes(key)) {
+      setAccordionGamematch(accordionGamematch.filter((item) => item !== key));
+    } else {
+      setAccordionGamematch([...accordionGamematch, key]);
+    }
+  }
+
+  const handleSubmit = (values: FormikValues) => {
+    console.log('handleSubmit ', values)
+    // mutateSubmit(values, {
+    //   onSuccess: (res) => {
+    //     if (res) {
+    //       if (res.status) {
+    //         notif.success(res.message);
+    //         refetchGameplayer();
+    //         setEdit('')
+    //       } else if (!res.success) {
+    //         notif.error(res.message);
+    //       }
+    //     }
+    //   },
+    //   onError: (res) => {
+    //     notif.error('Please cek you connection');
+    //   },
+    // });
   };
 
-  const toggleAddGameplayer = (refresh = false) => {
-    if (refresh) {
-      refetchGameplayer()
-    }
-    setAddBar(false);
-    setShowModalAddGameplayer(!showModalAddGameplayer)
-  };
-
-  const toggleAddGamematch = (refresh = false) => {
-    if (refresh) {
-      refetchGameplayer()
-    }
-    setAddBar(false);
-    setShowModalAddGamematch(!showModalAddGamematch)
-  };
+  var totalPaid = 0
+  var total = 0
 
   return (
     <>
       <Head>
         <title>{'Game - ' + game.name}</title>
       </Head>
-      <ModalAddGameplayer
-        onClickOverlay={toggleAddGameplayer}
-        show={showModalAddGameplayer}
-        game={game}
-      />
-      <ModalAddGamematch
-        onClickOverlay={toggleAddGamematch}
-        show={showModalAddGamematch}
-        game={game}
-      />
-      <ModalDelete
-        onClickOverlay={toggleDeleteGameplayer}
-        show={showModalDeleteGameplayer}
-        onDelete={handleDeleteGameplayer}
-        isLoading={isLoadingDeleteGameplayer}
-      >
-        <div>
-          <div className='mb-4'>Are you sure ?</div>
-          <div className='text-sm mb-4 text-gray-700'>Data related to thiss will also be deleted</div>
-        </div>
-      </ModalDelete>
       <div className='p-4'>
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='text-xl flex items-center justify-between'>
@@ -218,31 +169,189 @@ const Finish: NextPage<Props> = ({ gamedetail }) => {
 
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className={'w-full max-w-xl'}>
-            <div className='p-4'>
-              <div className='text-lg'>Game</div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>{'Name'}</div>
-                <div>{game.name}</div>
+            <div className='text-lg'>Game</div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>{'Name'}</div>
+              <div>{game.name}</div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>{'Description'}</div>
+              <div>{game.description}</div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>{'Normal Game Price'}</div>
+              <div>{displayMoney(game.normalGamePrice)}</div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>{'Rubber Game Price'}</div>
+              <div>{displayMoney(game.rubberGamePrice)}</div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>{'Ball Price'}</div>
+              <div>{displayMoney(game.ballPrice)}</div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>{'Game Date'}</div>
+              <div>{displayDateTime(game.gameDt)}</div>
+            </div>
+          </div>
+        </div>
+
+        <div className='bg-white mb-4 rounded shadow'>
+          <div className={'w-full max-w-xl'}>
+            <div className="p-4">
+              <div className='text-lg'>Game match</div>
+            </div>
+            {gamematches.map((data, key) => {
+              return (
+                <div key={key} className="mb-2 shadow">
+                  <button className='w-full flex justify-between rounded items-center px-4 py-2' onClick={() => toggleAccordionGamematch(data.id)}>
+                    <div className='text-left flex justify-between items-center'>
+                      <div className=''>{data.name}</div>
+                    </div>
+                    <div className="flex items-center">
+                      <div className='flex justify-center items-center h-8 w-8'>
+                        <MdOutlineKeyboardArrowRight className={`rotate-0 duration-300 ${accordionGamematch.includes(data.id) && 'rotate-90'}`} size={'1.5em'} />
+                      </div>
+                    </div>
+                  </button>
+                  <div className={`duration-300 overflow-hidden ${accordionGamematch.includes(data.id) ? 'max-h-60 ' : 'max-h-0 '}`}>
+                    <div className='px-4 pb-4'>
+                      <div className="grid grid-cols-5 gap-4 mb-2">
+                        <div className="col-span-3">
+                          <div className="">
+                            {gamematchteamplayers.filter((player) => player.gamematchteamId === data.leftTeamId).map((player, key) => {
+                              return (
+                                <div key={key} className="flex items-center">{player.playerName}</div>
+                              )
+                            })}
+                          </div>
+                        </div>
+                        <div className="col-span-2 flex justify-between">
+                          <div className="grid grid-cols-3 gap-4">
+                            {gamematchscores.filter((gms) => gms.gamematchId === data.id).map((gms, key) => {
+                              return (
+                                <div key={key} className="flex items-center">{gms.leftTeamScore}</div>
+                              )
+                            })}
+                          </div>
+                          <div className="font-bold flex items-center">{data.leftTeamPoint}</div>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-5 gap-4 mb-2">
+                        <div className="col-span-3">
+                          <div className="">
+                            {gamematchteamplayers.filter((player) => player.gamematchteamId === data.rightTeamId).map((player, key) => {
+                              return (
+                                <div key={key} className="flex items-center">{player.playerName}</div>
+                              )
+                            })}
+                          </div>
+                        </div>
+                        <div className="col-span-2 flex justify-between">
+                          <div className="grid grid-cols-3 gap-4">
+                            {gamematchscores.filter((gms) => gms.gamematchId === data.id).map((gms, key) => {
+                              return (
+                                <div key={key} className="flex items-center">{gms.rightTeamScore}</div>
+                              )
+                            })}
+                          </div>
+                          <div className="font-bold flex items-center">{data.rightTeamPoint}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        <div className='bg-white mb-4 rounded shadow'>
+          <div className={'w-full max-w-xl'}>
+            <div className="p-4">
+              <div className='text-lg'>Players</div>
+            </div>
+            {gameplayers.map((data, key) => {
+              total = total + (data.normalGame * game.normalGamePrice + data.rubberGame * game.rubberGamePrice + data.ball * game.ballPrice)
+              if (data.isPay) {
+                totalPaid = totalPaid + (data.normalGame * game.normalGamePrice + data.rubberGame * game.rubberGamePrice + data.ball * game.ballPrice)
+              }
+              return (
+                <div key={key} className="mb-2 shadow">
+                  <button className='w-full flex justify-between rounded items-center px-4 py-2' onClick={() => toggleAccordionPlayer(data.id)}>
+                    <div className='text-left flex justify-between items-center'>
+                      <div className=''>{data.playerName}</div>
+                    </div>
+                    <div className="flex items-center">
+                      {data.isPay ? (
+                        <div className="text-xs bg-primary-500 text-gray-50 px-2 py-1 rounded-full">PAID</div>
+                      ) : (
+                        <div className="text-xs bg-rose-500 text-gray-50 px-2 py-1 rounded-full">UNPAID</div>
+                      )}
+                      <div className='flex justify-center items-center h-8 w-8'>
+                        <MdOutlineKeyboardArrowRight className={`rotate-0 duration-300 ${accordionPlayer.includes(data.id) && 'rotate-90'}`} size={'1.5em'} />
+                      </div>
+                    </div>
+                  </button>
+                  <div className={`duration-300 overflow-hidden ${accordionPlayer.includes(data.id) ? 'max-h-60 ' : 'max-h-0 '}`}>
+                    <div className='px-4 pb-4'>
+                      <div className="text-sm">
+                        <div className="mb-4 grid grid-cols-3 gap-2 h-6">
+                          <div className="col-span-2">Normal Game</div>
+                          <div className="col-span-1 flex justify-between items-center">
+                            <div className="bg-gray-300 h-6 w-6 rounded-full flex justify-center items-center mr-4 font-bold shadow">{data.normalGame}</div>
+                            <div className="">{displayMoney(data.normalGame * game.normalGamePrice)}</div>
+                          </div>
+                        </div>
+                        <div className="mb-4 grid grid-cols-3 gap-2 h-6">
+                          <div className="col-span-2">Rubber Game</div>
+                          <div className="col-span-1 flex justify-between items-center">
+                            <div className="bg-gray-300 h-6 w-6 rounded-full flex justify-center items-center mr-4 font-bold shadow">{data.rubberGame}</div>
+                            <div className="">{displayMoney(data.rubberGame * game.rubberGamePrice)}</div>
+                          </div>
+                        </div>
+                        <div className="mb-4 grid grid-cols-3 gap-2 h-6">
+                          <div className="col-span-2">Ball</div>
+                          <div className="col-span-1 flex justify-between items-center">
+                            <div className="bg-gray-300 h-6 w-6 rounded-full flex justify-center items-center mr-4 font-bold shadow">{data.ball}</div>
+                            <div className="">{displayMoney(data.ball * game.ballPrice)}</div>
+                          </div>
+                        </div>
+                        <div className="mb-4 flex justify-between items-center h-6">
+                          <div>Total</div>
+                          <div className="flex justify-between items-center">
+                            <div className="font-bold">{displayMoney(data.normalGame * game.normalGamePrice + data.rubberGame * game.rubberGamePrice + data.ball * game.ballPrice)}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* <div className="text-base">
+                    <div>{data.playerName}</div>
+                  </div>
+                  <div className=" grid grid-cols-4 gap-2 text-sm">
+                    <div>{data.normalGame}</div>
+                    <div>{data.rubberGame}</div>
+                    <div>{data.ball}</div>
+                    <div>{displayMoney(game.normalGamePrice * data.normalGame + game.rubberGamePrice * data.rubberGame + game.ballPrice * data.ball)}</div>
+                  </div> */}
+                </div>
+              )
+            })}
+            <div className="p-4 text-right font-bold">
+              <div className="grid grid-cols-3 gap-4">
+                <div className="col-span-2 text-right">Paid  :</div>
+                <div>{displayMoney(totalPaid)}</div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>{'Description'}</div>
-                <div>{game.description}</div>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="col-span-2 text-right">Unpaid  :</div>
+                <div>{displayMoney(total - totalPaid)}</div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>{'Normal Game Price'}</div>
-                <div>{displayMoney(game.normalGamePrice)}</div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>{'Rubber Game Price'}</div>
-                <div>{displayMoney(game.rubberGamePrice)}</div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>{'Ball Price'}</div>
-                <div>{displayMoney(game.ballPrice)}</div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>{'Game Date'}</div>
-                <div>{displayDateTime(game.gameDt)}</div>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="col-span-2 text-right">Expected Total  :</div>
+                <div>{displayMoney(total)}</div>
               </div>
             </div>
           </div>
@@ -250,58 +359,36 @@ const Finish: NextPage<Props> = ({ gamedetail }) => {
 
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className={'w-full max-w-xl'}>
-            <div className='p-4'>
-              <div className='text-lg'>Game Match</div>
-              {gamematches.map((data, key) => {
+            <div className='text-lg'>Transaction</div>
+            <Formik
+              initialValues={initFormikValue}
+              validationSchema={schema}
+              enableReinitialize={true}
+              onSubmit={(values, { setErrors }) => handleSubmit(values)}
+            >
+              {({ values, errors, setFieldValue }) => {
                 return (
-                  <div key={key} className="mb-4">
-                    <div>{data.name}</div>
-                    <div className="flex justify-between">
-                      <div>{data.leftTeamName}</div>
-                      {gamematchteamplayers.filter((player) => player.gamematchteamId === data.leftTeamId).map((player, key) => {
-                        return (
-                          <div key={key}>{player.playerName}</div>
-                        )
-                      })}
-                      {gamematchscores.filter((gms) => gms.gamematchId === data.id).map((gms, key) => {
-                        return (
-                          <div key={key}>{gms.leftTeamScore}</div>
-                        )
-                      })}
+                  <Form>
+                    <div className={'w-full max-w-xl'}>
+                      <div className="mb-4">
+                        <TextField
+                          label={'Gor Name'}
+                          name={'name'}
+                          type={'text'}
+                          placeholder={'Gor Name'}
+                          required
+                        />
+                      </div>
                     </div>
-                    <div className="flex justify-between">
-                      <div>{data.rightTeamName}</div>
-                      {gamematchteamplayers.filter((player) => player.gamematchteamId === data.rightTeamId).map((player, key) => {
-                        return (
-                          <div key={key}>{player.playerName}</div>
-                        )
-                      })}
-                      {gamematchscores.filter((gms) => gms.gamematchId === data.id).map((gms, key) => {
-                        return (
-                          <div key={key}>{gms.rightTeamScore}</div>
-                        )
-                      })}
-                    </div>
-                    {/* <div className="grid grid-cols-2 gap-4">
-                      <div>{data.leftTeamName}</div>
-                      <div>{data.rightTeamName}</div>
-                    </div>
-                    {gamematchscores.filter((gms) => gms.gamematchId === data.id).map((gms, key) => {
-                      return (
-                        <div key={key} className="grid grid-cols-2 gap-4">
-                          <div>{gms.leftTeamScore}</div>
-                          <div>{gms.rightTeamScore}</div>
-                        </div>
-                      )
-                    })}
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>{data.leftTeamPoint}</div>
-                      <div>{data.rightTeamPoint}</div>
-                    </div> */}
-                  </div>
-                )
-              })}
-            </div>
+                  </Form>
+                );
+              }}
+            </Formik>
+          </div>
+        </div>
+        {/* <div className='bg-white mb-4 p-4 rounded shadow'>
+          <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+            {JSON.stringify(gameplayers, null, 4)}
           </div>
         </div>
 
@@ -309,7 +396,7 @@ const Finish: NextPage<Props> = ({ gamedetail }) => {
           <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
             {JSON.stringify(gamedetail, null, 4)}
           </div>
-        </div>
+        </div> */}
 
       </div>
     </>

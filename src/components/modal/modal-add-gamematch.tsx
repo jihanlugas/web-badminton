@@ -93,7 +93,7 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
   const { isLoading: isLoadingGamematch, data: dataGamematch, refetch: refetchGamematch } = useQuery(['gamematch', pageRequestGamematch], ({ queryKey }) => Api.get('/gamematch/page', queryKey[1]), {});
 
   const handleSubmit = (values: FormikValues, formikHelpers: FormikHelpers<CreateGamematch>) => {
-    values.matchName = 'Match ' + pageGamematchInfo.totalData + 1
+    values.matchName = 'Match ' + (pageGamematchInfo.totalData + 1)
 
     mutateSubmit(values, {
       onSuccess: (res) => {
@@ -240,7 +240,7 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
                             required
                           />
                         </div> */}
-                        <div className='mb-4 '>
+                        <div className='mb-4 pt-8'>
                           <div className='w-full grid grid-cols-2 gap-2'>
                             <button className='w-full h-8 rounded-lg bg-primary-200 hover:bg-primary-300 disabled:bg-primary-400' disabled={!selected} type='button' onClick={() => setSelected(!selected)}>
                               <div>{values.gameMatchTeams[0].name}</div>

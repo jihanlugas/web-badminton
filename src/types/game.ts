@@ -4,6 +4,7 @@ import { GamematchView } from "@/types/gamematch";
 import { GamematchscoreView } from "@/types/gamematchscore";
 import { GamematchteamView } from "@/types/gamematchteam";
 import { GamematchteamplayerView } from "@/types/gamematchteamplayer";
+import { CreateTransaction } from "@/types/transaction";
 
 export declare interface GameView {
   id: string;
@@ -69,4 +70,9 @@ export declare interface PageGame extends Paging {
   gorId: string;
   name: string;
   description: string;
+}
+
+export declare interface FinishGame {
+  gameId: string;
+  transactions: CreateTransaction[];
 }
