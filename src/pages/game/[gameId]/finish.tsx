@@ -10,7 +10,7 @@ import { PageInfo, Paging } from "@/types/pagination";
 import { PagePlayer } from "@/types/player";
 import { useDebounce } from "@/utils/hook";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Form, Formik, FormikHelpers, FormikValues } from "formik";
+import { ArrayHelpers, FieldArray, Form, Formik, FormikHelpers, FormikValues } from "formik";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
@@ -31,6 +31,7 @@ import { IoAdd, IoAddOutline, IoRemove } from "react-icons/io5";
 import TextField from "@/components/formik/text-field";
 import CheckboxField from "@/components/formik/checkbox-field";
 import ModalAddGamematch from "@/components/modal/modal-add-gamematch";
+import { CreateTransaction } from "@/types/transaction";
 
 type Props = {
   gamedetail: GameDetail
@@ -62,7 +63,13 @@ const schema = Yup.object().shape({
       isDebit: Yup.boolean(),
       price: Yup.number().required("Required field"),
     })
-  )
+  ),
+  // temp: Yup.object().shape({
+  //   companyId: Yup.string().required("Required field"),
+  //   name: Yup.string().required("Required field"),
+  //   isDebit: Yup.boolean(),
+  //   price: Yup.number().required("Required field"),
+  // })
 });
 
 const Finish: NextPage<Props> = ({ gamedetail }) => {
@@ -75,23 +82,17 @@ const Finish: NextPage<Props> = ({ gamedetail }) => {
   const [accordionPlayer, setAccordionPlayer] = useState<string[]>([]);
   const [accordionGamematch, setAccordionGamematch] = useState<string[]>([]);
 
-  const initFormikValue: FinishGame = {
+  const initFormikValue: FinishGame & { temp: CreateTransaction } = {
     gameId: game.id,
     transactions: [
-      {
-        companyId: company.id,
-        name: 'Iuran Game',
-        isDebit: true,
-        price: 0,
-      },
-      {
-        companyId: company.id,
-        name: 'Bola',
-        isDebit: false,
-        price: 0,
-      },
 
-    ]
+    ],
+    temp: {
+      companyId: company.id,
+      name: '',
+      isDebit: true,
+      price: 0,
+    }
   }
 
   const toggleAccordionPlayer = (key) => {
@@ -102,6 +103,8 @@ const Finish: NextPage<Props> = ({ gamedetail }) => {
     }
   }
 
+  const { mutate: mutateSubmit, isLoading } = useMutation((val: FormikValues) => Api.post('/game/' + game.id + '/finish', val));
+
   const toggleAccordionGamematch = (key) => {
     if (accordionGamematch.includes(key)) {
       setAccordionGamematch(accordionGamematch.filter((item) => item !== key));
@@ -110,24 +113,34 @@ const Finish: NextPage<Props> = ({ gamedetail }) => {
     }
   }
 
+  const handleAddTransaction = (arrayHelpers: ArrayHelpers, values: FormikValues, setFieldValue) => {
+    arrayHelpers.push(values.temp);
+    setFieldValue('temp', {
+      companyId: company.id,
+      name: '',
+      isDebit: true,
+      price: 0,
+
+    })
+  }
+
   const handleSubmit = (values: FormikValues) => {
     console.log('handleSubmit ', values)
-    // mutateSubmit(values, {
-    //   onSuccess: (res) => {
-    //     if (res) {
-    //       if (res.status) {
-    //         notif.success(res.message);
-    //         refetchGameplayer();
-    //         setEdit('')
-    //       } else if (!res.success) {
-    //         notif.error(res.message);
-    //       }
-    //     }
-    //   },
-    //   onError: (res) => {
-    //     notif.error('Please cek you connection');
-    //   },
-    // });
+    mutateSubmit(values, {
+      onSuccess: (res) => {
+        if (res) {
+          if (res.status) {
+            notif.success(res.message);
+            router.push('/game');
+          } else if (!res.success) {
+            notif.error(res.message);
+          }
+        }
+      },
+      onError: (res) => {
+        notif.error('Please cek you connection');
+      },
+    });
   };
 
   var totalPaid = 0
@@ -202,68 +215,70 @@ const Finish: NextPage<Props> = ({ gamedetail }) => {
             <div className="p-4">
               <div className='text-lg'>Game match</div>
             </div>
-            {gamematches.map((data, key) => {
-              return (
-                <div key={key} className="mb-2 shadow">
-                  <button className='w-full flex justify-between rounded items-center px-4 py-2' onClick={() => toggleAccordionGamematch(data.id)}>
-                    <div className='text-left flex justify-between items-center'>
-                      <div className=''>{data.name}</div>
-                    </div>
-                    <div className="flex items-center">
-                      <div className='flex justify-center items-center h-8 w-8'>
-                        <MdOutlineKeyboardArrowRight className={`rotate-0 duration-300 ${accordionGamematch.includes(data.id) && 'rotate-90'}`} size={'1.5em'} />
+            <div className="pb-2">
+              {gamematches.map((data, key) => {
+                return (
+                  <div key={key} className="mb-2 shadow">
+                    <button className='w-full flex justify-between rounded items-center px-4 py-2' onClick={() => toggleAccordionGamematch(data.id)}>
+                      <div className='text-left flex justify-between items-center'>
+                        <div className=''>{data.name}</div>
                       </div>
-                    </div>
-                  </button>
-                  <div className={`duration-300 overflow-hidden ${accordionGamematch.includes(data.id) ? 'max-h-60 ' : 'max-h-0 '}`}>
-                    <div className='px-4 pb-4'>
-                      <div className="grid grid-cols-5 gap-4 mb-2">
-                        <div className="col-span-3">
-                          <div className="">
-                            {gamematchteamplayers.filter((player) => player.gamematchteamId === data.leftTeamId).map((player, key) => {
-                              return (
-                                <div key={key} className="flex items-center">{player.playerName}</div>
-                              )
-                            })}
-                          </div>
-                        </div>
-                        <div className="col-span-2 flex justify-between">
-                          <div className="grid grid-cols-3 gap-4">
-                            {gamematchscores.filter((gms) => gms.gamematchId === data.id).map((gms, key) => {
-                              return (
-                                <div key={key} className="flex items-center">{gms.leftTeamScore}</div>
-                              )
-                            })}
-                          </div>
-                          <div className="font-bold flex items-center">{data.leftTeamPoint}</div>
+                      <div className="flex items-center">
+                        <div className='flex justify-center items-center h-8 w-8'>
+                          <MdOutlineKeyboardArrowRight className={`rotate-0 duration-300 ${accordionGamematch.includes(data.id) && 'rotate-90'}`} size={'1.5em'} />
                         </div>
                       </div>
-                      <div className="grid grid-cols-5 gap-4 mb-2">
-                        <div className="col-span-3">
-                          <div className="">
-                            {gamematchteamplayers.filter((player) => player.gamematchteamId === data.rightTeamId).map((player, key) => {
-                              return (
-                                <div key={key} className="flex items-center">{player.playerName}</div>
-                              )
-                            })}
+                    </button>
+                    <div className={`duration-300 overflow-hidden ${accordionGamematch.includes(data.id) ? 'max-h-60 ' : 'max-h-0 '}`}>
+                      <div className='px-4 pb-4'>
+                        <div className="grid grid-cols-5 gap-4 mb-2">
+                          <div className="col-span-3">
+                            <div className="">
+                              {gamematchteamplayers.filter((player) => player.gamematchteamId === data.leftTeamId).map((player, key) => {
+                                return (
+                                  <div key={key} className="flex items-center">{player.playerName}</div>
+                                )
+                              })}
+                            </div>
+                          </div>
+                          <div className="col-span-2 flex justify-between">
+                            <div className="grid grid-cols-3 gap-4">
+                              {gamematchscores.filter((gms) => gms.gamematchId === data.id).map((gms, key) => {
+                                return (
+                                  <div key={key} className="flex items-center">{gms.leftTeamScore}</div>
+                                )
+                              })}
+                            </div>
+                            <div className="font-bold flex items-center">{data.leftTeamPoint}</div>
                           </div>
                         </div>
-                        <div className="col-span-2 flex justify-between">
-                          <div className="grid grid-cols-3 gap-4">
-                            {gamematchscores.filter((gms) => gms.gamematchId === data.id).map((gms, key) => {
-                              return (
-                                <div key={key} className="flex items-center">{gms.rightTeamScore}</div>
-                              )
-                            })}
+                        <div className="grid grid-cols-5 gap-4 mb-2">
+                          <div className="col-span-3">
+                            <div className="">
+                              {gamematchteamplayers.filter((player) => player.gamematchteamId === data.rightTeamId).map((player, key) => {
+                                return (
+                                  <div key={key} className="flex items-center">{player.playerName}</div>
+                                )
+                              })}
+                            </div>
                           </div>
-                          <div className="font-bold flex items-center">{data.rightTeamPoint}</div>
+                          <div className="col-span-2 flex justify-between">
+                            <div className="grid grid-cols-3 gap-4">
+                              {gamematchscores.filter((gms) => gms.gamematchId === data.id).map((gms, key) => {
+                                return (
+                                  <div key={key} className="flex items-center">{gms.rightTeamScore}</div>
+                                )
+                              })}
+                            </div>
+                            <div className="font-bold flex items-center">{data.rightTeamPoint}</div>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              )
-            })}
+                )
+              })}
+            </div>
           </div>
         </div>
 
@@ -359,26 +374,77 @@ const Finish: NextPage<Props> = ({ gamedetail }) => {
 
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className={'w-full max-w-xl'}>
-            <div className='text-lg'>Transaction</div>
+            <div className='text-lg'>Transactions</div>
             <Formik
               initialValues={initFormikValue}
               validationSchema={schema}
               enableReinitialize={true}
               onSubmit={(values, { setErrors }) => handleSubmit(values)}
             >
-              {({ values, errors, setFieldValue }) => {
+              {({ values, errors, setFieldValue, validateField }) => {
                 return (
                   <Form>
                     <div className={'w-full max-w-xl'}>
+                      <FieldArray
+                        name={'transactions'}
+                        render={arrayHelpers => (
+                          <>
+                            <div className='mb-4'>
+                              {values.transactions.map((data, key) => {
+                                return (
+                                  <div key={key} className='mb-4'>
+                                    <div className="flex justify-between">
+                                      <div>{data.name}</div>
+                                      <div className={data.isDebit ? 'font-bold' : 'font-bold text-rose-500'}>{displayMoney(data.isDebit ? data.price : data.price * -1)}</div>
+                                    </div>
+                                  </div>
+                                )
+                              })}
+                              <div>
+                                <div className="mb-4">
+                                  <TextField
+                                    label={'Transaction Name'}
+                                    name={'temp.name'}
+                                    type={'text'}
+                                    placeholder={'Transaction Name'}
+                                    required
+                                  />
+                                </div>
+                                <div className="mb-4">
+                                  <TextField
+                                    label={'Price'}
+                                    name={'temp.price'}
+                                    type={'number'}
+                                    placeholder={'Price'}
+                                    required
+                                  />
+                                </div>
+                                <div className="mb-4">
+                                  <CheckboxField
+                                    name={'temp.isDebit'}
+                                    label={'Debit'}
+                                  />
+                                </div>
+                                <div className="">
+                                  <button className="w-full border border-primary-500 p-2 h-10 rounded" type="button" onClick={() => handleAddTransaction(arrayHelpers, values, setFieldValue)}>
+                                    <div>Add Transaction</div>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </>
+                        )}
+                      />
                       <div className="mb-4">
-                        <TextField
-                          label={'Gor Name'}
-                          name={'name'}
-                          type={'text'}
-                          placeholder={'Gor Name'}
-                          required
+                        <ButtonSubmit
+                          label={'Finish Game'}
+                          disabled={isLoading}
+                          loading={isLoading}
                         />
                       </div>
+                    </div>
+                    <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                      {JSON.stringify(values, null, 4)}
                     </div>
                   </Form>
                 );

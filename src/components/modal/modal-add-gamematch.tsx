@@ -102,6 +102,7 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
             notif.success(res.message);
             formikHelpers.resetForm()
             onClickOverlay(true)
+            setSelected(false)
           } else if (!res.success) {
             if (res.payload && res.payload.listError) {
               notif.error(res.message);
