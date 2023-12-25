@@ -193,9 +193,6 @@ const Edit: NextPage<Props> = ({ gor }) => {
   );
 }
 
-
-
-
 (Edit as PageWithLayoutType).layout = MainUser;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

@@ -69,8 +69,8 @@ const Index: NextPage<Props> = () => {
   const [pageRequestGame, setPageRequestGame] = useState<PageGame>({
     limit: 1000,
     page: 1,
-    sortField: null,
-    sortOrder: null,
+    sortField: 'create_dt',
+    sortOrder: 'desc',
     companyId: company.id,
     gorId: '',
     name: '',
@@ -173,8 +173,13 @@ const Index: NextPage<Props> = () => {
                       <div className='text-lg'>{data.name}</div>
                       <div className={`text-sm ${!accordion.includes(key) && 'w-64 truncate '}`}>{displayDateTime(data.gameDt, 'dddd, DD MMM YYYY HH:mm')}</div>
                     </div>
-                    <div className='flex justify-center items-center h-8 w-8'>
-                      <MdOutlineKeyboardArrowRight className={`rotate-0 duration-300 ${accordion.includes(key) && 'rotate-90'}`} size={'1.5em'} />
+                    <div className='flex items-center'>
+                      {data.isFinish && (
+                        <div className='text-xs flex justify-center items-center text-gray-50 bg-primary-500 px-2 py-1 rounded-full font-bold'>DONE</div>
+                      )}
+                      <div className='flex justify-center items-center h-8 w-8'>
+                        <MdOutlineKeyboardArrowRight className={`rotate-0 duration-300 ${accordion.includes(key) && 'rotate-90'}`} size={'1.5em'} />
+                      </div>
                     </div>
                   </button>
                   <div className={`duration-300 overflow-hidden ${accordion.includes(key) ? 'max-h-60 ' : 'max-h-0 '}`}>
@@ -225,6 +230,9 @@ const Index: NextPage<Props> = () => {
                       <div className='text-lg'>{data.name}</div>
                       <div className={'text-sm'}>{displayDateTime(data.gameDt, 'dddd DD MMM YYYY HH:mm')}</div>
                     </div>
+                    {data.isFinish && (
+                      <div className='text-xs flex justify-center items-center text-gray-50 bg-primary-500 px-2 py-1 rounded-full font-bold'>DONE</div>
+                    )}
                   </div>
                   <div className={'duration-300 overflow-hidden'}>
                     <div className='px-4 pb-4'>
@@ -255,12 +263,16 @@ const Index: NextPage<Props> = () => {
                         <div className='flex-grow '>{displayMoney(data.ballPrice)}</div>
                       </div>
                       <div className='flex justify-end items-center'>
-                        <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow text-rose-500' title='delete' onClick={() => toggleDeleteGame(data.id)}>
-                          <VscTrash className='' size={'1.2rem'} />
-                        </button>
-                        <Link href={{ pathname: '/game/[gameId]/edit', query: { gameId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow text-amber-500' title='edit'>
-                          <RiPencilLine className='' size={'1.2rem'} />
-                        </Link>
+                        {!data.isFinish && (
+                          <>
+                            <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow text-rose-500' title='delete' onClick={() => toggleDeleteGame(data.id)}>
+                              <VscTrash className='' size={'1.2rem'} />
+                            </button>
+                            <Link href={{ pathname: '/game/[gameId]/edit', query: { gameId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow text-amber-500' title='edit'>
+                              <RiPencilLine className='' size={'1.2rem'} />
+                            </Link>
+                          </>
+                        )}
                         <Link href={{ pathname: '/game/[gameId]', query: { gameId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow text-primary-500' title='Game Details'>
                           <MdOutlineDashboard className='' size={'1.2rem'} />
                         </Link>

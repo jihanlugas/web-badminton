@@ -1,5 +1,16 @@
 import { Paging } from "@/types/pagination";
 
+export declare interface TransactionView {
+  id: string;
+  companyId: string;
+  name: string;
+  isDebit: boolean;
+  price: number;
+  createBy: string;
+  createDt: string;
+  companyName: string;
+  createName: string;
+}
 
 export declare interface CreateTransaction {
   companyId: string;
@@ -10,7 +21,5 @@ export declare interface CreateTransaction {
 
 export declare interface PageTransaction extends Paging {
   companyId: string;
-  gorId: string;
   name: string;
-  description: string;
 }

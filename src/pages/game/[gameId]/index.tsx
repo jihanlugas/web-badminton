@@ -205,30 +205,32 @@ const Index: NextPage<Props> = ({ game }) => {
               </Link>
               <div className='mr-4'>{game.name}</div>
             </div>
-            <div className='text-base relative inline-block' ref={refAdd}>
-              <button onClick={() => setAddBar(!addBar)} className='flex items-center hover:bg-gray-100 rounded -m-2 p-2'>
-                <div className='flex justify-center items-center rounded h-6 w-6'>
-                  <BsChevronDown size={'1.2em'} />
-                </div>
-              </button>
+            {!game.isFinish && (
+              <div className='text-base relative inline-block' ref={refAdd}>
+                <button onClick={() => setAddBar(!addBar)} className='flex items-center hover:bg-gray-100 rounded -m-2 p-2'>
+                  <div className='flex justify-center items-center rounded h-6 w-6'>
+                    <BsChevronDown size={'1.2em'} />
+                  </div>
+                </button>
 
-              <div className={`absolute right-0 mt-2 w-56 rounded-md overflow-hidden origin-top-right shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none duration-300 ease-in-out ${!addBar && 'scale-0 shadow-none ring-0'}`}>
-                <div className="" role="none">
-                  <button onClick={() => toggleAddGamematch(false)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
-                    {'Add match'}
-                  </button>
-                  <button onClick={() => toggleAddGameplayer(false)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
-                    {'Add game player'}
-                  </button>
-                  <hr />
-                  <Link href={{ pathname: "/game/[gameId]/finish", query: { gameId: game.id } }}>
-                    <div className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
-                      {'Finish Game'}
-                    </div>
-                  </Link>
+                <div className={`absolute right-0 mt-2 w-56 rounded-md overflow-hidden origin-top-right shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none duration-300 ease-in-out ${!addBar && 'scale-0 shadow-none ring-0'}`}>
+                  <div className="" role="none">
+                    <button onClick={() => toggleAddGamematch(false)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
+                      {'Add match'}
+                    </button>
+                    <button onClick={() => toggleAddGameplayer(false)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
+                      {'Add game player'}
+                    </button>
+                    <hr />
+                    <Link href={{ pathname: "/game/[gameId]/finish", query: { gameId: game.id } }}>
+                      <div className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
+                        {'Finish Game'}
+                      </div>
+                    </Link>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
 
@@ -421,14 +423,16 @@ const GamePlayerSection: NextPage<GamePlayerSectionProps> = ({ game, company, ga
                                 <div className="font-bold">{displayMoney(data.normalGame * game.normalGamePrice + data.rubberGame * game.rubberGamePrice + data.ball * game.ballPrice)}</div>
                               </div>
                             </div>
-                            <div className='flex justify-end items-center'>
-                              <button className='text-rose-500 ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow' title='delete' onClick={() => toggleDeleteGameplayer(data.id)}>
-                                <VscTrash className='' size={'1.2rem'} />
-                              </button>
-                              <button className='text-amber-500 ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow' title='delete' onClick={() => setEdit(data.id)}>
-                                <RiPencilLine className='' size={'1.2rem'} />
-                              </button>
-                            </div>
+                            {!game.isFinish && (
+                              <div className='flex justify-end items-center'>
+                                <button className='text-rose-500 ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow' title='delete' onClick={() => toggleDeleteGameplayer(data.id)}>
+                                  <VscTrash className='' size={'1.2rem'} />
+                                </button>
+                                <button className='text-amber-500 ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow' title='delete' onClick={() => setEdit(data.id)}>
+                                  <RiPencilLine className='' size={'1.2rem'} />
+                                </button>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>

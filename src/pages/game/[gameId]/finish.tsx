@@ -82,6 +82,10 @@ const Finish: NextPage<Props> = ({ gamedetail }) => {
   const [accordionPlayer, setAccordionPlayer] = useState<string[]>([]);
   const [accordionGamematch, setAccordionGamematch] = useState<string[]>([]);
 
+  const { mutate: mutateSubmit, isLoading } = useMutation((val: FormikValues) => Api.post('/game/' + game.id + '/finish', val));
+
+  const { data, isLoading: isLoadingInit } = useQuery(['init'], () => Api.get('/init'));
+
   const initFormikValue: FinishGame & { temp: CreateTransaction } = {
     gameId: game.id,
     transactions: [
@@ -102,9 +106,6 @@ const Finish: NextPage<Props> = ({ gamedetail }) => {
       setAccordionPlayer([...accordionPlayer, key]);
     }
   }
-
-  const { mutate: mutateSubmit, isLoading } = useMutation((val: FormikValues) => Api.post('/game/' + game.id + '/finish', val));
-
   const toggleAccordionGamematch = (key) => {
     if (accordionGamematch.includes(key)) {
       setAccordionGamematch(accordionGamematch.filter((item) => item !== key));
@@ -114,14 +115,19 @@ const Finish: NextPage<Props> = ({ gamedetail }) => {
   }
 
   const handleAddTransaction = (arrayHelpers: ArrayHelpers, values: FormikValues, setFieldValue) => {
-    arrayHelpers.push(values.temp);
-    setFieldValue('temp', {
-      companyId: company.id,
-      name: '',
-      isDebit: true,
-      price: 0,
+    // todo validate
+    if (values.temp.name === '') {
+      notif.error('Transaction name cannot be empty');
+    } else {
+      arrayHelpers.push(values.temp);
+      setFieldValue('temp', {
+        companyId: company.id,
+        name: '',
+        isDebit: true,
+        price: 0,
 
-    })
+      })
+    }
   }
 
   const handleSubmit = (values: FormikValues) => {
@@ -142,6 +148,26 @@ const Finish: NextPage<Props> = ({ gamedetail }) => {
       },
     });
   };
+
+  const countGameTransaction = (transactions) => {
+    var balance = 0
+    transactions.forEach((transaction) => {
+      if (transaction.isDebit) {
+        balance += transaction.price
+      } else {
+        balance -= transaction.price
+      }
+    })
+
+    return balance
+  }
+
+  useEffect(() => {
+    if (data && data.status) {
+      localStorage.setItem("user", JSON.stringify(data.payload.user))
+      localStorage.setItem("company", JSON.stringify(data.payload.company || {}))
+    }
+  }, [data]);
 
   var totalPaid = 0
   var total = 0
@@ -372,34 +398,50 @@ const Finish: NextPage<Props> = ({ gamedetail }) => {
           </div>
         </div>
 
-        <div className='bg-white mb-4 p-4 rounded shadow'>
-          <div className={'w-full max-w-xl'}>
-            <div className='text-lg'>Transactions</div>
-            <Formik
-              initialValues={initFormikValue}
-              validationSchema={schema}
-              enableReinitialize={true}
-              onSubmit={(values, { setErrors }) => handleSubmit(values)}
-            >
-              {({ values, errors, setFieldValue, validateField }) => {
-                return (
-                  <Form>
+        <Formik
+          initialValues={initFormikValue}
+          validationSchema={schema}
+          enableReinitialize={true}
+          onSubmit={(values, { setErrors }) => handleSubmit(values)}
+        >
+          {({ values, errors, setFieldValue, validateField }) => {
+            return (
+              <Form>
+                <div className='bg-white mb-4 p-4 rounded shadow'>
+                  <div className={'w-full max-w-xl'}>
+                    <div className='text-lg mb-4'>Transactions</div>
                     <div className={'w-full max-w-xl'}>
                       <FieldArray
                         name={'transactions'}
                         render={arrayHelpers => (
                           <>
                             <div className='mb-4'>
-                              {values.transactions.map((data, key) => {
-                                return (
-                                  <div key={key} className='mb-4'>
-                                    <div className="flex justify-between">
-                                      <div>{data.name}</div>
-                                      <div className={data.isDebit ? 'font-bold' : 'font-bold text-rose-500'}>{displayMoney(data.isDebit ? data.price : data.price * -1)}</div>
+                              <div className="border-2 rounded p-2">
+                                <div className="mb-2">List Transaction</div>
+                                <div className="text-sm">
+                                  {values.transactions.length > 0 ? values.transactions.map((data, key) => {
+                                    return (
+                                      <div key={key} className='mb-2'>
+                                        <div className="flex justify-between">
+                                          <div>{data.name}</div>
+                                          <div className="flex items-center">
+                                            <div className={data.isDebit ? 'font-bold' : 'font-bold text-rose-500'}>{displayMoney(data.isDebit ? data.price : data.price * -1)}</div>
+                                            <div className="">
+                                              <button type="button" className='text-rose-500 ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='delete' onClick={() => arrayHelpers.remove(key)}>
+                                                <VscTrash className='' size={'1.2rem'} />
+                                              </button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    )
+                                  }) : (
+                                    <div className="flex justify-center items-center p-8 text-lg">
+                                      <div>No Transaction</div>
                                     </div>
-                                  </div>
-                                )
-                              })}
+                                  )}
+                                </div>
+                              </div>
                               <div>
                                 <div className="mb-4">
                                   <TextField
@@ -407,7 +449,6 @@ const Finish: NextPage<Props> = ({ gamedetail }) => {
                                     name={'temp.name'}
                                     type={'text'}
                                     placeholder={'Transaction Name'}
-                                    required
                                   />
                                 </div>
                                 <div className="mb-4">
@@ -416,7 +457,6 @@ const Finish: NextPage<Props> = ({ gamedetail }) => {
                                     name={'temp.price'}
                                     type={'number'}
                                     placeholder={'Price'}
-                                    required
                                   />
                                 </div>
                                 <div className="mb-4">
@@ -435,23 +475,40 @@ const Finish: NextPage<Props> = ({ gamedetail }) => {
                           </>
                         )}
                       />
-                      <div className="mb-4">
-                        <ButtonSubmit
-                          label={'Finish Game'}
-                          disabled={isLoading}
-                          loading={isLoading}
-                        />
-                      </div>
                     </div>
-                    <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                    {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
                       {JSON.stringify(values, null, 4)}
+                    </div> */}
+                  </div>
+                </div>
+                <div className='bg-white mb-4 p-4 rounded shadow'>
+                  <div className={'w-full max-w-xl'}>
+                    <div className='text-lg mb-4'>Summary</div>
+                    <div className="flex justify-between items-center mb-4">
+                      <div>Current Balance</div>
+                      <div>{displayMoney(company.balance)}</div>
                     </div>
-                  </Form>
-                );
-              }}
-            </Formik>
-          </div>
-        </div>
+                    <div className="flex justify-between items-center mb-4">
+                      <div>Game Transaction</div>
+                      <div>{displayMoney(countGameTransaction(values.transactions))}</div>
+                    </div>
+                    <div className="flex justify-between items-center mb-4 font-bold">
+                      <div>Balance</div>
+                      <div>{displayMoney(company.balance + countGameTransaction(values.transactions))}</div>
+                    </div>
+                    <div className="mb-4">
+                      <ButtonSubmit
+                        label={'Finish Game'}
+                        disabled={isLoading}
+                        loading={isLoading}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </Form>
+            );
+          }}
+        </Formik>
         {/* <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
             {JSON.stringify(gameplayers, null, 4)}
@@ -463,7 +520,6 @@ const Finish: NextPage<Props> = ({ gamedetail }) => {
             {JSON.stringify(gamedetail, null, 4)}
           </div>
         </div> */}
-
       </div>
     </>
   )

@@ -559,9 +559,9 @@ const Index: NextPage<Props> = ({ company }) => {
             </div>
           </div>
         </div>
-        <div className='bg-white mb-4 p-4 rounded shadow whitespace-pre-wrap'>
+        {/* <div className='bg-white mb-4 p-4 rounded shadow whitespace-pre-wrap'>
           {JSON.stringify(company, null, 4)}
-        </div>
+        </div> */}
       </div >
     </>
   )

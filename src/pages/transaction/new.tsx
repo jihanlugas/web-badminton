@@ -24,7 +24,7 @@ import { ListData } from "@/types/data";
 import { useDebounce } from "@/utils/hook";
 import { CompanyView } from "@/types/company";
 import { PageGor } from "@/types/gor";
-import { CreateGame } from "@/types/game";
+import { CreateTransaction } from "@/types/transaction";
 
 type Props = {
 }
@@ -37,15 +37,10 @@ type FilterPropsGor = {
 }
 
 const schema = Yup.object().shape({
-  companyId: Yup.string().required("Required field"),
-  gorId: Yup.string().required("Required field"),
-  name: Yup.string().required("Required field"),
-  description: Yup.string(),
-  normalGamePrice: Yup.number(),
-  rubberGamePrice: Yup.number(),
-  ballPrice: Yup.number(),
-  gameDt: Yup.date().required("Required field"),
-  isFinish: Yup.boolean(),
+    companyId: Yup.string().required("Required field"),
+    name: Yup.string().required("Required field"),
+    isDebit: Yup.boolean(),
+    price: Yup.number().required("Required field"),
 });
 
 const New: NextPage<Props> = () => {
@@ -53,55 +48,15 @@ const New: NextPage<Props> = () => {
 
   const company: CompanyView = JSON.parse(localStorage.getItem('company'));
 
-  const [searchGor, setSearchGor] = useState<string>('');
-  const debounceSearchGor = useDebounce(searchGor, 300)
-  const [listDataGor, setListDataGor] = useState<ListData[]>([]);
+  const { mutate: mutateSubmit, isLoading } = useMutation((val: FormikValues) => Api.post('/transaction', val));
 
-  const [pageRequestGor, setPageRequestGor] = useState<PageGor>({
-    limit: 1000,
-    page: 1,
-    sortField: null,
-    sortOrder: null,
+
+  const initFormikValue: CreateTransaction = {
     companyId: company.id,
     name: '',
-    createName: '',
-    description: '',
-    address: '',
-  });
-
-  const { mutate: mutateSubmit, isLoading } = useMutation((val: FormikValues) => Api.post('/game', val));
-
-  const { isLoading: isLoadingGor, data: dataGor, refetch: refetchGor } = useQuery(['gor', pageRequestGor], ({ queryKey }) => Api.get('/gor/page', queryKey[1]), {});
-
-  const initFormikValue: CreateGame = {
-    companyId: company.id,
-    gorId: '',
-    name: '',
-    description: '',
-    normalGamePrice: 0,
-    rubberGamePrice: 0,
-    ballPrice: 0,
-    gameDt: new Date(new Date().setHours(7, 0, 0, 0)),
+    isDebit: true,
+    price: 0,
   };
-
-  useEffect(() => {
-    setPageRequestGor({ ...pageRequestGor, name: debounceSearchGor })
-  }, [debounceSearchGor])
-
-  const handleChangeGor = (e, setFieldValue) => {
-    if (e) {
-      const selected = dataGor.payload.list.find((data) => data.id === e.value)
-      setFieldValue('gorId', selected ? selected.id : '')
-      setFieldValue('normalGamePrice', selected ? selected.normalGamePrice : 0)
-      setFieldValue('rubberGamePrice', selected ? selected.rubberGamePrice : 0)
-      setFieldValue('ballPrice', selected ? selected.ballPrice : 0)
-    } else {
-      setFieldValue('gorId', '')
-      setFieldValue('normalGamePrice', 0)
-      setFieldValue('rubberGamePrice', 0)
-      setFieldValue('ballPrice', 0)
-    }
-  }
 
   const handleSubmit = (values: FormikValues, setErrors) => {
     mutateSubmit(values, {
@@ -109,7 +64,7 @@ const New: NextPage<Props> = () => {
         if (res) {
           if (res.status) {
             notif.success(res.message);
-            router.push({ pathname: '/game' });
+            router.push({ pathname: '/transaction' });
           } else if (!res.success) {
             if (res.payload && res.payload.listError) {
               setErrors(res.payload.listError);
@@ -125,29 +80,17 @@ const New: NextPage<Props> = () => {
     });
   };
 
-  useEffect(() => {
-    if (dataGor?.status) {
-      const newArrayOfObj = dataGor.payload.list.map(data => {
-        return {
-          label: data.name,
-          value: data.id
-        }
-      })
-      setListDataGor(newArrayOfObj)
-    }
-  }, [dataGor])
-
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Game New'}</title>
+        <title>{process.env.APP_NAME + ' - Transaction New'}</title>
       </Head>
       <div className='p-4'>
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='text-xl flex items-center'>
             <div className='hidden md:flex items-center'>
-              <Link href={'/game'}>
-                <div className='mr-4 hover:text-primary-500'>{'Game'}</div>
+              <Link href={'/transaction'}>
+                <div className='mr-4 hover:text-primary-500'>{'Transaction'}</div>
               </Link>
               <div className='mr-4'>
                 <BsChevronRight className={''} size={'1.2rem'} />
@@ -155,7 +98,7 @@ const New: NextPage<Props> = () => {
               <div className='mr-4'>{'New'}</div>
             </div>
             <div className='flex items-center md:hidden'>
-              <Link href={'/game'}>
+              <Link href={'/transaction'}>
                 <div className='mr-4 hover:text-primary-500'>
                   <BsChevronLeft className={''} size={'1.2rem'} />
                 </div>
@@ -166,7 +109,7 @@ const New: NextPage<Props> = () => {
         </div>
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='mb-4'>
-            <div className='text-xl'>Create Game</div>
+            <div className='text-xl'>Create Transaction</div>
           </div>
           <div className='mb-4'>
             <Formik
@@ -181,67 +124,28 @@ const New: NextPage<Props> = () => {
                     <div className={'w-full max-w-xl'}>
                       <div className="mb-4">
                         <TextField
-                          label={'Game Name'}
+                          label={'Name'}
                           name={'name'}
                           type={'text'}
-                          placeholder={'Game Name'}
-                          required
-                        />
-                      </div>
-                      <div className="mb-4">
-                        <TextAreaField
-                          label={'Game Description'}
-                          name={'description'}
-                          type={'text'}
-                          placeholder={'Game Description'}
-                        />
-                      </div>
-                      <div className="mb-4">
-                        <DateField
-                          label={'Game Date'}
-                          name={'gameDt'}
-                          dateFormat={'dddd DD MMM YYYY'}
-                          timeFormat={'HH:mm'}
-                          required
-                        />
-                      </div>
-                      <div className="mb-4">
-                        <SearchDropdownField
-                          label={'Gor'}
-                          name={'gorId'}
-                          options={listDataGor}
-                          onInputChange={search => { setSearchGor(search) }}
-                          onChange={e => handleChangeGor(e, setFieldValue)}
+                          placeholder={'Name'}
                           required
                         />
                       </div>
                       <div className="mb-4">
                         <TextField
-                          label={'Normal Game Price'}
-                          name={'normalGamePrice'}
+                          label={'Price'}
+                          name={'price'}
                           type={'number'}
-                          placeholder={'Normal Game Price'}
-                          disabled={true}
+                          placeholder={''}
                         />
                       </div>
                       <div className="mb-4">
-                        <TextField
-                          label={'Rubber Game Price'}
-                          name={'rubberGamePrice'}
-                          type={'number'}
-                          placeholder={'Rubber Game Price'}
-                          disabled={true}
+                        <CheckboxField
+                          label={'Debit'}
+                          name={'isDebit'}
                         />
                       </div>
-                      <div className="mb-4">
-                        <TextField
-                          label={'Ball Price'}
-                          name={'ballPrice'}
-                          type={'number'}
-                          placeholder={'Ball Price'}
-                          disabled={true}
-                        />
-                      </div>
+
                       <div className="mb-4">
                         <ButtonSubmit
                           label={'Create'}
@@ -249,14 +153,14 @@ const New: NextPage<Props> = () => {
                           loading={isLoading}
                         />
                       </div>
-                      {/* <div className="mb-4">
+                      <div className="mb-4">
                         <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
                           {JSON.stringify(values, null, 4)}
                         </div>
                         <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
                           {JSON.stringify(errors, null, 4)}
                         </div>
-                      </div> */}
+                      </div>
                     </div>
                   </Form>
                 );
