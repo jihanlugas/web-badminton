@@ -416,7 +416,7 @@ const Finish: NextPage<Props> = ({ gamedetail }) => {
                         render={arrayHelpers => (
                           <>
                             <div className='mb-4'>
-                              <div className="border-2 rounded p-2">
+                              <div className="border-2 rounded p-2 mb-4">
                                 <div className="mb-2">List Transaction</div>
                                 <div className="text-sm">
                                   {values.transactions.length > 0 ? values.transactions.map((data, key) => {

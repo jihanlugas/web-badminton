@@ -149,7 +149,6 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
   }, [show]);
 
   const handleChangePlayer = (e: HTMLSelectElement, fieldName, setFieldValue) => {
-    console.log(e)
     setFieldValue(fieldName, e ? e.value : '')
   }
 

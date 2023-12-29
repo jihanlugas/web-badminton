@@ -81,7 +81,7 @@ const New: NextPage<Props> = () => {
     normalGamePrice: 0,
     rubberGamePrice: 0,
     ballPrice: 0,
-    gameDt: new Date(new Date().setHours(7, 0, 0, 0)),
+    gameDt: new Date(new Date().setHours(20, 0, 0, 0)),
   };
 
   useEffect(() => {

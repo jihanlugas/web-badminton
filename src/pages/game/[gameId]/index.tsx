@@ -58,6 +58,17 @@ const Index: NextPage<Props> = ({ game }) => {
   const company: CompanyView = JSON.parse(localStorage.getItem('company'));
   const router = useRouter();
 
+  const listSort = [
+    {
+      name: 'Date',
+      value: 'create_dt'
+    },
+    {
+      name: 'Name',
+      value: 'player_name'
+    },
+  ]
+  const [sort, setSort] = useState<number>(listSort.length)
   const [gameplayer, setGameplayer] = useState<GameplayerView[]>([]);
   const [showModalAddGameplayer, setShowModalAddGameplayer] = useState<boolean>(false);
   const [showModalAddGamematch, setShowModalAddGamematch] = useState<boolean>(false);
@@ -93,7 +104,7 @@ const Index: NextPage<Props> = ({ game }) => {
   const [pageRequestGameplayer, setPageRequestGameplayer] = useState<PageGameplayer>({
     limit: 1000,
     page: 1,
-    sortField: 'create_dt',
+    sortField: listSort[sort % listSort.length].value,
     sortOrder: 'asc',
     gameId: game.id,
     playerId: '',
@@ -104,18 +115,6 @@ const Index: NextPage<Props> = ({ game }) => {
   const { mutate: mutateDeleteGameplayer, isLoading: isLoadingDeleteGameplayer } = useMutation((id: string) => Api.delete('/gameplayer/' + id));
 
   const { isLoading: isLoadingGameplayer, data: dataGameplayer, refetch: refetchGameplayer } = useQuery(['gameplayer', pageRequestGameplayer], ({ queryKey }) => Api.get('/gameplayer/page', queryKey[1]), {});
-
-  useEffect(() => {
-    if (dataGameplayer && dataGameplayer.status) {
-      setGameplayer(dataGameplayer.payload.list);
-      setPageInfoGameplayer({
-        pageCount: dataGameplayer.payload.totalPage,
-        pageSize: dataGameplayer.payload.dataPerPage,
-        totalData: dataGameplayer.payload.totalData,
-        page: dataGameplayer.payload.page,
-      });
-    }
-  }, [dataGameplayer]);
 
   const toggleDeleteGameplayer = (id = '') => {
     setDeleteGameplayerId(id);
@@ -158,6 +157,26 @@ const Index: NextPage<Props> = ({ game }) => {
     setAddBar(false);
     setShowModalAddGamematch(!showModalAddGamematch)
   };
+
+  const handleChangeSort = () => {
+    setSort(sort + 1)
+  }
+
+  useEffect(() => {
+    if (dataGameplayer && dataGameplayer.status) {
+      setGameplayer(dataGameplayer.payload.list);
+      setPageInfoGameplayer({
+        pageCount: dataGameplayer.payload.totalPage,
+        pageSize: dataGameplayer.payload.dataPerPage,
+        totalData: dataGameplayer.payload.totalData,
+        page: dataGameplayer.payload.page,
+      });
+    }
+  }, [dataGameplayer]);
+
+  useEffect(() => {
+    setPageRequestGameplayer({ ...pageRequestGameplayer, sortField: listSort[sort % listSort.length].value })
+  }, [sort]);
 
   return (
     <>
@@ -215,6 +234,10 @@ const Index: NextPage<Props> = ({ game }) => {
 
                 <div className={`absolute right-0 mt-2 w-56 rounded-md overflow-hidden origin-top-right shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none duration-300 ease-in-out ${!addBar && 'scale-0 shadow-none ring-0'}`}>
                   <div className="" role="none">
+                    <button onClick={() => handleChangeSort()} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
+                      {'Sort by ' + listSort[sort % listSort.length].name}
+                    </button>
+                    <hr />
                     <button onClick={() => toggleAddGamematch(false)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
                       {'Add match'}
                     </button>

@@ -24,7 +24,7 @@ const schema = Yup.object().shape({
   gameId: Yup.string().required('Required field'),
   listPlayerId: Yup.array().of(
     Yup.string()
-  ).min(1, "Please add minimal 1 player"),
+  ),
 });
 
 const ModalAddGameplayer: NextPage<Props> = ({ show, onClickOverlay, game }) => {
@@ -56,6 +56,10 @@ const ModalAddGameplayer: NextPage<Props> = ({ show, onClickOverlay, game }) => 
   const { isLoading: isLoadingPlayer, data: dataPlayer, refetch: refetchPlayer } = useQuery(['player', pageRequestPlayer], ({ queryKey }) => Api.get('/player/page', queryKey[1]), {});
 
   const handleSubmit = (values: FormikValues, formikHelpers: FormikHelpers<CreateBulkGameplayer>) => {
+    if (values.listPlayerId.length === 0) {
+      notif.error('Please select player');
+      return
+    }
     mutateSubmit(values, {
       onSuccess: (res) => {
         if (res) {
@@ -123,7 +127,7 @@ const ModalAddGameplayer: NextPage<Props> = ({ show, onClickOverlay, game }) => 
                             <>
                               <div className='mb-4'>
                                 <div className='mb-4'>List Player</div>
-                                {player.length > 0 ? (
+                                {show && player.length > 0 ? (
                                   <>
                                     <div className='h-96 overflow-y-scroll mb-4'>
                                       <div className='grid grid-cols-2 gap-2'>
@@ -147,9 +151,9 @@ const ModalAddGameplayer: NextPage<Props> = ({ show, onClickOverlay, game }) => 
                                     </div>
                                   </>
                                 )}
-                                {touched.listPlayerId && errors.listPlayerId && (
+                                {/* {touched.listPlayerId && errors.listPlayerId && (
                                   <div className='text-rose-500'>{errors.listPlayerId}</div>
-                                )}
+                                )} */}
                               </div>
                             </>
                           )}
@@ -164,6 +168,12 @@ const ModalAddGameplayer: NextPage<Props> = ({ show, onClickOverlay, game }) => 
                           loading={isLoadingPlayer || isLoading}
                         />
                       </div>
+                    </div>
+                    <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                      {JSON.stringify(values, null, 4)}
+                    </div>
+                    <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                      {JSON.stringify(errors, null, 4)}
                     </div>
                   </Form>
                 );
