@@ -230,7 +230,7 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
                 {({ values, errors, touched, setValues, setFieldValue }) => {
                   return (
                     <Form encType='multipart/form-data'>
-                      <div className='max-h-[44rem] overflow-y-scroll mb-4'>
+                      <div className='max-h-[36rem] overflow-y-scroll mb-4'>
                         {/* <div className="mb-4">
                           <TextField
                             label={'Match Name'}
@@ -240,10 +240,11 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
                             required
                           />
                         </div> */}
-                        <div className='mb-4 pt-8'>
+                        <div className='mb-4 pt-4'>
                           <div className='w-full grid grid-cols-2 gap-2'>
                             <button className='w-full h-8 rounded-lg bg-primary-200 hover:bg-primary-300 disabled:bg-primary-400' disabled={!selected} type='button' onClick={() => setSelected(!selected)}>
                               <div>{values.gameMatchTeams[0].name}</div>
+                              {/* <div className='absolute h-2 w-2 right-1 top-1 rounded-full bg-rose-500 shadow'></div> */}
                             </button>
                             <button className='w-full h-8 rounded-lg bg-primary-200 hover:bg-primary-300 disabled:bg-primary-400' disabled={selected} type='button' onClick={() => setSelected(!selected)}>
                               <div>{values.gameMatchTeams[1].name}</div>
@@ -324,7 +325,7 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
                                   <div className=''>
                                     <CheckboxField
                                       name={`isRubber`}
-                                      label={"Rubber Game"} 
+                                      label={"Rubber Game"}
                                       onChange={(e) => handleCheckRubber(e, setFieldValue, arrayHelpers)}
                                     />
                                   </div>
@@ -394,6 +395,12 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
                           loading={isLoading}
                         />
                       </div>
+                      {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                        {JSON.stringify(values, null, 4)}
+                      </div>
+                      <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                        {JSON.stringify(errors, null, 4)}
+                      </div> */}
                     </Form>
                   );
                 }}
