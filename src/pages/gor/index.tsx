@@ -31,14 +31,6 @@ type Props = {
   company: CompanyView
 }
 
-type FilterPropsGor = {
-  companyId: string
-  name: string
-  description: string
-  address: string
-  createName: string
-}
-
 const Index: NextPage<Props> = () => {
 
   const company: CompanyView = JSON.parse(localStorage.getItem('company'));

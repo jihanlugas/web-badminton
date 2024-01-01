@@ -388,7 +388,7 @@ const GamePlayerSection: NextPage<GamePlayerSectionProps> = ({ game, company, ga
                                   <div className="mb-4 h-6">
                                     <CheckboxField
                                       name={'isPay'}
-                                      label="Is Pay"
+                                      label="Paid"
                                     />
                                   </div>
                                   <div className='flex justify-end items-center'>

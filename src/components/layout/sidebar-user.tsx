@@ -49,6 +49,11 @@ const defaultMenu = [
     path: '/game',
   },
   {
+    name: 'Rank',
+    icon: 'BiAbacus',
+    path: '/rank',
+  },
+  {
     name: 'Transaction',
     icon: 'BiAbacus',
     path: '/transaction',

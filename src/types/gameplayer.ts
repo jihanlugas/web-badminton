@@ -21,6 +21,18 @@ export declare interface GameplayerView {
   deleteName: string;
 }
 
+export declare interface GameplayerRangking {
+  playerId: string;
+  playerName: string;
+  gender: string;
+  normalGame: number;
+  rubberGame: number;
+  game: number;
+  ball: number;
+  point: number;
+  rank: number;
+}
+
 export declare interface CreateGameplayer {
   gameId: string;
   playerId: string;
@@ -45,4 +57,9 @@ export declare interface PageGameplayer extends Paging {
   playerId: string;
   gameName: string;
   playerName: string;
+}
+
+export declare interface PageRankingGameplayer extends Paging {
+  gender: string;
+  gameDt: Date | string;
 }
