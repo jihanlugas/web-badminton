@@ -253,14 +253,14 @@ const Edit: NextPage<Props> = ({ game }) => {
                           loading={isLoading}
                         />
                       </div>
-                      <div className="mb-4">
+                      {/* <div className="mb-4">
                         <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
                           {JSON.stringify(values, null, 4)}
                         </div>
                         <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
                           {JSON.stringify(errors, null, 4)}
                         </div>
-                      </div>
+                      </div> */}
                     </div>
                   </Form>
                 );

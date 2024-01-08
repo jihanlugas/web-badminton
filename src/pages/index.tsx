@@ -48,19 +48,7 @@ const Index = () => {
         <title>{process.env.APP_NAME + ' - Badminton'}</title>
       </Head>
       <div className='p-4'>
-        Test
-        <div className='p-4' onClick={testSuccess}>
-          Success
-        </div>
-        <div className='p-4' onClick={testError}>
-          Error
-        </div>
-        <div className='p-4' onClick={testInfo}>
-          Info
-        </div>
-        <div className='p-4' onClick={testWarning}>
-          Warning
-        </div>
+        Home
       </div>
     </>
   );
