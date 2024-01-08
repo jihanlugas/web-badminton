@@ -15,7 +15,10 @@ export declare interface GameplayerView {
   deleteBy: string;
   deleteDt?: string;
   gameName: string;
-  playerName: string;
+  gameDt: string;
+  isFinish: boolean;
+  playerName: string
+  gender: string;
   createName: string;
   updateName: string;
   deleteName: string;

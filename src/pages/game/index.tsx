@@ -69,7 +69,7 @@ const Index: NextPage<Props> = () => {
   const [pageRequestGame, setPageRequestGame] = useState<PageGame>({
     limit: 1000,
     page: 1,
-    sortField: 'create_dt',
+    sortField: 'game_dt',
     sortOrder: 'desc',
     companyId: company.id,
     gorId: '',

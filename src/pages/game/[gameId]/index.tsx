@@ -330,7 +330,7 @@ const GamePlayerSection: NextPage<GamePlayerSectionProps> = ({ game, company, ga
                 isPay: data.isPay,
               }
               return (
-                <div key={key} className='bg-white rounded shadow'>
+                <div key={key} className={`bg-white rounded shadow border-l-4 ${data.gender === 'MALE' ? 'border-blue-500' : data.gender === 'FEMALE' && 'border-pink-500'}`}>
                   {edit.includes(data.id) ? (
                     <>
                       <Formik

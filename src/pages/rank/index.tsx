@@ -5,6 +5,7 @@ import { CompanyView } from "@/types/company";
 import { GameplayerRangking, PageRankingGameplayer } from "@/types/gameplayer";
 import PageWithLayoutType from "@/types/layout";
 import { PageInfo } from "@/types/pagination";
+import { displayDate, displayDateTime } from "@/utils/formater";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import Head from "next/head";
 import Link from "next/link";
@@ -53,7 +54,7 @@ const Index: NextPage<Props> = () => {
     sortField: null,
     sortOrder: null,
     gender: '',
-    gameDt: '',
+    gameDt: new Date(),
   });
 
   const { isLoading: isLoadingRank, data: dataRank, refetch: refetchRank } = useQuery(['gameplayer-rank', pageRequestRank], ({ queryKey }) => Api.get('/gameplayer/page-rank', queryKey[1]), {});
@@ -102,10 +103,23 @@ const Index: NextPage<Props> = () => {
             </div>
           </div>
         </div>
+        <div className='bg-white mb-4 p-4 rounded shadow w-full max-w-xl'>
+          <div className="text-lg">Filter</div>
+          <div className="flex items-center justify-between">
+            <div>Date</div>
+            <div>{displayDate(pageRequestRank.gameDt, 'MMMM YYYY')}</div>
+          </div>
+          {pageRequestRank.gender && (
+            <div className="flex items-center justify-between">
+              <div>Gender</div>
+              <div>{pageRequestRank.gender}</div>
+            </div>
+          )}
+        </div>
         <div className={'w-full max-w-xl'}>
           {rank.map((data, key) => {
             return (
-              <div key={key} className='bg-white rounded shadow mb-4'>
+              <div key={key} className={`bg-white rounded shadow mb-4 border-l-4 ${data.gender === 'MALE' ? 'border-blue-500' : data.gender === 'FEMALE' && 'border-pink-500'}`}>
                 <div className="flex items-center justify-between p-4">
                   <div className="flex w-full justify-between">
                     <div className="flex">

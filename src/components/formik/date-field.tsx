@@ -10,6 +10,9 @@ interface Props extends DatetimepickerProps {
 }
 
 const DateField: NextPage<Props> = ({ label, name, required, ...props }) => {
+  const handleChange = (form, field, value) => {
+    form.setFieldValue(field.name, new Date(value))
+  }
   return (
     <>
       <div className=''>
@@ -19,19 +22,13 @@ const DateField: NextPage<Props> = ({ label, name, required, ...props }) => {
             {required && <span className={'text-rose-600'}>{'*'}</span>}
           </div>
         )}
-        {/* <Datetime
-          className={'datetime w-full border-2 rounded'}
-          dateFormat={'DD MMM YYYY'}
-          timeFormat={'HH:mm'}
-          {...props}
-        /> */}
         <Field name={name} className={'w-full border-2 rounded'}>
           {({ field, form }) => {
             return (
               <DateTime
                 className={'datetime w-full'}
                 value={new Date(field.value)}
-                onChange={(value) => { form.setFieldValue(field.name, value) }}
+                onChange={(value) => handleChange(form, field, value)}
                 dateFormat={'DD MMM YYYY'}
                 timeFormat={'HH:mm'}
                 {...props}

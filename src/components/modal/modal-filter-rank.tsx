@@ -41,7 +41,7 @@ const ModalFilterRank: NextPage<Props> = ({ show, onClickOverlay, pageRequest, s
       ...pageRequest,
       page: 1,
       name: values.name,
-      gameDt: JSON.stringify(values.gameDt),
+      gameDt: JSON.stringify(values.gameDt).replaceAll('"', ''),
       gender: values.gender,
     };
     setPageRequest(newReq);
@@ -52,7 +52,7 @@ const ModalFilterRank: NextPage<Props> = ({ show, onClickOverlay, pageRequest, s
     const newReq = {
       ...pageRequest,
       page: 1,
-      gameDt: '',
+      gameDt: new Date(),
       gender: '',
     };
     setPageRequest(newReq);
@@ -67,6 +67,7 @@ const ModalFilterRank: NextPage<Props> = ({ show, onClickOverlay, pageRequest, s
           <div className={'text-xl mb-4'}>
             Filter Player
           </div>
+          
           <div>
             <Formik
               initialValues={pageRequest}
@@ -108,6 +109,9 @@ const ModalFilterRank: NextPage<Props> = ({ show, onClickOverlay, pageRequest, s
                           <GrPowerReset className='text-primary-500' size={'1.5rem'} />
                         </button>
                       </div>
+                    </div>
+                    <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                      {JSON.stringify(values, null, 4)}
                     </div>
                   </Form>
                 );
