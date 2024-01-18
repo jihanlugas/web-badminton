@@ -23,8 +23,8 @@ export declare interface CreateGamematch {
     companyId: string;
     gameId: string;
     matchName: string;
-    leftPoint: number;
-    rightPoint: number;
+    leftPoint: string | number;
+    rightPoint: string | number;
     isRubber: boolean;
     gameMatchTeams: {
         name: string;
@@ -33,10 +33,10 @@ export declare interface CreateGamematch {
         }[];
     }[];
     gameMatchScores: {
-        leftScore: number;
-        rightScore: number;
+        leftScore: string | number;
+        rightScore: string | number;
     }[];
-    ball: number;
+    ball: string | number;
 }
 
 export declare interface PageGamematch extends Paging {

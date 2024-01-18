@@ -78,7 +78,7 @@ const ModalFilterRank: NextPage<Props> = ({ show, onClickOverlay, pageRequest, s
               {({ values, setValues, setFieldValue }) => {
                 return (
                   <Form encType='multipart/form-data'>
-                    <div className='grid grid-cols-1 md:grid-cols-1 gap-4 mb-4'>
+                    <div className='grid grid-cols-1 md:grid-cols-1 gap-4 mb-16'>
                       <div className="mb-4">
                         <DateField
                           label={'Game Date'}

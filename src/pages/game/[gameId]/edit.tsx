@@ -1,5 +1,6 @@
 import ButtonSubmit from "@/components/formik/button-submit";
 import DateField from "@/components/formik/date-field";
+import DropdownField from "@/components/formik/dropdown-field";
 import SearchDropdownField from "@/components/formik/search-dropdown-field";
 import TextAreaField from "@/components/formik/text-area-field";
 import TextField from "@/components/formik/text-field";
@@ -50,15 +51,15 @@ const Edit: NextPage<Props> = ({ game }) => {
   const company: CompanyView = JSON.parse(localStorage.getItem('company'));
 
   const initFormikValue: UpdateGame = {
-    companyId:game.companyId,
-    gorId:game.gorId,
-    name:game.name,
-    description:game.description,
-    normalGamePrice:game.normalGamePrice,
-    rubberGamePrice:game.rubberGamePrice,
-    ballPrice:game.ballPrice,
-    gameDt:game.gameDt,
-    isFinish:game.isFinish,
+    companyId: game.companyId,
+    gorId: game.gorId,
+    name: game.name,
+    description: game.description,
+    normalGamePrice: game.normalGamePrice,
+    rubberGamePrice: game.rubberGamePrice,
+    ballPrice: game.ballPrice,
+    gameDt: game.gameDt,
+    isFinish: game.isFinish,
     debit: game.debit,
     expectedDebit: game.expectedDebit,
   };
@@ -107,7 +108,7 @@ const Edit: NextPage<Props> = ({ game }) => {
         if (res) {
           if (res.status) {
             notif.success(res.message);
-            router.push({ pathname: '/game'});
+            router.push({ pathname: '/game' });
           } else if (!res.success) {
             if (res.payload && res.payload.listError) {
               setErrors(res.payload.listError);
@@ -209,13 +210,23 @@ const Edit: NextPage<Props> = ({ game }) => {
                           required
                         />
                       </div>
-                      <div className="mb-4">
+                      {/* <div className="mb-4">
                         <SearchDropdownField
                           label={'Gor'}
                           name={'gorId'}
                           options={listDataGor}
                           onInputChange={search => { setSearchGor(search) }}
                           onChange={e => handleChangeGor(e, setFieldValue)}
+                          required
+                        />
+                      </div> */}
+                      <div className="mb-4">
+                        <DropdownField
+                          label={'Gor'}
+                          name={'gorId'}
+                          placeholder="Select Gor"
+                          placeholderValue={''}
+                          items={listDataGor}
                           required
                         />
                       </div>

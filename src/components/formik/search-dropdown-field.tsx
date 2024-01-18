@@ -1,7 +1,7 @@
 import { ListData } from '@/types/data';
 import { Field, ErrorMessage } from 'formik';
 import { NextPage } from 'next';
-import React from 'react';
+import React, { useRef } from 'react';
 import Select from 'react-select';
 
 // declare module 'react-select/dist/declarations/src/Select' {
@@ -21,16 +21,13 @@ import Select from 'react-select';
 
 const DropDown = ({ field, form, options, required, disable, isLoading, placeholder, onChange, onInputChange, ...props }) => {
 
-	const handleChange = (option) => {
-		if (option) {
-			form.setFieldValue(field.name, option.value)
-		} else {
-			if (typeof field.value === 'number') {
-				form.setFieldValue(field.name, 0)
-			} else {
-				form.setFieldValue(field.name, '')
-			}
-		}
+	const ref = useRef(null)
+	
+	const handleChange = (e) => {
+		onChange(e)
+		setTimeout(() => {
+			ref.current.blur()
+		}, 10);
 	}
 
 	const handleOnBlur = () => {
@@ -43,7 +40,7 @@ const DropDown = ({ field, form, options, required, disable, isLoading, placehol
 			options={options}
 			placeholder={placeholder}
 			isLoading={isLoading}
-			onChange={onChange ? onChange : handleChange}
+			onChange={e => handleChange(e)}
 			value={options && options.find(option => option.value === field.value)}
 			filterOption={null}
 			onInputChange={onInputChange}
@@ -54,7 +51,6 @@ const DropDown = ({ field, form, options, required, disable, isLoading, placehol
 			isClearable={true}
 			className={''}
 			onBlur={handleOnBlur}
-			{...props}
 			classNames={{
 				// valueContainer: (state) =>
 				// 	state.isFocused ? 'border-rose-400' : 'border-green-400',
@@ -85,7 +81,8 @@ const DropDown = ({ field, form, options, required, disable, isLoading, placehol
 					// borderColor: state.isFocused ? 'green' : 'red',
 				}),
 			}}
-
+			{...props}
+			ref={ref}
 		/>
 	)
 }

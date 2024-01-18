@@ -8,7 +8,7 @@ import TextField from '@/components/formik/text-field';
 import ButtonSubmit from '@/components/formik/button-submit';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { PagePlayer, PlayerView } from '@/types/player';
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { Api } from '@/lib/api';
 import CheckboxField from '@/components/formik/checkbox-field';
 import notif from "@/utils/notif";
@@ -18,6 +18,7 @@ import SearchDropdownField from "@/components/formik/search-dropdown-field";
 import { useDebounce } from '@/utils/hook';
 import { ListData } from '@/types/data';
 import { PageInfo } from '@/types/pagination';
+import DropdownField from '../formik/dropdown-field';
 
 
 type Props = {
@@ -30,8 +31,8 @@ const schema = Yup.object().shape({
   companyId: Yup.string().required('Required field'),
   gameId: Yup.string().required('Required field'),
   matchName: Yup.string(),
-  leftPoint: Yup.number().required('Required field'),
-  rightPoint: Yup.number().required('Required field'),
+  leftPoint: Yup.number().typeError("Must be a number").required('Required field'),
+  rightPoint: Yup.number().typeError("Must be a number").required('Required field'),
   gameMatchTeams: Yup.array().of(
     Yup.object().shape({
       name: Yup.string().required('Required field'),
@@ -44,11 +45,11 @@ const schema = Yup.object().shape({
   ).min(2, "Please add minimal 2 team"),
   gameMatchScores: Yup.array().of(
     Yup.object().shape({
-      leftScore: Yup.number().min(0).required('Required field'),
-      rightScore: Yup.number().min(0).required('Required field'),
+      leftScore: Yup.number().typeError("Must be a number").min(0).required('Required field'),
+      rightScore: Yup.number().typeError("Must be a number").min(0).required('Required field'),
     })
   ),
-  ball: Yup.number().min(0),
+  ball: Yup.number().typeError("Must be a number").min(0).required('Required field'),
 });
 
 const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
@@ -94,6 +95,18 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
 
   const handleSubmit = (values: FormikValues, formikHelpers: FormikHelpers<CreateGamematch>) => {
     values.matchName = 'Match ' + (pageGamematchInfo.totalData + 1)
+
+    values.leftPoint = Number(values.leftPoint)
+    values.rightPoint = Number(values.rightPoint)
+    values.ball = Number(values.ball)
+    values.gameMatchScores[0].leftScore = Number(values.gameMatchScores[0].leftScore)
+    values.gameMatchScores[1].leftScore = Number(values.gameMatchScores[1].leftScore)
+    values.gameMatchScores[0].rightScore = Number(values.gameMatchScores[0].rightScore)
+    values.gameMatchScores[1].rightScore = Number(values.gameMatchScores[1].rightScore)
+    if (values.isRubber) {
+      values.gameMatchScores[2].leftScore = Number(values.gameMatchScores[2].leftScore)
+      values.gameMatchScores[2].rightScore = Number(values.gameMatchScores[2].rightScore)
+    }
 
     mutateSubmit(values, {
       onSuccess: (res) => {
@@ -148,9 +161,10 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
     }
   }, [show]);
 
-  const handleChangePlayer = (e: HTMLSelectElement, fieldName, setFieldValue) => {
-    setFieldValue(fieldName, e ? e.value : '')
-  }
+  // const handleChangePlayer = (e, fieldName, setFieldValue) => {
+  //   console.log('e ', e)
+  //   setFieldValue(fieldName, e ? e.value : '')
+  // }
 
   const handleCheckRubber = (e, setFieldValue, arrayHelpers: ArrayHelpers) => {
     setFieldValue('isRubber', e.target.checked)
@@ -172,8 +186,8 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
     companyId: game.companyId,
     gameId: game.id,
     matchName: '',
-    leftPoint: 0,
-    rightPoint: 0,
+    leftPoint: '',
+    rightPoint: '',
     isRubber: false,
     gameMatchTeams: [
       {
@@ -201,12 +215,12 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
     ],
     gameMatchScores: [
       {
-        leftScore: 0,
-        rightScore: 0,
+        leftScore: '',
+        rightScore: '',
       },
       {
-        leftScore: 0,
-        rightScore: 0,
+        leftScore: '',
+        rightScore: '',
       },
     ],
     ball: 1,
@@ -231,15 +245,6 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
                   return (
                     <Form encType='multipart/form-data'>
                       <div className='max-h-[36rem] overflow-y-scroll mb-4'>
-                        {/* <div className="mb-4">
-                          <TextField
-                            label={'Match Name'}
-                            name={'matchName'}
-                            type={'text'}
-                            placeholder={'Match Name'}
-                            required
-                          />
-                        </div> */}
                         <div className='mb-4 pt-4'>
                           <div className='w-full grid grid-cols-2 gap-2'>
                             <button className='w-full h-8 rounded-lg bg-primary-200 hover:bg-primary-300 disabled:bg-primary-400' disabled={!selected} type='button' onClick={() => setSelected(!selected)}>
@@ -262,7 +267,7 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
                                 required
                               />
                             </div>
-                            <div className="mb-4">
+                            {/* <div className="mb-4">
                               <SearchDropdownField
                                 label={'Player 1'}
                                 name={'gameMatchTeams[0].gameMatchTeamPlayers[0].playerId'}
@@ -281,6 +286,28 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
                                 onChange={e => handleChangePlayer(e, 'gameMatchTeams[0].gameMatchTeamPlayers[1].playerId', setFieldValue)}
                                 required
                               />
+                            </div> */}
+                            <div className="mb-4">
+                              <DropdownField
+                                label={'Player 1'}
+                                name={'gameMatchTeams[0].gameMatchTeamPlayers[0].playerId'}
+                                placeholder="Select Player"
+                                placeholderValue={''}
+                                items={listDataPlayer}
+                                // onChange={e => handleChangePlayer(e, 'gameMatchTeams[0].gameMatchTeamPlayers[0].playerId', setFieldValue)}
+                                required
+                              />
+                            </div>
+                            <div className="mb-4">
+                              <DropdownField
+                                label={'Player 2'}
+                                name={'gameMatchTeams[0].gameMatchTeamPlayers[1].playerId'}
+                                placeholder="Select Player"
+                                placeholderValue={''}
+                                items={listDataPlayer}
+                                // onChange={e => handleChangePlayer(e, 'gameMatchTeams[0].gameMatchTeamPlayers[1].playerId', setFieldValue)}
+                                required
+                              />
                             </div>
                           </div>
                           <div className={`${selected ? 'block' : 'hidden'}`}>
@@ -293,7 +320,7 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
                                 required
                               />
                             </div>
-                            <div className="mb-4">
+                            {/* <div className="mb-4">
                               <SearchDropdownField
                                 label={'Player 1'}
                                 name={'gameMatchTeams[1].gameMatchTeamPlayers[0].playerId'}
@@ -310,6 +337,29 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
                                 options={listDataPlayer}
                                 onInputChange={search => { setSearchPlayer(search) }}
                                 onChange={e => handleChangePlayer(e, 'gameMatchTeams[1].gameMatchTeamPlayers[1].playerId', setFieldValue)}
+                                required
+                              />
+                            </div> */}
+
+                            <div className="mb-4">
+                              <DropdownField
+                                label={'Player 1'}
+                                name={'gameMatchTeams[1].gameMatchTeamPlayers[0].playerId'}
+                                placeholder="Select Player"
+                                placeholderValue={''}
+                                items={listDataPlayer}
+                                // onChange={e => handleChangePlayer(e, 'gameMatchTeams[1].gameMatchTeamPlayers[0].playerId', setFieldValue)}
+                                required
+                              />
+                            </div>
+                            <div className="mb-4">
+                              <DropdownField
+                                label={'Player 2'}
+                                name={'gameMatchTeams[1].gameMatchTeamPlayers[1].playerId'}
+                                placeholder="Select Player"
+                                placeholderValue={''}
+                                items={listDataPlayer}
+                                // onChange={e => handleChangePlayer(e, 'gameMatchTeams[1].gameMatchTeamPlayers[1].playerId', setFieldValue)}
                                 required
                               />
                             </div>
@@ -337,15 +387,17 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
                                           <TextField
                                             label={values.gameMatchTeams[0].name}
                                             name={`gameMatchScores[${key}].leftScore`}
-                                            type={'number'}
+                                            type={'text'}
                                             placeholder={'Score'}
+                                            inputMode='numeric'
                                             required
                                           />
                                           <TextField
                                             label={values.gameMatchTeams[1].name}
                                             name={`gameMatchScores[${key}].rightScore`}
-                                            type={'number'}
+                                            type={'text'}
                                             placeholder={'Score'}
+                                            inputMode='numeric'
                                             required
                                           />
                                         </div>
@@ -365,14 +417,16 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
                             <TextField
                               label={'Point ' + values.gameMatchTeams[0].name}
                               name={'leftPoint'}
-                              type={'number'}
+                              type={'text'}
+                              inputMode='numeric'
                               placeholder={'Point'}
                               required
                             />
                             <TextField
                               label={'Point ' + values.gameMatchTeams[1].name}
                               name={'rightPoint'}
-                              type={'number'}
+                              type={'text'}
+                              inputMode='numeric'
                               placeholder={'Point'}
                               required
                             />
@@ -382,7 +436,8 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
                           <TextField
                             label={'Total Ball'}
                             name={'ball'}
-                            type={'number'}
+                            type={'text'}
+                            inputMode='numeric'
                             placeholder={'Ball'}
                             required
                           />
@@ -395,11 +450,13 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
                           loading={isLoading}
                         />
                       </div>
-                      {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
-                        {JSON.stringify(values, null, 4)}
-                      </div>
-                      <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
-                        {JSON.stringify(errors, null, 4)}
+                      {/* <div>
+                        <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                          {JSON.stringify(values, null, 4)}
+                        </div>
+                        <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                          {JSON.stringify(errors, null, 4)}
+                        </div>
                       </div> */}
                     </Form>
                   );

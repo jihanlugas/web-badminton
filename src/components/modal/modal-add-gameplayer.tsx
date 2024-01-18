@@ -129,7 +129,7 @@ const ModalAddGameplayer: NextPage<Props> = ({ show, onClickOverlay, game }) => 
                                 <div className='mb-4'>List Player</div>
                                 {show && player.length > 0 ? (
                                   <>
-                                    <div className='h-96 overflow-y-scroll mb-4'>
+                                    <div className='max-h-[36rem] overflow-y-scroll mb-4'>
                                       <div className='grid grid-cols-2 gap-2'>
                                         {player.map((player, key) => (
                                           <div key={key} className=''>

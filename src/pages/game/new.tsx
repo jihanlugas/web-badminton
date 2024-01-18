@@ -14,12 +14,13 @@ import TextField from '@/components/formik/text-field';
 import TextAreaField from '@/components/formik/text-area-field';
 import ButtonSubmit from '@/components/formik/button-submit';
 import DateField from "@/components/formik/date-field";
+import DateFieldNew from "@/components/formik/date-field-new";
 import PasswordField from "@/components/formik/password-field";
 import DropdownField from "@/components/formik/dropdown-field";
 import { GENDER } from "@/utils/constant";
 import CheckboxField from "@/components/formik/checkbox-field";
 import SearchDropdownField from "@/components/formik/search-dropdown-field";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ListData } from "@/types/data";
 import { useDebounce } from "@/utils/hook";
 import { CompanyView } from "@/types/company";
@@ -58,7 +59,7 @@ const New: NextPage<Props> = () => {
   const [listDataGor, setListDataGor] = useState<ListData[]>([]);
 
   const [pageRequestGor, setPageRequestGor] = useState<PageGor>({
-    limit: 1000,
+    limit: 100,
     page: 1,
     sortField: null,
     sortOrder: null,
@@ -81,7 +82,7 @@ const New: NextPage<Props> = () => {
     normalGamePrice: 0,
     rubberGamePrice: 0,
     ballPrice: 0,
-    gameDt: new Date(new Date().setHours(20, 0, 0, 0)),
+    gameDt: "",
   };
 
   useEffect(() => {
@@ -175,7 +176,7 @@ const New: NextPage<Props> = () => {
               enableReinitialize={true}
               onSubmit={(values, { setErrors }) => handleSubmit(values, setErrors)}
             >
-              {({ values, errors, setFieldValue }) => {
+              {({ values, errors, touched, setFieldValue }) => {
                 return (
                   <Form>
                     <div className={'w-full max-w-xl'}>
@@ -199,19 +200,37 @@ const New: NextPage<Props> = () => {
                       <div className="mb-4">
                         <DateField
                           label={'Game Date'}
-                          name={'gameDt'}
+                          name={'gameDt2'}
                           dateFormat={'dddd DD MMM YYYY'}
                           timeFormat={'HH:mm'}
                           required
                         />
                       </div>
                       <div className="mb-4">
+                        <DateFieldNew
+                          label={'Game Date'}
+                          name={'gameDt'}
+                          placeholder="dd-mm-yyyy"
+                          required
+                        />
+                      </div>
+                      {/* <div className="mb-4">
                         <SearchDropdownField
                           label={'Gor'}
                           name={'gorId'}
                           options={listDataGor}
                           onInputChange={search => { setSearchGor(search) }}
                           onChange={e => handleChangeGor(e, setFieldValue)}
+                          required
+                        />
+                      </div> */}
+                      <div className="mb-4">
+                        <DropdownField
+                          label={'Gor'}
+                          name={'gorId'}
+                          placeholder="Select Gor"
+                          placeholderValue={''}
+                          items={listDataGor}
                           required
                         />
                       </div>
@@ -255,6 +274,9 @@ const New: NextPage<Props> = () => {
                         </div>
                         <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
                           {JSON.stringify(errors, null, 4)}
+                        </div>
+                        <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                          {JSON.stringify(touched, null, 4)}
                         </div>
                       </div> */}
                     </div>

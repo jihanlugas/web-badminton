@@ -1,7 +1,7 @@
 import DateTime, { DatetimepickerProps } from 'react-datetime';
 import { NextPage } from 'next';
 import moment from 'moment';
-import { Field } from 'formik';
+import { Field, ErrorMessage } from 'formik';
 
 interface Props extends DatetimepickerProps {
   label?: string
@@ -36,6 +36,13 @@ const DateField: NextPage<Props> = ({ label, name, required, ...props }) => {
             )
           }}
         </Field>
+        <ErrorMessage name={name}>
+          {(msg) => {
+            return (
+              <div className={'text-rose-600 text-sm normal-case'}>{msg}</div>
+            );
+          }}
+        </ErrorMessage>
       </div>
     </>
   )

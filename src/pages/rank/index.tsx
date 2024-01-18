@@ -1,12 +1,14 @@
 import MainUser from "@/components/layout/main-user";
 import ModalFilterRank from "@/components/modal/modal-filter-rank";
+import Table from "@/components/table/table";
 import { Api } from "@/lib/api";
 import { CompanyView } from "@/types/company";
 import { GameplayerRangking, PageRankingGameplayer } from "@/types/gameplayer";
 import PageWithLayoutType from "@/types/layout";
 import { PageInfo } from "@/types/pagination";
-import { displayDate, displayDateTime } from "@/utils/formater";
+import { displayDate, displayDateTime, displayMoney, displayNumber } from "@/utils/formater";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { ColumnDef } from "@tanstack/react-table";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -49,13 +51,77 @@ const Index: NextPage<Props> = () => {
   });
 
   const [pageRequestRank, setPageRequestRank] = useState<PageRankingGameplayer>({
-    limit: 1000,
+    limit: 100,
     page: 1,
     sortField: null,
     sortOrder: null,
     gender: '',
     gameDt: new Date(),
   });
+
+  const column: ColumnDef<GameplayerRangking>[] = [
+    {
+      id: 'rank',
+      accessorKey: 'rank',
+      header: 'Rank',
+      enableSorting: false,
+      cell: (props) => {
+        return (
+          <div className={'w-full font-bold'}>
+            {displayNumber(Number(props.getValue()))}
+          </div>
+        )
+      },
+    },
+    {
+      id: 'playerName',
+      accessorKey: 'playerName',
+      header: 'Player Name',
+      enableSorting: false,
+      cell: (props) => {
+        return (
+          <div className={`w-full duration-300 h-8 flex items-center border-l-4 pl-2 ${props.row.original.gender === 'MALE' ? 'border-blue-500' : props.row.original.gender === 'FEMALE' && 'border-pink-500'}`}>
+            {props.getValue() as string}
+          </div>
+        )
+      },
+    },
+    {
+      id: 'normalGame',
+      accessorKey: 'normalGame',
+      header: 'Normal Game',
+      enableSorting: false,
+      cell: props => displayNumber(Number(props.getValue())),
+    },
+    {
+      id: 'rubberGame',
+      accessorKey: 'rubberGame',
+      header: 'Rubber Game',
+      enableSorting: false,
+      cell: props => displayNumber(Number(props.getValue())),
+    },
+    {
+      id: 'game',
+      accessorKey: 'game',
+      header: 'Total Game',
+      enableSorting: false,
+      cell: props => displayNumber(Number(props.getValue())),
+    },
+    {
+      id: 'setWin',
+      accessorKey: 'setWin',
+      header: 'Total Set Win',
+      enableSorting: false,
+      cell: props => displayNumber(Number(props.getValue())),
+    },
+    {
+      id: 'point',
+      accessorKey: 'point',
+      header: 'Point',
+      enableSorting: false,
+      cell: props => displayNumber(Number(props.getValue())),
+    },
+  ];
 
   const { isLoading: isLoadingRank, data: dataRank, refetch: refetchRank } = useQuery(['gameplayer-rank', pageRequestRank], ({ queryKey }) => Api.get('/gameplayer/page-rank', queryKey[1]), {});
 
@@ -103,28 +169,29 @@ const Index: NextPage<Props> = () => {
             </div>
           </div>
         </div>
-        <div className='bg-white mb-4 p-4 rounded shadow w-full max-w-xl'>
-          <div className="text-lg">Filter</div>
-          <div className="flex items-center justify-between">
-            <div>Date</div>
-            <div>{displayDate(pageRequestRank.gameDt, 'MMMM YYYY')}</div>
-          </div>
-          {pageRequestRank.gender && (
+        <div className="block md:hidden">
+          <div className='bg-white mb-4 p-4 rounded shadow w-full max-w-xl'>
+            <div className="text-lg">Filter</div>
             <div className="flex items-center justify-between">
-              <div>Gender</div>
-              <div>{pageRequestRank.gender}</div>
+              <div>Date</div>
+              <div>{displayDate(pageRequestRank.gameDt, 'MMMM YYYY')}</div>
             </div>
-          )}
-        </div>
-        <div className={'w-full max-w-xl'}>
-          {rank.map((data, key) => {
-            return (
-              <div key={key} className={`bg-white rounded shadow mb-4 border-l-4 ${data.gender === 'MALE' ? 'border-blue-500' : data.gender === 'FEMALE' && 'border-pink-500'}`}>
-                <div className="flex items-center justify-between p-4">
-                  <div className="flex w-full justify-between">
-                    <div className="flex">
-                      <div className="mr-4">
-                        {/* {data.rank === 1 ? (
+            {pageRequestRank.gender && (
+              <div className="flex items-center justify-between">
+                <div>Gender</div>
+                <div>{pageRequestRank.gender}</div>
+              </div>
+            )}
+          </div>
+          <div className={'w-full max-w-xl'}>
+            {rank.map((data, key) => {
+              return (
+                <div key={key} className={`bg-white rounded shadow mb-4 border-l-4 ${data.gender === 'MALE' ? 'border-blue-500' : data.gender === 'FEMALE' && 'border-pink-500'}`}>
+                  <div className="flex items-center justify-between p-4">
+                    <div className="flex w-full justify-between">
+                      <div className="flex">
+                        <div className="mr-4">
+                          {/* {data.rank === 1 ? (
                           <span className="relative flex h-6 w-6 justify-center items-center">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-200 opacity-50"></span>
                             <FaTrophy className={'text-amber-400'} size={'1.2rem'} />
@@ -132,38 +199,38 @@ const Index: NextPage<Props> = () => {
                         ) : (
                           <div className="h-6 w-6 flex justify-center items-center">{data.rank}</div>
                         )} */}
-                        {data.rank === 1 ? (
-                          <span className="relative flex h-6 w-6 justify-center items-center">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-50"></span>
-                            <FaTrophy className={'text-amber-400'} size={'1.2rem'} />
-                          </span>
-                        ) : data.rank === 2 ? (
-                          <span className="relative flex h-6 w-6 justify-center items-center">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-400 opacity-50"></span>
-                            <FaTrophy className={'text-slate-400'} size={'1.2rem'} />
-                          </span>
-                        ) : data.rank === 3 ? (
-                          <span className="relative flex h-6 w-6 justify-center items-center">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-800 opacity-50"></span>
-                            <FaTrophy className={'text-amber-800'} size={'1.2rem'} />
-                          </span>
-                        ) : (
-                          <div className="h-6 w-6 flex justify-center items-center font-bold">{data.rank}</div>
-                        )}
+                          {data.rank === 1 ? (
+                            <span className="relative flex h-6 w-6 justify-center items-center">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-50"></span>
+                              <FaTrophy className={'text-amber-400'} size={'1.2rem'} />
+                            </span>
+                          ) : data.rank === 2 ? (
+                            <span className="relative flex h-6 w-6 justify-center items-center">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-400 opacity-50"></span>
+                              <FaTrophy className={'text-slate-400'} size={'1.2rem'} />
+                            </span>
+                          ) : data.rank === 3 ? (
+                            <span className="relative flex h-6 w-6 justify-center items-center">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-800 opacity-50"></span>
+                              <FaTrophy className={'text-amber-800'} size={'1.2rem'} />
+                            </span>
+                          ) : (
+                            <div className="h-6 w-6 flex justify-center items-center font-bold">{data.rank}</div>
+                          )}
+                        </div>
+                        <div>{data.playerName}</div>
                       </div>
-                      <div>{data.playerName}</div>
+                      {data.rank === 1 ? (
+                        <div className="text-lg font-bold text-amber-400">{data.point}</div>
+                      ) : data.rank === 2 ? (
+                        <div className="font-bold text-slate-400">{data.point}</div>
+                      ) : data.rank === 3 ? (
+                        <div className="font-bold text-amber-800">{data.point}</div>
+                      ) : (
+                        <div className="">{data.point}</div>
+                      )}
                     </div>
-                    {data.rank === 1 ? (
-                      <div className="text-lg font-bold text-amber-400">{data.point}</div>
-                    ) : data.rank === 2 ? (
-                      <div className="font-bold text-slate-400">{data.point}</div>
-                    ) : data.rank === 3 ? (
-                      <div className="font-bold text-amber-800">{data.point}</div>
-                    ) : (
-                      <div className="">{data.point}</div>
-                    )}
-                  </div>
-                  {/* <div className="ml-4 h-6 w-6">
+                    {/* <div className="ml-4 h-6 w-6">
                     {data.rank === 1 && (
                       <span className="relative flex h-6 w-6 justify-center items-center">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-200 opacity-50"></span>
@@ -172,14 +239,41 @@ const Index: NextPage<Props> = () => {
                     )}
                   </div> */}
 
+                  </div>
                 </div>
-              </div>
-            )
-          })}
+              )
+            })}
+          </div>
         </div>
-        {/* <div className='bg-white mb-4 p-4 rounded shadow whitespace-pre-wrap'>
-          {JSON.stringify(company, null, 4)}
-        </div> */}
+        <div className="hidden md:block">
+          <div className='bg-white mb-4 p-4 rounded shadow'>
+            <div className="mb-8 max-w-lg">
+              <div className="text-lg">Filter</div>
+              <div className="flex items-center justify-between">
+                <div>Date</div>
+                <div>{displayDate(pageRequestRank.gameDt, 'MMMM YYYY')}</div>
+              </div>
+              {pageRequestRank.gender && (
+                <div className="flex items-center justify-between">
+                  <div>Gender</div>
+                  <div>{pageRequestRank.gender}</div>
+                </div>
+              )}
+            </div>
+            <div className='w-full rounded-sm'>
+              <div className=''>
+                <Table
+                  columns={column}
+                  data={rank}
+                  setPageRequest={setPageRequestRank}
+                  pageRequest={pageRequestRank}
+                  pageInfo={pageInfoRank}
+                  isLoading={isLoadingRank}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </div >
     </>
   )
