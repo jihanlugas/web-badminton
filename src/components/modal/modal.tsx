@@ -11,7 +11,7 @@ interface Props {
 const Modal: NextPage<Props> = ({ children, show, onClickOverlay, layout = '' }) => {
   return (
     <div className={show ? 'z-50 inset-0 overflow-y-auto fixed' : 'hidden'} >
-      <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-4 text-center sm:p-0">
+      <div className="flex items-center justify-center min-h-[100dvh] pt-4 px-4 pb-4 text-center sm:p-0">
         <div className="fixed inset-0 transition-opacity" onClick={() => onClickOverlay()} aria-hidden="true">
           <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
         </div>

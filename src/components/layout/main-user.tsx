@@ -19,7 +19,7 @@ type Props = {
 const Loading: React.FC = () => {
   return (
     <>
-      <div className='h-screen w-screen flex justify-center items-center'>
+      <div className='h-[100dvh] w-screen flex justify-center items-center'>
         <AiOutlineLoading className={'absolute animate-spin '} size={'6em'} />
       </div>
     </>

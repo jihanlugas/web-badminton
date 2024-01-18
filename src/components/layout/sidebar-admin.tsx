@@ -81,7 +81,7 @@ const SidebarAdmin: React.FC<Props> = ({ sidebar, onClickOverlay }) => {
           <div className={`fixed ${sidebar && 'inset-0'}`} onClick={() => onClickOverlay()} aria-hidden="true">
             <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
           </div>
-          <div className={`fixed bg-gray-50 h-screen flex w-80 duration-300 ${sidebar ? 'left-0' : '-left-80'}`}>
+          <div className={`fixed bg-gray-50 h-[100dvh] flex w-80 duration-300 ${sidebar ? 'left-0' : '-left-80'}`}>
             <div className='w-full'>
               <div className='flex items-center h-16 shadow px-2'>
                 <button className='p-2 rounded-full duration-300 hover:bg-primary-100' onClick={() => onClickOverlay()}>

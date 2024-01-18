@@ -71,7 +71,7 @@ const SingIn: NextPage<Props> = () => {
         <title>{process.env.APP_NAME + ' - Login'}</title>
         <meta name="theme-color" content={'#FAF5FF'} />
       </Head>
-      <div className={'h-dvh w-screen flex justify-center items-center'}>
+      <div className={'h-[100dvh] w-screen flex justify-center items-center'}>
         <div className={'px-4 w-full max-w-md'}>
           <div className={'w-full bg-white rounded-lg shadow p-4 mb-2'}>
             <div className={'flex justify-center mb-4'}>
