@@ -236,77 +236,79 @@ const Finish: NextPage<Props> = ({ gamedetail }) => {
           </div>
         </div>
 
-        <div className='bg-white mb-4 rounded shadow'>
-          <div className={'w-full max-w-xl'}>
-            <div className="p-4">
-              <div className='text-lg'>Game match</div>
-            </div>
-            <div className="pb-2">
-              {gamematches.map((data, key) => {
-                return (
-                  <div key={key} className="mb-2 shadow">
-                    <button className='w-full flex justify-between rounded items-center px-4 py-2' onClick={() => toggleAccordionGamematch(data.id)}>
-                      <div className='text-left flex justify-between items-center'>
-                        <div className=''>{data.name}</div>
-                      </div>
-                      <div className="flex items-center">
-                        <div className='flex justify-center items-center h-8 w-8'>
-                          <MdOutlineKeyboardArrowRight className={`rotate-0 duration-300 ${accordionGamematch.includes(data.id) && 'rotate-90'}`} size={'1.5em'} />
+        {gamematches.length > 1 && (
+          <div className='bg-white mb-4 rounded shadow'>
+            <div className={'w-full max-w-xl'}>
+              <div className="p-4">
+                <div className='text-lg'>Game match</div>
+              </div>
+              <div className="pb-2">
+                {gamematches.map((data, key) => {
+                  return (
+                    <div key={key} className="mb-2 shadow">
+                      <button className='w-full flex justify-between rounded items-center px-4 py-2' onClick={() => toggleAccordionGamematch(data.id)}>
+                        <div className='text-left flex justify-between items-center'>
+                          <div className=''>{data.name}</div>
                         </div>
-                      </div>
-                    </button>
-                    <div className={`duration-300 overflow-hidden ${accordionGamematch.includes(data.id) ? 'max-h-60 ' : 'max-h-0 '}`}>
-                      <div className='px-4 pb-4'>
-                        <div className="grid grid-cols-5 gap-4 mb-2">
-                          <div className="col-span-3">
-                            <div className="">
-                              {gamematchteamplayers.filter((player) => player.gamematchteamId === data.leftTeamId).map((player, key) => {
-                                return (
-                                  <div key={key} className="flex items-center">{player.playerName}</div>
-                                )
-                              })}
-                            </div>
-                          </div>
-                          <div className="col-span-2 flex justify-between">
-                            <div className="grid grid-cols-3 gap-4">
-                              {gamematchscores.filter((gms) => gms.gamematchId === data.id).map((gms, key) => {
-                                return (
-                                  <div key={key} className="flex items-center">{gms.leftTeamScore}</div>
-                                )
-                              })}
-                            </div>
-                            <div className="font-bold flex items-center">{data.leftTeamPoint}</div>
+                        <div className="flex items-center">
+                          <div className='flex justify-center items-center h-8 w-8'>
+                            <MdOutlineKeyboardArrowRight className={`rotate-0 duration-300 ${accordionGamematch.includes(data.id) && 'rotate-90'}`} size={'1.5em'} />
                           </div>
                         </div>
-                        <div className="grid grid-cols-5 gap-4 mb-2">
-                          <div className="col-span-3">
-                            <div className="">
-                              {gamematchteamplayers.filter((player) => player.gamematchteamId === data.rightTeamId).map((player, key) => {
-                                return (
-                                  <div key={key} className="flex items-center">{player.playerName}</div>
-                                )
-                              })}
+                      </button>
+                      <div className={`duration-300 overflow-hidden ${accordionGamematch.includes(data.id) ? 'max-h-60 ' : 'max-h-0 '}`}>
+                        <div className='px-4 pb-4'>
+                          <div className="grid grid-cols-5 gap-4 mb-2">
+                            <div className="col-span-3">
+                              <div className="">
+                                {gamematchteamplayers.filter((player) => player.gamematchteamId === data.leftTeamId).map((player, key) => {
+                                  return (
+                                    <div key={key} className="flex items-center">{player.playerName}</div>
+                                  )
+                                })}
+                              </div>
+                            </div>
+                            <div className="col-span-2 flex justify-between">
+                              <div className="grid grid-cols-3 gap-4">
+                                {gamematchscores.filter((gms) => gms.gamematchId === data.id).map((gms, key) => {
+                                  return (
+                                    <div key={key} className="flex items-center">{gms.leftTeamScore}</div>
+                                  )
+                                })}
+                              </div>
+                              <div className="font-bold flex items-center">{data.leftTeamPoint}</div>
                             </div>
                           </div>
-                          <div className="col-span-2 flex justify-between">
-                            <div className="grid grid-cols-3 gap-4">
-                              {gamematchscores.filter((gms) => gms.gamematchId === data.id).map((gms, key) => {
-                                return (
-                                  <div key={key} className="flex items-center">{gms.rightTeamScore}</div>
-                                )
-                              })}
+                          <div className="grid grid-cols-5 gap-4 mb-2">
+                            <div className="col-span-3">
+                              <div className="">
+                                {gamematchteamplayers.filter((player) => player.gamematchteamId === data.rightTeamId).map((player, key) => {
+                                  return (
+                                    <div key={key} className="flex items-center">{player.playerName}</div>
+                                  )
+                                })}
+                              </div>
                             </div>
-                            <div className="font-bold flex items-center">{data.rightTeamPoint}</div>
+                            <div className="col-span-2 flex justify-between">
+                              <div className="grid grid-cols-3 gap-4">
+                                {gamematchscores.filter((gms) => gms.gamematchId === data.id).map((gms, key) => {
+                                  return (
+                                    <div key={key} className="flex items-center">{gms.rightTeamScore}</div>
+                                  )
+                                })}
+                              </div>
+                              <div className="font-bold flex items-center">{data.rightTeamPoint}</div>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                )
-              })}
+                  )
+                })}
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         <div className='bg-white mb-4 rounded shadow'>
           <div className={'w-full max-w-xl'}>

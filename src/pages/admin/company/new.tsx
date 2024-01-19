@@ -139,7 +139,7 @@ const New: NextPage<Props> = () => {
                       </div>
                       <div className="mb-4">
                         <TextField
-                          label={'username'}
+                          label={'Username'}
                           name={'username'}
                           type={'text'}
                           placeholder={'username'}

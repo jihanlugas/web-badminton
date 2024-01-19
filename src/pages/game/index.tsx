@@ -184,11 +184,9 @@ const Index: NextPage<Props> = () => {
                   </button>
                   <div className={`duration-300 overflow-hidden ${accordion.includes(key) ? 'max-h-60 ' : 'max-h-0 '}`}>
                     <div className='px-4 pb-4'>
-                      {data.description && (
-                        <div className='flex mb-2'>
-                          <div className='flex-grow '>{data.description}</div>
-                        </div>
-                      )}
+                      <div className='flex mb-2'>
+                        <div className='flex-grow '>{data.description ? data.description : 'No Description'}</div>
+                      </div>
                       <div className='flex'>
                         <div className='h-6 w-6 flex-none flex justify-center items-center mr-2'>2</div>
                         <div className='flex-grow '>{displayMoney(data.normalGamePrice)}</div>
@@ -240,11 +238,9 @@ const Index: NextPage<Props> = () => {
                   </div>
                   <div className={'duration-300 overflow-hidden'}>
                     <div className='px-4 pb-4'>
-                      {data.description && (
-                        <div className='flex mb-2'>
-                          <div className='flex-grow '>{data.description}</div>
-                        </div>
-                      )}
+                      <div className='flex mb-2'>
+                        <div className='flex-grow '>{data.description ? data.description : 'No Description'}</div>
+                      </div>
                       <div className='flex'>
                         <div className='h-6 w-6 flex-none flex justify-center items-center mr-2'>2</div>
                         <div className='flex-grow '>{displayMoney(data.normalGamePrice)}</div>

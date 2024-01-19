@@ -89,7 +89,7 @@ const Edit: NextPage<Props> = ({ game }) => {
 
   const handleChangeGor = (e, setFieldValue) => {
     if (e) {
-      const selected = dataGor.payload.list.find((data) => data.id === e.value)
+      const selected = dataGor.payload.list.find((data) => data.id === e.target.value)
       setFieldValue('gorId', selected ? selected.id : '')
       setFieldValue('normalGamePrice', selected ? selected.normalGamePrice : 0)
       setFieldValue('rubberGamePrice', selected ? selected.rubberGamePrice : 0)
@@ -226,6 +226,7 @@ const Edit: NextPage<Props> = ({ game }) => {
                           name={'gorId'}
                           placeholder="Select Gor"
                           placeholderValue={''}
+                          onChange={e => handleChangeGor(e, setFieldValue)}
                           items={listDataGor}
                           required
                         />

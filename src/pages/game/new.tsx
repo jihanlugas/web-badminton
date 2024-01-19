@@ -82,7 +82,7 @@ const New: NextPage<Props> = () => {
     normalGamePrice: 0,
     rubberGamePrice: 0,
     ballPrice: 0,
-    gameDt: "",
+    gameDt: new Date(new Date().setHours(20, 0, 0, 0)),
   };
 
   useEffect(() => {
@@ -91,7 +91,7 @@ const New: NextPage<Props> = () => {
 
   const handleChangeGor = (e, setFieldValue) => {
     if (e) {
-      const selected = dataGor.payload.list.find((data) => data.id === e.value)
+      const selected = dataGor.payload.list.find((data) => data.id === e.target.value)
       setFieldValue('gorId', selected ? selected.id : '')
       setFieldValue('normalGamePrice', selected ? selected.normalGamePrice : 0)
       setFieldValue('rubberGamePrice', selected ? selected.rubberGamePrice : 0)
@@ -200,20 +200,20 @@ const New: NextPage<Props> = () => {
                       <div className="mb-4">
                         <DateField
                           label={'Game Date'}
-                          name={'gameDt2'}
+                          name={'gameDt'}
                           dateFormat={'dddd DD MMM YYYY'}
                           timeFormat={'HH:mm'}
                           required
                         />
                       </div>
-                      <div className="mb-4">
+                      {/* <div className="mb-4">
                         <DateFieldNew
                           label={'Game Date'}
                           name={'gameDt'}
                           placeholder="dd-mm-yyyy"
                           required
                         />
-                      </div>
+                      </div> */}
                       {/* <div className="mb-4">
                         <SearchDropdownField
                           label={'Gor'}
@@ -231,6 +231,7 @@ const New: NextPage<Props> = () => {
                           placeholder="Select Gor"
                           placeholderValue={''}
                           items={listDataGor}
+                          onChange={e => handleChangeGor(e, setFieldValue)}
                           required
                         />
                       </div>
