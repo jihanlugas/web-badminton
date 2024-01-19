@@ -12,6 +12,8 @@ import { PagePlayer } from '@/types/player';
 import { NextPage } from 'next';
 import DateField from '../formik/date-field';
 import { PageRankingGameplayer } from '@/types/gameplayer';
+import DateFieldNew from '../formik/date-field-new';
+import { displayDate, displayDateForm } from '@/utils/formater';
 
 type FilterProps = {
   companyId: string
@@ -37,11 +39,12 @@ const schema = Yup.object().shape({
 
 const ModalFilterRank: NextPage<Props> = ({ show, onClickOverlay, pageRequest, setPageRequest }) => {
   const handleSubmit = (values: FormikValues) => {
+    values.gameDt = new Date(values.gameDt);
     const newReq = {
       ...pageRequest,
       page: 1,
       name: values.name,
-      gameDt: JSON.stringify(values.gameDt).replaceAll('"', ''),
+      gameDt: values.gameDt,
       gender: values.gender,
     };
     setPageRequest(newReq);
@@ -52,7 +55,7 @@ const ModalFilterRank: NextPage<Props> = ({ show, onClickOverlay, pageRequest, s
     const newReq = {
       ...pageRequest,
       page: 1,
-      gameDt: new Date(),
+      gameDt: displayDate(new Date(), 'YYYY-MM'),
       gender: '',
     };
     setPageRequest(newReq);
@@ -67,10 +70,9 @@ const ModalFilterRank: NextPage<Props> = ({ show, onClickOverlay, pageRequest, s
           <div className={'text-xl mb-4'}>
             Filter Player
           </div>
-          
           <div>
             <Formik
-              initialValues={pageRequest}
+              initialValues={{...pageRequest, gameDt: displayDate(pageRequest.gameDt, 'YYYY-MM')}}
               validationSchema={schema}
               enableReinitialize={true}
               onSubmit={(values) => handleSubmit(values)}
@@ -78,13 +80,21 @@ const ModalFilterRank: NextPage<Props> = ({ show, onClickOverlay, pageRequest, s
               {({ values, setValues, setFieldValue }) => {
                 return (
                   <Form encType='multipart/form-data'>
-                    <div className='grid grid-cols-1 md:grid-cols-1 gap-4 mb-16'>
-                      <div className="mb-4">
+                    <div className='grid grid-cols-1 md:grid-cols-1 gap-4 mb-4'>
+                      {/* <div className="mb-4">
                         <DateField
                           label={'Game Date'}
                           name={'gameDt'}
                           dateFormat={'MMM YYYY'}
                           timeFormat={false}
+                        />
+                      </div> */}
+                      <div className="mb-4">
+                        <DateFieldNew
+                          label={'Game Date'}
+                          name={'gameDt'}
+                          type={'month'}
+                          required
                         />
                       </div>
                       <div className="mb-4">
@@ -110,9 +120,9 @@ const ModalFilterRank: NextPage<Props> = ({ show, onClickOverlay, pageRequest, s
                         </button>
                       </div>
                     </div>
-                    {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                    <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
                       {JSON.stringify(values, null, 4)}
-                    </div> */}
+                    </div>
                   </Form>
                 );
               }}

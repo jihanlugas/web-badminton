@@ -96,13 +96,13 @@ const Header: React.FC<Props> = ({ sidebar, setSidebar }) => {
               </div>
               <div className={`absolute right-4 mt-2 w-56 rounded-md overflow-hidden origin-top-right shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none duration-300 ease-in-out ${!profileBar && 'scale-0 shadow-none ring-0'}`}>
                 <div className="" role="none">
-                  <Link href={'/account/change-password'}>
+                  {/* <Link href={'/account/change-password'}>
                     <div className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700'}>{'Change Password'}</div>
                   </Link>
                   <Link href={'/settings'}>
                     <div className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700'}>{'Setting'}</div>
                   </Link>
-                  <hr />
+                  <hr /> */}
                   <button onClick={handleLogout} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
                     {'Sign Out'}
                   </button>

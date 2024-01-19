@@ -29,7 +29,7 @@ const icons = {
 
 const defaultMenu = [
   {
-    name: 'Overview',
+    name: 'Home',
     icon: 'BiAbacus',
     path: '/overview',
   },

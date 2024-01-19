@@ -26,6 +26,8 @@ import { useDebounce } from "@/utils/hook";
 import { CompanyView } from "@/types/company";
 import { PageGor } from "@/types/gor";
 import { CreateGame } from "@/types/game";
+import moment from "moment";
+import { displayDateForm } from "@/utils/formater";
 
 type Props = {
 }
@@ -82,7 +84,8 @@ const New: NextPage<Props> = () => {
     normalGamePrice: 0,
     rubberGamePrice: 0,
     ballPrice: 0,
-    gameDt: new Date(new Date().setHours(20, 0, 0, 0)),
+    gameDt: displayDateForm(new Date().setHours(20, 0, 0, 0)),
+    // gameDt: '2024-01-19T20:00:00.00',
   };
 
   useEffect(() => {
@@ -105,6 +108,7 @@ const New: NextPage<Props> = () => {
   }
 
   const handleSubmit = (values: FormikValues, setErrors) => {
+    values.gameDt = new Date(values.gameDt);
     mutateSubmit(values, {
       onSuccess: (res) => {
         if (res) {
@@ -197,7 +201,7 @@ const New: NextPage<Props> = () => {
                           placeholder={'Game Description'}
                         />
                       </div>
-                      <div className="mb-4">
+                      {/* <div className="mb-4">
                         <DateField
                           label={'Game Date'}
                           name={'gameDt'}
@@ -205,15 +209,14 @@ const New: NextPage<Props> = () => {
                           timeFormat={'HH:mm'}
                           required
                         />
-                      </div>
-                      {/* <div className="mb-4">
+                      </div> */}
+                      <div className="mb-4">
                         <DateFieldNew
                           label={'Game Date'}
                           name={'gameDt'}
-                          placeholder="dd-mm-yyyy"
                           required
                         />
-                      </div> */}
+                      </div>
                       {/* <div className="mb-4">
                         <SearchDropdownField
                           label={'Gor'}
@@ -269,7 +272,7 @@ const New: NextPage<Props> = () => {
                           loading={isLoading}
                         />
                       </div>
-                      {/* <div className="mb-4">
+                      <div className="mb-4">
                         <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
                           {JSON.stringify(values, null, 4)}
                         </div>
@@ -279,7 +282,7 @@ const New: NextPage<Props> = () => {
                         <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
                           {JSON.stringify(touched, null, 4)}
                         </div>
-                      </div> */}
+                      </div>
                     </div>
                   </Form>
                 );

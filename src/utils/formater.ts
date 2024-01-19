@@ -24,6 +24,14 @@ export const displayDateTime = (value, format = 'DD MMM YYYY HH:mm') => {
 	}
 };
 
+export const displayDateForm = (value) => {
+	if (value != null) {
+		return moment(value).format('YYYY-MM-DDTHH:mm:ss');
+	} else {
+		return '';
+	}
+};
+
 export const displayActive = (val: boolean): string => {
 	return val ? 'Active' : 'Not Active';
 };

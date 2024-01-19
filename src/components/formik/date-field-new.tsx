@@ -19,15 +19,17 @@ const DateField: NextPage<Props> = ({ label, name, ...props }) => {
             {props.required && <span className={'text-rose-600'}>{'*'}</span>}
           </div>
         )}
-        <input
+        <FastField
           className={'w-full h-10 px-2 select-all'}
           type={'datetime-local'}
           name={name}
-          step="3600"
-          min="00:00"
-          max="23:59"
           {...props}
         />
+        {/* <input
+          type="datetime-local"
+          name=""
+          id=""
+        /> */}
         <ErrorMessage name={name}>
           {(msg) => {
             return (

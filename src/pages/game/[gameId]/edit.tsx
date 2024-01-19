@@ -1,5 +1,6 @@
 import ButtonSubmit from "@/components/formik/button-submit";
 import DateField from "@/components/formik/date-field";
+import DateFieldNew from "@/components/formik/date-field-new";
 import DropdownField from "@/components/formik/dropdown-field";
 import SearchDropdownField from "@/components/formik/search-dropdown-field";
 import TextAreaField from "@/components/formik/text-area-field";
@@ -11,6 +12,7 @@ import { ListData } from "@/types/data";
 import { GameView, PageGame, UpdateGame } from "@/types/game";
 import { PageGor } from "@/types/gor";
 import PageWithLayoutType from "@/types/layout";
+import { displayDateForm } from "@/utils/formater";
 import { useDebounce } from "@/utils/hook";
 import notif from "@/utils/notif";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -58,7 +60,7 @@ const Edit: NextPage<Props> = ({ game }) => {
     normalGamePrice: game.normalGamePrice,
     rubberGamePrice: game.rubberGamePrice,
     ballPrice: game.ballPrice,
-    gameDt: game.gameDt,
+    gameDt: displayDateForm(game.gameDt),
     isFinish: game.isFinish,
     debit: game.debit,
     expectedDebit: game.expectedDebit,
@@ -103,6 +105,7 @@ const Edit: NextPage<Props> = ({ game }) => {
   }
 
   const handleSubmit = (values: FormikValues, setErrors) => {
+    values.gameDt = new Date(values.gameDt);
     mutateSubmit(values, {
       onSuccess: (res) => {
         if (res) {
@@ -201,12 +204,19 @@ const Edit: NextPage<Props> = ({ game }) => {
                           placeholder={'Game Description'}
                         />
                       </div>
-                      <div className="mb-4">
+                      {/* <div className="mb-4">
                         <DateField
                           label={'Game Date'}
                           name={'gameDt'}
                           dateFormat={'dddd DD MMM YYYY'}
                           timeFormat={'HH:mm'}
+                          required
+                        />
+                      </div> */}
+                      <div className="mb-4">
+                        <DateFieldNew
+                          label={'Game Date'}
+                          name={'gameDt'}
                           required
                         />
                       </div>
