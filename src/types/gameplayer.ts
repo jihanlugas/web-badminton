@@ -63,6 +63,7 @@ export declare interface PageGameplayer extends Paging {
 }
 
 export declare interface PageRankingGameplayer extends Paging {
+  companyId: string;
   gender: string;
   gameDt: Date | string;
 }

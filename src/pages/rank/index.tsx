@@ -55,6 +55,7 @@ const Index: NextPage<Props> = () => {
     page: 1,
     sortField: null,
     sortOrder: null,
+    companyId: company?.id,
     gender: '',
     gameDt: new Date(),
   });
