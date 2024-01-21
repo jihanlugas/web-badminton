@@ -65,9 +65,6 @@ const Header: React.FC<Props> = ({ sidebar, setSidebar }) => {
     }
   }, [])
 
-  // console.log('user ', user)
-  // console.log('company ', company)
-
   return (
     <>
       <header>
