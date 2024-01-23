@@ -13,7 +13,7 @@ import { Api } from '@/lib/api';
 import CheckboxField from '@/components/formik/checkbox-field';
 import notif from "@/utils/notif";
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import { CreateGamematch, PageGamematch } from '@/types/gamematch';
+import { CreateMatchPointGamematch, PageGamematch } from '@/types/gamematch';
 import SearchDropdownField from "@/components/formik/search-dropdown-field";
 import { useDebounce } from '@/utils/hook';
 import { ListData } from '@/types/data';
@@ -52,7 +52,7 @@ const schema = Yup.object().shape({
   ball: Yup.number().typeError("Must be a number").min(0).required('Required field'),
 });
 
-const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
+const ModalAddGamematchMatchPoint: NextPage<Props> = ({ show, onClickOverlay, game }) => {
 
   const [searchPlayer, setSearchPlayer] = useState<string>('');
   const debounceSearchPlayer = useDebounce(searchPlayer, 300)
@@ -88,12 +88,12 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
     page: 0,
   });
 
-  const { mutate: mutateSubmit, isLoading } = useMutation((val: FormikValues) => Api.post('/gamematch', val));
+  const { mutate: mutateSubmit, isLoading } = useMutation((val: FormikValues) => Api.post('/gamematch/match-point', val));
 
   const { isLoading: isLoadingGameplayer, data: dataGameplayer, refetch: refetchGameplayer } = useQuery(['gameplayer', pageRequestGameplayer], ({ queryKey }) => Api.get('/gameplayer/page', queryKey[1]), {});
   const { isLoading: isLoadingGamematch, data: dataGamematch, refetch: refetchGamematch } = useQuery(['gamematch', pageRequestGamematch], ({ queryKey }) => Api.get('/gamematch/page', queryKey[1]), {});
 
-  const handleSubmit = (values: FormikValues, formikHelpers: FormikHelpers<CreateGamematch>) => {
+  const handleSubmit = (values: FormikValues, formikHelpers: FormikHelpers<CreateMatchPointGamematch>) => {
     values.matchName = 'Match ' + (pageGamematchInfo.totalData + 1)
 
     values.leftPoint = Number(values.leftPoint)
@@ -182,7 +182,7 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
     setPageRequestGameplayer({ ...pageRequestGameplayer, playerName: debounceSearchPlayer })
   }, [debounceSearchPlayer])
 
-  const initFormikValue: CreateGamematch = {
+  const initFormikValue: CreateMatchPointGamematch = {
     companyId: game.companyId,
     gameId: game.id,
     matchName: '',
@@ -470,4 +470,4 @@ const ModalAddGamematch: NextPage<Props> = ({ show, onClickOverlay, game }) => {
   )
 }
 
-export default ModalAddGamematch;
+export default ModalAddGamematchMatchPoint;

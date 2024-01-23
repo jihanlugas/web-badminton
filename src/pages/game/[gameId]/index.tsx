@@ -30,7 +30,8 @@ import ModalAddGameplayer from "@/components/modal/modal-add-gameplayer";
 import { IoAdd, IoAddOutline, IoRemove } from "react-icons/io5";
 import TextField from "@/components/formik/text-field";
 import CheckboxField from "@/components/formik/checkbox-field";
-import ModalAddGamematch from "@/components/modal/modal-add-gamematch";
+import ModalAddGamematchMatchPoint from "@/components/modal/modal-add-gamematch-match-point";
+import ModalAddGamematchMatch from "@/components/modal/modal-add-gamematch-match";
 
 type Props = {
   game: GameView
@@ -71,7 +72,8 @@ const Index: NextPage<Props> = ({ game }) => {
   const [sort, setSort] = useState<number>(listSort.length)
   const [gameplayer, setGameplayer] = useState<GameplayerView[]>([]);
   const [showModalAddGameplayer, setShowModalAddGameplayer] = useState<boolean>(false);
-  const [showModalAddGamematch, setShowModalAddGamematch] = useState<boolean>(false);
+  const [showModalAddGamematchMatchPoint, setShowModalAddGamematchMatchPoint] = useState<boolean>(false);
+  const [showModalAddGamematchMatch, setShowModalAddGamematchMatch] = useState<boolean>(false);
   const [showModalDeleteGameplayer, setShowModalDeleteGameplayer] = useState<boolean>(false);
   const refAdd = useRef<HTMLDivElement>();
   const [addBar, setAddBar] = useState(false);
@@ -150,12 +152,20 @@ const Index: NextPage<Props> = ({ game }) => {
     setShowModalAddGameplayer(!showModalAddGameplayer)
   };
 
-  const toggleAddGamematch = (refresh = false) => {
+  const toggleAddGamematchMatch = (refresh = false) => {
     if (refresh) {
       refetchGameplayer()
     }
     setAddBar(false);
-    setShowModalAddGamematch(!showModalAddGamematch)
+    setShowModalAddGamematchMatch(!showModalAddGamematchMatch)
+  };
+
+  const toggleAddGamematchMatchPoint = (refresh = false) => {
+    if (refresh) {
+      refetchGameplayer()
+    }
+    setAddBar(false);
+    setShowModalAddGamematchMatchPoint(!showModalAddGamematchMatchPoint)
   };
 
   const handleChangeSort = () => {
@@ -188,9 +198,14 @@ const Index: NextPage<Props> = ({ game }) => {
         show={showModalAddGameplayer}
         game={game}
       />
-      <ModalAddGamematch
-        onClickOverlay={toggleAddGamematch}
-        show={showModalAddGamematch}
+      <ModalAddGamematchMatch
+        onClickOverlay={toggleAddGamematchMatch}
+        show={showModalAddGamematchMatch}
+        game={game}
+      />
+      <ModalAddGamematchMatchPoint
+        onClickOverlay={toggleAddGamematchMatchPoint}
+        show={showModalAddGamematchMatchPoint}
         game={game}
       />
       <ModalDelete
@@ -231,18 +246,21 @@ const Index: NextPage<Props> = ({ game }) => {
                     <BsChevronDown size={'1.2em'} />
                   </div>
                 </button>
-
                 <div className={`absolute right-0 mt-2 w-56 rounded-md overflow-hidden origin-top-right shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none duration-300 ease-in-out ${!addBar && 'scale-0 shadow-none ring-0'}`}>
                   <div className="" role="none">
                     <button onClick={() => handleChangeSort()} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
                       {'Sort by ' + listSort[sort % listSort.length].name}
                     </button>
                     <hr />
-                    <button onClick={() => toggleAddGamematch(false)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
-                      {'Add match'}
-                    </button>
                     <button onClick={() => toggleAddGameplayer(false)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
                       {'Add game player'}
+                    </button>
+                    <hr />
+                    <button onClick={() => toggleAddGamematchMatch(false)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
+                      {'Add match'}
+                    </button>
+                    <button onClick={() => toggleAddGamematchMatchPoint(false)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
+                      {'Add match point'}
                     </button>
                     <hr />
                     <Link href={{ pathname: "/game/[gameId]/finish", query: { gameId: game.id } }}>
@@ -295,7 +313,6 @@ const GamePlayerSection: NextPage<GamePlayerSectionProps> = ({ game, company, ga
 
 
   const handleSubmit = (values: FormikValues) => {
-    console.log('handleSubmit ', values)
     mutateSubmit(values, {
       onSuccess: (res) => {
         if (res) {
@@ -469,7 +486,7 @@ const GamePlayerSection: NextPage<GamePlayerSectionProps> = ({ game, company, ga
       ) : (
         <>
           <div className='bg-white rounded shadow'>
-            <div className='w-full flex flex-col justify-center items-center rounded px-4 py-12'>
+            <div className='w-full flex flex-col justify-center items-center rounded px-4 py-24'>
               <div className='text-lg mb-4 font-bold'>No data</div>
               <div className='text-sm'>Add game player first</div>
             </div>

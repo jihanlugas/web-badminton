@@ -19,7 +19,7 @@ export declare interface GamematchView {
     createName: string;
 }
 
-export declare interface CreateGamematch {
+export declare interface CreateMatchPointGamematch {
     companyId: string;
     gameId: string;
     matchName: string;
@@ -35,6 +35,20 @@ export declare interface CreateGamematch {
     gameMatchScores: {
         leftScore: string | number;
         rightScore: string | number;
+    }[];
+    ball: string | number;
+}
+
+export declare interface CreateMatchGamematch {
+    companyId: string;
+    gameId: string;
+    matchName: string;
+    isRubber: boolean;
+    gameMatchTeams: {
+        name: string;
+        gameMatchTeamPlayers: {
+            playerId: string;
+        }[];
     }[];
     ball: string | number;
 }

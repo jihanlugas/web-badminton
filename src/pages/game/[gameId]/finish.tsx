@@ -30,7 +30,7 @@ import ModalAddGameplayer from "@/components/modal/modal-add-gameplayer";
 import { IoAdd, IoAddOutline, IoRemove } from "react-icons/io5";
 import TextField from "@/components/formik/text-field";
 import CheckboxField from "@/components/formik/checkbox-field";
-import ModalAddGamematch from "@/components/modal/modal-add-gamematch";
+import ModalAddGamematch from "@/components/modal/modal-add-gamematch-match-point";
 import { CreateTransaction } from "@/types/transaction";
 
 type Props = {
