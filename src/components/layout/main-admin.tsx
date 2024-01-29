@@ -98,8 +98,6 @@ const MainAdmin: React.FC<Props> = ({ children }) => {
             localStorage.setItem("user", JSON.stringify(res.payload.user))
             localStorage.setItem("company", JSON.stringify(res.payload.company || {}))
 
-            console.log('res.payload.user.role ', res.payload.user.role)
-
             if (res.payload.user.role !== USER_TYPE_ADMIN) {
               router.push('/');
             }

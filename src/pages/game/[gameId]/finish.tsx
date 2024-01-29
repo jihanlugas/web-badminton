@@ -131,7 +131,7 @@ const Finish: NextPage<Props> = ({ gamedetail }) => {
   }
 
   const handleSubmit = (values: FormikValues) => {
-    console.log('handleSubmit ', values)
+    // console.log('handleSubmit ', values)
     mutateSubmit(values, {
       onSuccess: (res) => {
         if (res) {

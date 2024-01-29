@@ -65,7 +65,7 @@ const Table: React.FC<Props> = ({ columns, data, setPageRequest, pageRequest, pa
   };
 
   const handleSort = (sortField) => {
-    console.log('sortField ', sortField)
+    // console.log('sortField ', sortField)
     if (pageRequest.sortField !== sortField) {
       setPageRequest({
         ...pageRequest,

@@ -46,8 +46,9 @@ const SingIn: NextPage<Props> = () => {
             // } else {
             if (res.payload.userLogin?.role === USER_TYPE_ADMIN) {
               router.push('/admin');
+            } else {
+              router.push('/');
             }
-            router.push('/');
             // }
           } else {
             if (res.payload && res.payload.listError) {
@@ -101,6 +102,8 @@ const SingIn: NextPage<Props> = () => {
                           label={'Password'}
                           name={'passwd'}
                           placeholder={'Password'}
+                          autoComplete={'off'}
+
                         />
                       </div>
                       <div className={''}>
