@@ -198,10 +198,10 @@ const Index: NextPage<Props> = () => {
                         <div className='flex-grow '>{displayMoney(data.ballPrice)}</div>
                       </div>
                       <div className='flex justify-end items-center'>
-                        <Link href={{ pathname: '/gor/[gorId]/edit', query: { gorId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit'>
+                        <Link href={{ pathname: '/gor/[gorId]/edit', query: { gorId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow text-amber-500' title='edit'>
                           <RiPencilLine className='' size={'1.2rem'} />
                         </Link>
-                        <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='delete' onClick={() => toggleDeleteGor(data.id)}>
+                        <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow text-rose-500' title='delete' onClick={() => toggleDeleteGor(data.id)}>
                           <VscTrash className='' size={'1.2rem'} />
                         </button>
                       </div>
@@ -243,10 +243,10 @@ const Index: NextPage<Props> = () => {
                         <div className='flex-grow '>{displayMoney(data.ballPrice)}</div>
                       </div>
                       <div className='flex justify-end items-center'>
-                        <Link href={{ pathname: '/gor/[gorId]/edit', query: { gorId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit'>
+                        <Link href={{ pathname: '/gor/[gorId]/edit', query: { gorId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow text-amber-500' title='edit'>
                           <RiPencilLine className='' size={'1.2rem'} />
                         </Link>
-                        <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='delete' onClick={() => toggleDeleteGor(data.id)}>
+                        <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow text-rose-500' title='delete' onClick={() => toggleDeleteGor(data.id)}>
                           <VscTrash className='' size={'1.2rem'} />
                         </button>
                       </div>

@@ -147,7 +147,7 @@ const Index: NextPage<Props> = () => {
         </div>
       </ModalDelete>
       <div className='p-4'>
-      <div className='bg-white mb-4 p-4 rounded shadow'>
+        <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='text-xl flex items-center justify-between'>
             <div className='hidden md:flex items-center'>
               <div className='mr-4'>{'Player'}</div>
@@ -196,10 +196,10 @@ const Index: NextPage<Props> = () => {
                         <div className='flex-grow '>{data.noHp ? displayPhoneNumber(data.noHp) : '-'}</div>
                       </div>
                       <div className='flex justify-end items-center'>
-                        <Link href={{ pathname: '/player/[playerId]/edit', query: { playerId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit'>
+                        <Link href={{ pathname: '/player/[playerId]/edit', query: { playerId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow text-amber-500' title='edit'>
                           <RiPencilLine className='' size={'1.2rem'} />
                         </Link>
-                        <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='delete' onClick={() => toggleDeletePlayer(data.id)}>
+                        <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow text-rose-500' title='delete' onClick={() => toggleDeletePlayer(data.id)}>
                           <VscTrash className='' size={'1.2rem'} />
                         </button>
                       </div>
@@ -228,12 +228,12 @@ const Index: NextPage<Props> = () => {
                       <div className='flex'>
                         <div className='h-6 w-6 flex-none flex justify-center items-center mr-2'><MdPhone className='' size={'1.1rem'} /></div>
                         <div className='flex-grow '>{data.noHp ? displayPhoneNumber(data.noHp) : '-'}</div>
-                      </div>                      
+                      </div>
                       <div className='flex justify-end items-center'>
-                        <Link href={{ pathname: '/player/[playerId]/edit', query: { playerId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='edit'>
+                        <Link href={{ pathname: '/player/[playerId]/edit', query: { playerId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow text-amber-500' title='edit'>
                           <RiPencilLine className='' size={'1.2rem'} />
                         </Link>
-                        <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded' title='delete' onClick={() => toggleDeletePlayer(data.id)}>
+                        <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow text-rose-500' title='delete' onClick={() => toggleDeletePlayer(data.id)}>
                           <VscTrash className='' size={'1.2rem'} />
                         </button>
                       </div>

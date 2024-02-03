@@ -263,19 +263,19 @@ const Index: NextPage<Props> = () => {
                         <div className='flex-grow '>{displayMoney(data.ballPrice)}</div>
                       </div>
                       <div className='flex justify-end items-center'>
-                        {!data.isFinish && (
-                          <>
-                            <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow text-rose-500' title='delete' onClick={() => toggleDeleteGame(data.id)}>
-                              <VscTrash className='' size={'1.2rem'} />
-                            </button>
-                            <Link href={{ pathname: '/game/[gameId]/edit', query: { gameId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow text-amber-500' title='edit'>
-                              <RiPencilLine className='' size={'1.2rem'} />
-                            </Link>
-                          </>
-                        )}
                         <Link href={{ pathname: '/game/[gameId]', query: { gameId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow text-primary-500' title='Game Details'>
                           <MdOutlineDashboard className='' size={'1.2rem'} />
                         </Link>
+                        {!data.isFinish && (
+                          <>
+                            <Link href={{ pathname: '/game/[gameId]/edit', query: { gameId: data.id } }} className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow text-amber-500' title='edit'>
+                              <RiPencilLine className='' size={'1.2rem'} />
+                            </Link>
+                            <button className='ml-2 h-8 w-8 flex justify-center items-center duration-300 hover:bg-gray-100 rounded shadow text-rose-500' title='delete' onClick={() => toggleDeleteGame(data.id)}>
+                              <VscTrash className='' size={'1.2rem'} />
+                            </button>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
