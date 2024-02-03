@@ -168,7 +168,7 @@ const Index: NextPage<Props> = () => {
         <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-4'>
           {player.map((data, key) => {
             return (
-              <div key={key} className='bg-white rounded shadow'>
+              <div key={key} className={`bg-white rounded shadow border-l-4 ${data.gender === 'MALE' ? 'border-blue-500' : data.gender === 'FEMALE' && 'border-pink-500'}`}>
                 <div className='block md:hidden'>
                   <button className='w-full flex justify-between rounded items-center p-4' onClick={() => toggleAccordion(key)}>
                     <div className='text-left flex items-center'>
