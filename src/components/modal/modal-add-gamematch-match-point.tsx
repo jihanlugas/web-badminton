@@ -247,11 +247,11 @@ const ModalAddGamematchMatchPoint: NextPage<Props> = ({ show, onClickOverlay, ga
                       <div className='max-h-[36rem] overflow-y-scroll mb-4'>
                         <div className='mb-4 pt-4'>
                           <div className='w-full grid grid-cols-2 gap-2'>
-                            <button className='w-full h-8 border-2 rounded font-bold text-gray-600 border-primary-400 disabled:bg-primary-400 disabled:text-gray-50 relative' disabled={!selected} type='button' onClick={() => setSelected(!selected)}>
+                            <button className='w-full h-12 border-2 rounded font-bold text-gray-600 border-primary-400 disabled:bg-primary-400 disabled:text-gray-50 relative' disabled={!selected} type='button' onClick={() => setSelected(!selected)}>
                               <div>{values.gameMatchTeams[0].name}</div>
                               {errors?.gameMatchTeams?.[0] && (<div className='bg-red-500 h-2 w-2 rounded-full absolute top-1 right-1'></div>)}
                             </button>
-                            <button className='w-full h-8 border-2 rounded font-bold text-gray-600 border-primary-400 disabled:bg-primary-400 disabled:text-gray-50 relative' disabled={selected} type='button' onClick={() => setSelected(!selected)}>
+                            <button className='w-full h-12 border-2 rounded font-bold text-gray-600 border-primary-400 disabled:bg-primary-400 disabled:text-gray-50 relative' disabled={selected} type='button' onClick={() => setSelected(!selected)}>
                               <div>{values.gameMatchTeams[1].name}</div>
                               {errors?.gameMatchTeams?.[1] && (<div className='bg-red-500 h-2 w-2 rounded-full absolute top-1 right-1'></div>)}
                             </button>
