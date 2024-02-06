@@ -45,9 +45,9 @@ const SingIn: NextPage<Props> = () => {
             //   router.push(router.query.redirect as string);
             // } else {
             if (res.payload.userLogin?.role === USER_TYPE_ADMIN) {
-              router.push('/admin');
+              router.push('/admin/overview');
             } else {
-              router.push('/');
+              router.push('/overview');
             }
             // }
           } else {
