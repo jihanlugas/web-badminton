@@ -88,6 +88,12 @@ const Edit: NextPage<Props> = ({ company, player }) => {
                 <BsChevronRight className={''} size={'1.2rem'} />
               </div>
               <Link href={{ pathname: '/admin/company/[companyId]', query: { companyId: company.id } }}>
+                <div className='mr-4 hover:text-primary-500'>{company.name}</div>
+              </Link>
+              <div className='mr-4'>
+                <BsChevronRight className={''} size={'1.2rem'} />
+              </div>
+              <Link href={{ pathname: '/admin/company/[companyId]/player/[playerId]', query: { companyId: company.id, playerId: player.id } }}>
                 <div className='mr-4 hover:text-primary-500'>{player.name}</div>
               </Link>
               <div className='mr-4'>
