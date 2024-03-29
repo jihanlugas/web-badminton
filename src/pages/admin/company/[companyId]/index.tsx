@@ -163,7 +163,7 @@ const Index: NextPage<Props> = ({ company }) => {
       },
       cell: (props) => {
         return (
-          <Link href={{ pathname: '/admin/company/[companyId]', query: { companyId: props.row.original.id } }} >
+          <Link href={{ pathname: '/admin/company/[companyId]/gor/[gorId]', query: { companyId: company.id, gorId: props.row.original.id  } }} >
             <div className='w-full duration-300 hover:text-primary-500'>
               {props.getValue() as string}
             </div>
@@ -292,7 +292,7 @@ const Index: NextPage<Props> = ({ company }) => {
       },
       cell: (props) => {
         return (
-          <Link href={{ pathname: '/admin/company/[companyId]', query: { companyId: props.row.original.id } }} >
+          <Link href={{ pathname: '/admin/company/[companyId]/player/[playerId]', query: { companyId: company.id, playerId: props.row.original.id  } }} >
             <div className='w-full duration-300 hover:text-primary-500'>
               {props.getValue() as string}
             </div>
