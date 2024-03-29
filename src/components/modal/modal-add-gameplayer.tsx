@@ -163,7 +163,7 @@ const ModalAddGameplayer: NextPage<Props> = ({ show, onClickOverlay, game }) => 
                     <div className='flex'>
                       <div className={'w-full'}>
                         <ButtonSubmit
-                          label={'Add'}
+                          label={'Save'}
                           disabled={isLoadingPlayer || isLoading}
                           loading={isLoadingPlayer || isLoading}
                         />

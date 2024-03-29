@@ -164,7 +164,7 @@ const New: NextPage<Props> = () => {
                       </div>
                       <div className="mb-4">
                         <ButtonSubmit
-                          label={'Create'}
+                          label={'Save'}
                           disabled={isLoading}
                           loading={isLoading}
                         />

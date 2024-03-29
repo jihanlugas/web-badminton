@@ -303,7 +303,7 @@ const ModalAddGamematchMatch: NextPage<Props> = ({ show, onClickOverlay, game })
                       </div>
                       <div className=''>
                         <ButtonSubmit
-                          label={'Create'}
+                          label={'Save'}
                           disabled={isLoading}
                           loading={isLoading}
                         />

@@ -170,7 +170,7 @@ const Edit: NextPage<Props> = ({ gor }) => {
                       </div>
                       <div className="mb-4">
                         <ButtonSubmit
-                          label={'Edit'}
+                          label={'Save'}
                           disabled={isLoading}
                           loading={isLoading}
                         />

@@ -171,7 +171,7 @@ const Edit: NextPage<Props> = ({ company, gor }) => {
                       </div>
                       <div className="mb-4">
                         <ButtonSubmit
-                          label={'Edit'}
+                          label={'Save'}
                           disabled={isLoading}
                           loading={isLoading}
                         />
